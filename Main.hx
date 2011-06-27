@@ -158,10 +158,13 @@ class Main
 	{
 		var t = new AlphaGradient(renderingBuffer);
 		
-		Lib.current.addEventListener(Event.ENTER_FRAME, function(e:Event) {
-			t.animate();
-			blit();
-		});
+		t.run();
+		//Lib.current.addEventListener(Event.ENTER_FRAME, function(e:Event) {
+			//t.animate();
+			//blit();
+		//});
+		
+		blit();
 	}
 	//---------------------------------------------------------------------------------------------------
 	static function t4():Void
