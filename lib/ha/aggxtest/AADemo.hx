@@ -44,7 +44,7 @@ class AADemo
 		_clippingRenderer = new ClippingRenderer(_pixelFormatRenderer);
 		_scanline = new Scanline();
 		_rasterizer = new ScanlineRasterizer();
-		_enlargingRenderer = new RendererEnlarged(_clippingRenderer, PIXEL_SIZE);
+		_enlargingRenderer = new EnlargedRenderer(_clippingRenderer, PIXEL_SIZE);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function run():Void 
@@ -106,7 +106,7 @@ class Square
 	}	
 }
 //=======================================================================================================
-class RendererEnlarged implements IRenderer
+class EnlargedRenderer implements IRenderer
 {
 	private var _ras:ScanlineRasterizer;
 	private var _sl:Scanline;
