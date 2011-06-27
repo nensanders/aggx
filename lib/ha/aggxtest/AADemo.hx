@@ -24,7 +24,7 @@ class AADemo
 	private var _clippingRenderer:ClippingRenderer;
 	private var _scanline:Scanline;
 	private var _rasterizer:ScanlineRasterizer;
-	private var _enlargingRenderer:RendererEnlarged;
+	private var _enlargingRenderer:EnlargedRenderer;
 	private var _x:Vector<Float>;
 	private var _y:Vector<Float>;
 	//---------------------------------------------------------------------------------------------------

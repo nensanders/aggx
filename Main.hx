@@ -63,12 +63,13 @@ class Main
 	{
 		clippingRenderer.clear(new RgbaColor(255, 255, 255));
 
-		t0();
+		//t0();
 		//t4();
 		//t5();
 		//t6();
 		//t7();
 		//t8();
+		t9();
 		
 		Lib.current.addChild(bitmap);
 	}
@@ -159,10 +160,6 @@ class Main
 		var t = new AlphaGradient(renderingBuffer);
 		
 		t.run();
-		//Lib.current.addEventListener(Event.ENTER_FRAME, function(e:Event) {
-			//t.animate();
-			//blit();
-		//});
 		
 		blit();
 	}
@@ -289,5 +286,12 @@ class Main
 		SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
 		
 		blit();	
+	}
+	//---------------------------------------------------------------------------------------------------
+	static function t9():Void
+	{
+		var t = new Circles(renderingBuffer);
+		t.run();
+		blit();
 	}
 }
