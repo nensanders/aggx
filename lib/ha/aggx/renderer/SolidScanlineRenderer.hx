@@ -27,7 +27,7 @@ class SolidScanlineRenderer implements IRenderer
 	//---------------------------------------------------------------------------------------------------
 	public function prepare():Void { }
 	//---------------------------------------------------------------------------------------------------
-	public function render(sl:IScanline):Void
+	public inline function render(sl:IScanline):Void
 	{
 		renderAASolidScanline(sl, _clippingRenderer, _color);
 	}

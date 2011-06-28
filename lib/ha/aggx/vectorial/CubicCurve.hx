@@ -61,24 +61,13 @@ class CubicCurve implements IVertexSource
 		_curveDiv.reset();
 	}	
 	//---------------------------------------------------------------------------------------------------
-	public function rewind(pathId:UInt)
+	public inline function rewind(pathId:UInt)
 	{
-		if(_approximationMethod == CURVE_INC)
-		{
-			_curveInc.rewind(pathId);
-		}
-		else
-		{
-			_curveDiv.rewind(pathId);
-		}
+		_approximationMethod == CURVE_INC ? _curveInc.rewind(pathId) : _curveDiv.rewind(pathId);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getVertex(x:FloatRef, y:FloatRef):UInt
+	public inline function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
-		if(_approximationMethod == CURVE_INC)
-		{
-			return _curveInc.getVertex(x, y);
-		}
-		return _curveDiv.getVertex(x, y);
+		return _approximationMethod == CURVE_INC ? _curveInc.getVertex(x, y) : _curveDiv.getVertex(x, y);
 	}
 }

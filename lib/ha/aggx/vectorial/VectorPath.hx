@@ -201,7 +201,7 @@ class VectorPath implements IVertexSource
 		curve4To(rdx_ctrl2.value, rdy_ctrl2.value, rdx_to.value, rdy_to.value);
 	}	
 	//---------------------------------------------------------------------------------------------------
-	public function endPoly(flags:Int):Void
+	public inline function endPoly(flags:Int):Void
 	{
 		if(PathUtils.isVertex(_vertices.lastCommand))
 		{
@@ -209,7 +209,7 @@ class VectorPath implements IVertexSource
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function closePolygon(flags:Int = 0):Void
+	public inline function closePolygon(flags:Int = 0):Void
 	{
 		endPoly(PathFlags.CLOSE | flags);
 	}	
@@ -269,43 +269,43 @@ class VectorPath implements IVertexSource
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getLastVertex(x:FloatRef, y:FloatRef):Int
+	public inline function getLastVertex(x:FloatRef, y:FloatRef):Int
 	{
 		return _vertices.getLastVertex(x, y);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getPrevVertex(x:FloatRef, y:FloatRef):Int
+	public inline function getPrevVertex(x:FloatRef, y:FloatRef):Int
 	{
 		return _vertices.getPrevVertex(x, y);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getVertex(x:FloatRef, y:FloatRef):UInt
+	public inline function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
-		if (_vertextIterator >= _vertices.verticesCount) return PathCommands.STOP;			
-		return _vertices.getVertex(_vertextIterator++, x, y);
+		//if (_vertextIterator >= _vertices.verticesCount) return PathCommands.STOP;			
+		return (_vertextIterator >= _vertices.verticesCount) ? PathCommands.STOP : _vertices.getVertex(_vertextIterator++, x, y);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getVertexByIndex(idx:Int, x:FloatRef, y:FloatRef):Int
+	public inline function getVertexByIndex(idx:Int, x:FloatRef, y:FloatRef):Int
 	{
 		return _vertices.getVertex(idx, x, y);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getCommand(idx:Int):Int
+	public inline function getCommand(idx:Int):Int
 	{
 		return _vertices.getCommand(idx);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function modifyVertex(idx:Int, x:Float, y:Float, ?cmd:Int):Void
+	public inline function modifyVertex(idx:Int, x:Float, y:Float, ?cmd:Int):Void
 	{
 		_vertices.modifyVertex(idx, x, y, cmd);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function modifyCommand(idx:Int, cmd:Int):Void
+	public inline function modifyCommand(idx:Int, cmd:Int):Void
 	{
 		_vertices.modifyCommand(idx, cmd);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function rewind(pathId:UInt):Void
+	public inline function rewind(pathId:UInt):Void
 	{
 		_vertextIterator = pathId;
 	}

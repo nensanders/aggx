@@ -13,6 +13,6 @@ interface IScanline
 	public function resetSpans():Void;
 	public function finalize(y:Int):Void;
 	public function addCell(x:Int, cover:Byte):Void;
-	public function addCells(x:Int, len:Int, covers:Pointer):Void;
-	public function addSpan(x:Int, len:Int, cover:Byte):Void;
+	public function addCells(x:Int, len:UInt, covers:Pointer):Void;
+	public function addSpan(x:Int, len:UInt, cover:Byte):Void;
 }

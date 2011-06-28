@@ -14,17 +14,17 @@ class LiangBarskyClipper
 	public static inline var CLIPPING_FLAGS_X_CLIPPED = CLIPPING_FLAGS_X1_CLIPPED | CLIPPING_FLAGS_X2_CLIPPED;
 	public static inline var CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED;
 	//---------------------------------------------------------------------------------------------------
-	public static function getClippingFlags(x:Float, y:Float, clippingBox:RectBox):Int
+	public static inline function getClippingFlags(x:Float, y:Float, clippingBox:RectBox):Int
     {
         return  Calc.int(x > clippingBox.x2) | (Calc.int(y > clippingBox.y2) << 1) | (Calc.int(x < clippingBox.x1) << 2) | (Calc.int(y < clippingBox.y1) << 3);
     }
 	//---------------------------------------------------------------------------------------------------
-	public static function getClippingFlagsX(x:Float, clippingBox:RectBox):Int
+	public static inline function getClippingFlagsX(x:Float, clippingBox:RectBox):Int
 	{
 		return  Calc.int(x > clippingBox.x2) | (Calc.int(x < clippingBox.x1) << 2);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public static function getClippingFlagsY(y:Float, clippingBox:RectBox):Int
+	public static inline function getClippingFlagsY(y:Float, clippingBox:RectBox):Int
 	{
 		return (Calc.int(y > clippingBox.y2) << 1) | (Calc.int(y < clippingBox.y1) << 3);
 	}

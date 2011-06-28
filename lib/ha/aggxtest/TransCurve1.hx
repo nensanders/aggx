@@ -21,7 +21,7 @@ import lib.ha.rfpx.TrueTypeCollection;
 //=======================================================================================================
 class TransCurve1 
 {
-	public static var NUMBER_OF_POINTS:UInt = 6;
+	public static var NUMBER_OF_POINTS:UInt = 8;
 	public static var PRESERVE_X_SCALE:Bool = true;
 	public static var NUMBER_OF_INTERMEDIATE_POINTS:UInt = 200;
 	public static var FIXED_LENGTH:Bool = true;
@@ -114,23 +114,23 @@ class TransCurve1
 		var x = 0.;
 		var y = 0.;
 		
-		var c:UInt = _string.length;
-		var i:UInt = 0;
-		while (i < c)
-		{
-			if (x > _tcurve.totalLength) break;
-			
-			var face = _fontEngine.vectorizeCharacter(_string.charCodeAt(i), _fontSize, x, y);
-			_rasterizer.reset();
-			_rasterizer.addPath(_ftrans);
-			_scanlineRenderer.color = new RgbaColor(27, 106, 240);
-			SolidScanlineRenderer.renderScanlines(_rasterizer, _scanline, _scanlineRenderer);
-			
-			x += face.glyph.advanceWidth * _fontScale;
-			y = 0;
-			
-			++i;
-		}
+		//var c:UInt = _string.length;
+		//var i:UInt = 0;
+		//while (i < c)
+		//{
+			//if (x > _tcurve.totalLength) break;
+			//
+			//var face = _fontEngine.vectorizeCharacter(_string.charCodeAt(i), _fontSize, x, y);
+			//_rasterizer.reset();
+			//_rasterizer.addPath(_ftrans);
+			//_scanlineRenderer.color = new RgbaColor(27, 106, 240);
+			//SolidScanlineRenderer.renderScanlines(_rasterizer, _scanline, _scanlineRenderer);
+			//
+			//x += face.glyph.advanceWidth * _fontScale;
+			//y = 0;
+			//
+			//++i;
+		//}
 		
 		_rasterizer.addPath(_stroke);
 		_scanlineRenderer.color = new RgbaColor(136, 207, 100);
@@ -145,7 +145,7 @@ class TransCurve1
 	{
 		//initPoly();
 		var i:UInt = 0;
-		while (i < 6)
+		while (i < NUMBER_OF_POINTS)
 		{
 			var x = _poly.xn(i);
 			var y = _poly.yn(i);

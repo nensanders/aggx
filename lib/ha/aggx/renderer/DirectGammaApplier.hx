@@ -14,17 +14,18 @@ class DirectGammaApplier
 		_gamma = gamma;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function apply(p:Pointer):Void
+	public inline function apply(p:Pointer):Void
 	{
-		var r = p.getR();
-		var g = p.getG();
-		var b = p.getB();
-		var a = p.getA();
-		
-		r = _gamma.getDirectGamma(r);
-		g = _gamma.getDirectGamma(g);
-		b = _gamma.getDirectGamma(b);
-		
-		p.setFull(r, g, b, a);
+		//var r = p.getR();
+		//var g = p.getG();
+		//var b = p.getB();
+		//var a = p.getA();
+		//
+		//r = _gamma.getDirectGamma(r);
+		//g = _gamma.getDirectGamma(g);
+		//b = _gamma.getDirectGamma(b);
+		//
+		//p.setFull(r, g, b, a);
+		p.setFull(_gamma.getDirectGamma(p.getR()), _gamma.getDirectGamma(p.getG()), _gamma.getDirectGamma(p.getB()), _gamma.getDirectGamma(p.getA()));		
 	}	
 }

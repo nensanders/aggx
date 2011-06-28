@@ -11,9 +11,21 @@ class PixelCell
 	public var left:Int;
 	public var right:Int;
 	//---------------------------------------------------------------------------------------------------
-	public function new()
+	public function new(?cell:PixelCell)
 	{
-		initial();
+		if (cell == null) 
+		{
+			initial();
+		}
+		else 
+		{
+			x = cell.x;
+			y = cell.y;
+			cover = cell.cover;
+			area = cell.area;
+			left = cell.left;
+			right = cell.right;
+		}
 	}	
 	//---------------------------------------------------------------------------------------------------
 	public function initial():Void
@@ -36,13 +48,23 @@ class PixelCell
 		right = cell.right;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function setStyleCell(cell:PixelCell)
+	public function define(x_:Int, y_:Int, cover_:Int, area_:Int, styleCell:PixelCell):Void
+	{
+		x = x_;
+		y = y_;
+		cover = cover_;
+		area = area_;
+		left = styleCell.left;
+		right = styleCell.right;
+	}
+	//---------------------------------------------------------------------------------------------------
+	public inline function setStyleCell(cell:PixelCell)
 	{
 		left = cell.left;
 		right = cell.right;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function isNotEqual(ex:Int, ey:Int, cell:PixelCell):Bool
+	public inline function isNotEqual(ex:Int, ey:Int, cell:PixelCell):Bool
 	{
 		return ((ex - x) | (ey - y) | (left - cell.left) | (right - cell.right)) != 0;
 	}

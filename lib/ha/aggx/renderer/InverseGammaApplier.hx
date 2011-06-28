@@ -14,17 +14,18 @@ class InverseGammaApplier
 		_gamma = gamma;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function apply(p:Pointer):Void
+	public inline function apply(p:Pointer):Void
 	{
-		var r = p.getR();
-		var g = p.getG();
-		var b = p.getB();
-		var a = p.getA();
+		//var r = p.getR();
+		//var g = p.getG();
+		//var b = p.getB();
+		//var a = p.getA();
+		//
+		//r = _gamma.getInverseGamma(r);
+		//g = _gamma.getInverseGamma(g);
+		//b = _gamma.getInverseGamma(b);
 		
-		r = _gamma.getInverseGamma(r);
-		g = _gamma.getInverseGamma(g);
-		b = _gamma.getInverseGamma(b);
-		
-		p.setFull(r, g, b, a);
+		//p.setFull(r, g, b, a);
+		p.setFull(_gamma.getInverseGamma(p.getR()), _gamma.getInverseGamma(p.getG()), _gamma.getInverseGamma(p.getB()), _gamma.getInverseGamma(p.getA()));
 	}
 }

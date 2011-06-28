@@ -249,10 +249,14 @@ class CubicCurveFitterDiv implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
-		if(_count >= _points.length) return PathCommands.STOP;
-		var p = _points[_count++];
-		x.value = p.x;
-		y.value = p.y;
-		return (_count == 1) ? PathCommands.MOVE_TO : PathCommands.LINE_TO;
+		var cmd:UInt = PathCommands.STOP;
+		if (_count < _points.length) 
+		{
+			var p = _points[_count++];
+			x.value = p.x;
+			y.value = p.y;
+			cmd = (_count == 1) ? PathCommands.MOVE_TO : PathCommands.LINE_TO;
+		}
+		return cmd;
 	}	
 }

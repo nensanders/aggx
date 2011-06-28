@@ -78,7 +78,7 @@ class MathStroke
 	private inline function set_miterLimitTheta(value:Float):Float { _miterLimit = 1.0 / Math.sin(value * 0.5); return value; }
 	public inline var miterLimitTheta(null, set_miterLimitTheta):Float;
 	//---------------------------------------------------------------------------------------------------
-	private function addVertex(vc:Vector<Coord>, x:Float, y:Float):Void	
+	private inline function addVertex(vc:Vector<Coord>, x:Float, y:Float):Void	
 	{
 		vc[vc.length] = new Coord(x, y);
 	}	

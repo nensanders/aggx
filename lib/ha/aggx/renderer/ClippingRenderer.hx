@@ -105,7 +105,7 @@ class ClippingRenderer
 			while (y < h)
 			{
 				_pixelFormatRenderer.copyHLine(0, y, width, color);
-				y++;
+				++y;
 			}
 		}
 	}
@@ -166,7 +166,7 @@ class ClippingRenderer
 		if (y < minY) return;
 		if (x1 > maxX) return;
 		if (x2 < minX) return;
-
+		
 		if (x1 < minX) x1 = minX;
 		if (x2 > maxX) x2 = maxX;
 
@@ -222,7 +222,7 @@ class ClippingRenderer
 	{
 		if(y > maxY) return;
 		if(y < minY) return;
-
+		
 		if(x < minX)
 		{
 			len -= (minX - x);
@@ -233,7 +233,7 @@ class ClippingRenderer
 		if((x + len) > maxX)
 		{
 			len = maxX - x + 1;
-			if(len <= 0) return;
+			if (len <= 0) return;
 		}
 		_pixelFormatRenderer.blendSolidHSpan(x, y, len, color, covers);
 	}

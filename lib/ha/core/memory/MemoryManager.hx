@@ -78,7 +78,6 @@ class MemoryManager
 			}
 			block._ptr = block._size;
 		}
-		//trace("Expanding:\n\tsize: " + block._size + "\n\tstart: " + block._start);
 	}	
 	//---------------------------------------------------------------------------------------------------
 	public static function free(block:MemoryBlockFriend):Void
@@ -117,7 +116,6 @@ class MemoryManager
 			_lastBlock = block;
 			ApplicationDomain.currentDomain.domainMemory.length += size;
 		}
-		//trace("Allocation of size\n\tsize: " + block._size + "\n\tstart: " + block._start);
 	}
 	//---------------------------------------------------------------------------------------------------
 	private static function mallocExImpl(bytes:BytesData, block:MemoryBlockFriend):Void
@@ -139,10 +137,9 @@ class MemoryManager
 			ApplicationDomain.currentDomain.domainMemory.length += bytes.length;
 			bytes.readBytes(ApplicationDomain.currentDomain.domainMemory, block._start, block._size);			
 		}
-		//trace("Allocation from bytes\n\tsize: " + block._size + "\n\tstart: " + block._start);
 	}	
 	//---------------------------------------------------------------------------------------------------
-	private static function roundToNext1024(size:UInt):UInt
+	private static inline function roundToNext1024(size:UInt):UInt
 	{
 		size = Calc.umax(size, 1024);
 		return size + ((size % 1024) > 0 ? 1024 : 0);

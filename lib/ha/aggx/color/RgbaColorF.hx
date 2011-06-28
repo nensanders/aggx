@@ -15,13 +15,8 @@ class RgbaColorF
 		a = a_;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function toRgbaColor():RgbaColor
+	public inline function toRgbaColor():RgbaColor
 	{
-		var c = new RgbaColor();
-		c.r = Std.int(r * RgbaColor.BASE_MASK);
-		c.g = Std.int(g * RgbaColor.BASE_MASK);
-		c.b = Std.int(b * RgbaColor.BASE_MASK);
-		c.a = Std.int(a * RgbaColor.BASE_MASK);
-		return c;
+		return new RgbaColor(Std.int(r * RgbaColor.BASE_MASK), Std.int(g * RgbaColor.BASE_MASK), Std.int(b * RgbaColor.BASE_MASK), Std.int(a * RgbaColor.BASE_MASK));
 	}
 }

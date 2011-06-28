@@ -14,7 +14,7 @@ class VertexSequence
 	private inline function get_size():UInt { return _storage.length; }
 	public inline var size(get_size, null):UInt;	
 	//---------------------------------------------------------------------------------------------------
-	public function add(vd:IDistanceProvider):Void
+	public inline function add(vd:IDistanceProvider):Void
 	{
 		if (_storage.length > 1)
 		{
@@ -26,17 +26,17 @@ class VertexSequence
 		_storage[_storage.length] = vd;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function removeAll():Void
+	public inline function removeAll():Void
 	{
 		_storage.length = 0;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function removeLast():Void
+	public inline function removeLast():Void
 	{
 		_storage.pop();
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function modifyLast(v:IDistanceProvider):Void
+	public inline function modifyLast(v:IDistanceProvider):Void
 	{
 		removeLast();
 		_storage[_storage.length] = v;

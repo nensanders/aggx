@@ -21,17 +21,12 @@ class RgbaColor
 		a = alpha;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public static function fromRgbaColor(color:RgbaColor):RgbaColor
+	public static inline function fromRgbaColor(color:RgbaColor):RgbaColor
 	{
-		var ret = new RgbaColor();
-		ret.a = color.a;
-		ret.r = color.r;
-		ret.g = color.g;
-		ret.b = color.b;
-		return ret;
+		return new RgbaColor(color.r, color.g, color.b, color.a);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public static function fromRgbaColorF(color:RgbaColorF):RgbaColor
+	public inline static function fromRgbaColorF(color:RgbaColorF):RgbaColor
 	{
 		return color.toRgbaColor();
 	}	

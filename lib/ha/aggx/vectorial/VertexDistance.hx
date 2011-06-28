@@ -15,7 +15,7 @@ class VertexDistance implements IDistanceProvider
 		dist = 0.0;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function calc(val:IDistanceProvider):Bool
+	public inline function calc(val:IDistanceProvider):Bool
 	{
 		var ret = (dist = Calc.distance(x, y, val.x, val.y)) > Calc.VERTEX_DIST_EPSILON;
 		if(!ret) dist = 1.0 / Calc.VERTEX_DIST_EPSILON;

@@ -49,7 +49,7 @@ class ClippingScanlineRasterizer
 	}
 
 	//--------------------------------------------------------------------
-	public function moveTo(x1:Float, y1:Float):Void
+	public inline function moveTo(x1:Float, y1:Float):Void
 	{
 		_x1 = x1;
 		_y1 = y1;

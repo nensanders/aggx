@@ -269,14 +269,20 @@ class ScanlineRasterizer implements IRasterizer
 	//---------------------------------------------------------------------------------------------------
 	public function rewindScanlines():Bool
 	{
+		var ret = false;
 		if(_isAutoClose) closePolygon();
 		_outline.sortCells();
-		if(_outline.cellsCount == 0)
+		//if(_outline.cellsCount == 0)
+		//{
+			//return false;
+		//}
+		//_scanY = _outline.minY;
+		//return true;
+		if (ret = (_outline.cellsCount != 0)) 
 		{
-			return false;
+			_scanY = _outline.minY;
 		}
-		_scanY = _outline.minY;
-		return true;
+		return ret;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function navigateScanline(y:Int):Bool

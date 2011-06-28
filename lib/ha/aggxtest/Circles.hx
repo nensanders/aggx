@@ -20,7 +20,7 @@ class Circles
 	public static var Z1 = 0.2;//0...1
 	public static var Z2 = 0.7;//0...1
 	public static var SELECTIVITY = 0.1;//0...1
-	public static var SIZE = .6;//0...1
+	public static var SIZE = .4;//0...1
 	//---------------------------------------------------------------------------------------------------
 	private static var splineRx = Vector.ofArray([0.000000, 0.200000, 0.400000, 0.910484, 0.957258, 1.000000 ]);
 	private static var splineRy = Vector.ofArray([1.000000, 0.800000, 0.600000, 0.066667, 0.169697, 0.600000 ]);
@@ -38,7 +38,7 @@ class Circles
 	private var _points:Vector<ScatterPoint>;
 	private var _splineR:BSpline;
 	private var _splineG:BSpline;
-	private var _splineB:BSpline;	
+	private var _splineB:BSpline;
 	//---------------------------------------------------------------------------------------------------
 	public function new(rbuf:RenderingBuffer) 
 	{
@@ -59,12 +59,27 @@ class Circles
 	//---------------------------------------------------------------------------------------------------
 	public function run():Void 
 	{
+		generate();
+		draw();
+	}
+	//---------------------------------------------------------------------------------------------------
+	public function animate():Void
+	{
+        var i:UInt = 0;
+        while (i < _numberOfPoints)
+        {
+            _points[i].x += (randomDouble(0, SELECTIVITY) - SELECTIVITY * 0.5) * 100;
+            _points[i].y += (randomDouble(0, SELECTIVITY) - SELECTIVITY * 0.5) * 100;
+            _points[i].z += randomDouble(0, SELECTIVITY * 0.01) - SELECTIVITY * 0.005;
+            if (_points[i].z < 0.0) _points[i].z = 0.0;
+            if (_points[i].z > 1.0) _points[i].z = 1.0;
+			++i;
+        }
 		draw();
 	}
 	//---------------------------------------------------------------------------------------------------
 	private function draw():Void
 	{
-		generate();
 		_clippingRenderer.clear(new RgbaColor(255, 255, 255, 255));
 		
 		var ellipse = new Ellipse();
@@ -127,10 +142,10 @@ class Circles
 		}
 	}	
 	//---------------------------------------------------------------------------------------------------
-	private function randomDouble(start:Float, end:Float):Float
+	private inline function randomDouble(start:Float, end:Float):Float
 	{
-		var r = Math.random();
-		return r * (end - start) + start;
+		//var r = Math.random();
+		return Math.random() * (end - start) + start;
 	}	
 }
 //=======================================================================================================

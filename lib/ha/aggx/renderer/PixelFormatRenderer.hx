@@ -46,11 +46,11 @@ class PixelFormatRenderer
 	private inline function get_stride():Int { return _rbuf.stride; }
 	public inline var stride(get_stride, null):Int;
 	//---------------------------------------------------------------------------------------------------
-	public function getRowPtr(y:Int):Pointer { return _rbuf.getRowPtr(y); }
+	public inline function getRowPtr(y:Int):Pointer { return _rbuf.getRowPtr(y); }
 	//---------------------------------------------------------------------------------------------------
-	public function getRow(y:Int):RowInfo { return _rbuf.getRow(y); }
+	public inline function getRow(y:Int):RowInfo { return _rbuf.getRow(y); }
 	//---------------------------------------------------------------------------------------------------
-	public function getPixPtr(x:Int, y:Int):Pointer { return _rbuf.getRowPtr(y) + x; }
+	public inline function getPixPtr(x:Int, y:Int):Pointer { return _rbuf.getRowPtr(y) + x; }
 	//---------------------------------------------------------------------------------------------------
 	public static function makePix(p:Pointer, color:RgbaColor)
 	{		
@@ -75,7 +75,7 @@ class PixelFormatRenderer
 		copyOrBlendPix(ptr, color.r, color.g, color.b, color.a, cover);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function copyHLine(x:Int, y:Int, len:Int, color:RgbaColor):Void
+	public inline function copyHLine(x:Int, y:Int, len:Int, color:RgbaColor):Void
 	{
 		var p = _rbuf.getRowPtr(y) + (x << 2);
 		do
@@ -194,7 +194,7 @@ class PixelFormatRenderer
 				}
 				else
 				{
-					Blender.blendPix(p, color.r, color.g, color.b, alpha, cover);					
+					Blender.blendPix(p, color.r, color.g, color.b, alpha, cover);
 				}
 				p += 4;
 				++covers;
@@ -216,7 +216,7 @@ class PixelFormatRenderer
 				if(alpha == RgbaColor.BASE_MASK)
 				{
 					color.a = RgbaColor.BASE_MASK;
-					p.setFull(color.r, color.g, color.b, color.a);					
+					p.setFull(color.r, color.g, color.b, color.a);
 				}
 				else
 				{
@@ -282,7 +282,7 @@ class PixelFormatRenderer
 				do
 				{
 					color = colors.data[ci];
-					copyOrBlendPix(p, color.r, color.g, color.b, color.a);
+					copyOrBlendPix2(p, color.r, color.g, color.b, color.a);
 					p += 4;
 					++ci;
 				}
@@ -329,7 +329,7 @@ class PixelFormatRenderer
 				{
 					color = colors.data[ci];
 					p = _rbuf.getRowPtr(y++) + x;
-					copyOrBlendPix(p, color.r, color.g, color.b, color.a);
+					copyOrBlendPix2(p, color.r, color.g, color.b, color.a);
 					p += 4;
 					++ci;
 				}
@@ -424,7 +424,7 @@ class PixelFormatRenderer
 			{
 				do
 				{
-					copyOrBlendPix(pdst, psrc.getR(), psrc.getG(), psrc.getB(), psrc.getA());
+					copyOrBlendPix2(pdst, psrc.getR(), psrc.getG(), psrc.getB(), psrc.getA());
 					psrc += incp;
 					pdst += incp;
 				}
@@ -445,16 +445,13 @@ class PixelFormatRenderer
 	//---------------------------------------------------------------------------------------------------
 	public function blendFromColor(from:PixelFormatRenderer, color:RgbaColor, xdst:Int, ydst:Int, xsrc:Int, ysrc:Int, len:Int, cover:Byte):Void
 	{
-		var base_shift = RgbaColor.BASE_SHIFT;
-		var base_mask = RgbaColor.BASE_MASK;
-		
 		var psrc = from.getRowPtr(ysrc);
 		if(psrc != 0)
 		{
 			var pdst = _rbuf.getRowPtr(ydst) + (xdst << 2);
 			do
 			{
-				copyOrBlendPix(pdst, color.r, color.g, color.b, (psrc.getByte() * cover + base_mask) >> base_shift);
+				copyOrBlendPix2(pdst, color.r, color.g, color.b, (psrc.getByte() * cover + RgbaColor.BASE_MASK) >> RgbaColor.BASE_SHIFT);
 				++psrc;
 				pdst += 4;
 			}
@@ -474,7 +471,7 @@ class PixelFormatRenderer
 				do
 				{
 					var color = colorLut[psrc.getByte()];
-					copyOrBlendPix(pdst, color.r, color.g, color.b, color.a);
+					copyOrBlendPix2(pdst, color.r, color.g, color.b, color.a);
 					++psrc;
 					pdst += 4;
 				}
@@ -494,9 +491,9 @@ class PixelFormatRenderer
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public static function copyOrBlendPix(p:Pointer, cr:Byte, cg:Byte, cb:Byte, alpha:Byte, ?cover:Byte):Void
+	public static inline function copyOrBlendPix(p:Pointer, cr:Byte, cg:Byte, cb:Byte, alpha:Byte, cover:Byte):Void
 	{
-		if (cover != null && cover != 255) 
+		if (cover != 255) 
 		{
 			if (alpha != 0)			
 			{
@@ -527,17 +524,29 @@ class PixelFormatRenderer
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
+	public static inline function copyOrBlendPix2(p:Pointer, cr:Byte, cg:Byte, cb:Byte, alpha:Byte):Void
+	{
+		if(alpha != 0)
+		{
+			if(alpha == RgbaColor.BASE_MASK)
+			{
+				p.setFull(cr, cg, cb, RgbaColor.BASE_MASK);
+			}
+			else
+			{
+				Blender.blendPix(p, cr, cg, cb, alpha);
+			}
+		}
+	}
+	//---------------------------------------------------------------------------------------------------
 	public static function premultiplyPixel(p:Pointer)
 	{
-		var base_shift = RgbaColor.BASE_SHIFT;
-		var base_mask = RgbaColor.BASE_MASK;
-		
 		var r = p.getR();
 		var g = p.getG();
 		var b = p.getB();
 		var a = p.getA();	
 		
-		if(a < base_mask)
+		if(a < RgbaColor.BASE_MASK)
 		{
 			if(a == 0)
 			{
@@ -545,9 +554,9 @@ class PixelFormatRenderer
 			}
 			else 
 			{
-				r = (r * a + base_mask) >> base_shift;
-				g = (g * a + base_mask) >> base_shift;
-				b = (b * a + base_mask) >> base_shift;
+				r = (r * a + RgbaColor.BASE_MASK) >> RgbaColor.BASE_SHIFT;
+				g = (g * a + RgbaColor.BASE_MASK) >> RgbaColor.BASE_SHIFT;
+				b = (b * a + RgbaColor.BASE_MASK) >> RgbaColor.BASE_SHIFT;
 			}
 			p.setFull(r, g, b, a);
 		}
@@ -555,15 +564,12 @@ class PixelFormatRenderer
 	//---------------------------------------------------------------------------------------------------
 	public static function demultiplyPixel(p:Pointer):Void
 	{
-		var base_shift = RgbaColor.BASE_SHIFT;
-		var base_mask = RgbaColor.BASE_MASK;
-		
 		var r = p.getR();
 		var g = p.getG();
 		var b = p.getB();
 		var a = p.getA();
 		
-		if(a < base_mask)
+		if(a < RgbaColor.BASE_MASK)
 		{
 			if(a == 0)
 			{
@@ -571,13 +577,13 @@ class PixelFormatRenderer
 			}
 			else 
 			{
-				var rr:Byte = Std.int((r * base_mask) / a);
-				var gg:Byte = Std.int((g * base_mask) / a);
-				var bb:Byte = Std.int((b * base_mask) / a);
+				var rr:Byte = Std.int((r * RgbaColor.BASE_MASK) / a);
+				var gg:Byte = Std.int((g * RgbaColor.BASE_MASK) / a);
+				var bb:Byte = Std.int((b * RgbaColor.BASE_MASK) / a);
 				
-				r = (rr > base_mask) ? base_mask : rr;
-				g = (gg > base_mask) ? base_mask : gg;
-				b = (bb > base_mask) ? base_mask : bb;
+				r = (rr > RgbaColor.BASE_MASK) ? RgbaColor.BASE_MASK : rr;
+				g = (gg > RgbaColor.BASE_MASK) ? RgbaColor.BASE_MASK : gg;
+				b = (bb > RgbaColor.BASE_MASK) ? RgbaColor.BASE_MASK : bb;
 			}
 			p.setFull(r, g, b, a);
 		}

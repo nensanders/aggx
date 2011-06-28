@@ -35,14 +35,14 @@ class RenderingBuffer
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getRowPtr(y:Int):Pointer
+	public inline function getRowPtr(y:Int):Pointer
 	{
 		return _start + y * _stride;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getRow(y:Int):RowInfo
+	public inline function getRow(y:Int):RowInfo
 	{
-		return new RowInfo(0, _width - 1, getRowPtr(y));
+		return new RowInfo(0, _width - 1, _start + y * _stride);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function copyFrom(src:RenderingBuffer):Void

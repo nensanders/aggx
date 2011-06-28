@@ -89,7 +89,7 @@ class VcgenStroke implements ICurveGenerator, implements IVertexSource //Vertex 
 		_status = INITIAL;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function addVertex(x:Float, y:Float, cmd:UInt):Void
+	public inline function addVertex(x:Float, y:Float, cmd:UInt):Void
 	{
 		_status = INITIAL;
 		if(PathUtils.isMoveTo(cmd))

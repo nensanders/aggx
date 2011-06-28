@@ -27,6 +27,7 @@ class PixelCellRasterizer
 	private var _maxX:Int;
 	private var _maxY:Int;
 	private var _isSorted:Bool;
+	private var _storage:PixelCellStorage;
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
@@ -41,6 +42,7 @@ class PixelCellRasterizer
 		_maxX = -0x7FFFFFFF;
 		_maxY = -0x7FFFFFFF;
 		_isSorted = false;
+		_storage = new PixelCellStorage();
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function reset():Void
@@ -73,41 +75,42 @@ class PixelCellRasterizer
 	private inline function get_isSorted():Bool { return _isSorted; }
 	public inline var isSorted(get_isSorted, null):Bool;
 	//---------------------------------------------------------------------------------------------------
-	public function getScanlineCells(y:Int):PixelCellStorage
+	public inline function getScanlineCells(y:Int):PixelCellStorage
 	{
-		return { data: _sortedCells, offset: _sortedY[y - _minY].start };
+		return _storage.set(_sortedCells, _sortedY[y - _minY].start);//{ data: _sortedCells, offset: _sortedY[y - _minY].start };
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getScanlineCellsCount(y:Int):UInt
+	public inline function getScanlineCellsCount(y:Int):UInt
 	{
 		return _sortedY[y - _minY].num;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function style(styleCell:PixelCell)
+	public inline function style(styleCell:PixelCell)
 	{
 		_styleCell.setStyleCell(styleCell);
 	}	
 	//---------------------------------------------------------------------------------------------------
-	public function addCurrentCell():Void
+	public inline function addCurrentCell():Void
 	{
 		if ((_currentCell.area | _currentCell.cover) != 0)
 		{
-			_cells[_cellsCount] = new PixelCell();
-			_cells[_cellsCount].set(_currentCell);
-			_cellsCount++;
+			_cells[_cellsCount++] = new PixelCell(_currentCell);
+			//_cells[_cellsCount].set(_currentCell);
+			//_cellsCount++;
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function setCurrentCell(x:Int, y:Int):Void
+	public inline function setCurrentCell(x:Int, y:Int):Void
 	{
 		if(_currentCell.isNotEqual(x, y, _styleCell))
 		{
 			addCurrentCell();
-			_currentCell.setStyleCell(_styleCell);
-			_currentCell.x = x;
-			_currentCell.y = y;
-			_currentCell.cover = 0;
-			_currentCell.area = 0;
+			_currentCell.define(x, y, 0, 0, _styleCell);
+			//_currentCell.setStyleCell(_styleCell);
+			//_currentCell.x = x;
+			//_currentCell.y = y;
+			//_currentCell.cover = 0;
+			//_currentCell.area = 0;
 		}
 	}
 	//---------------------------------------------------------------------------------------------------

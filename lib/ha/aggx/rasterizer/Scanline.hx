@@ -60,7 +60,7 @@ class Scanline implements IScanline
 		_lastX = x;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function addCells(x:Int, len:Int, covers:Pointer):Void
+	public function addCells(x:Int, len:UInt, covers:Pointer):Void
 	{
 		x -= _minX;
 		MemoryUtils.copy(_covers.ptr + x, covers, len);
@@ -80,7 +80,7 @@ class Scanline implements IScanline
 		_lastX = x + len - 1;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function addSpan(x:Int, len:Int, cover:Byte):Void
+	public function addSpan(x:Int, len:UInt, cover:Byte):Void
 	{
 		x -= _minX;
 		MemoryUtils.set(_covers.ptr + x, cover, len);

@@ -25,9 +25,9 @@ class ScanlineHitTest implements IScanline
 		if (_x == x) _isHit = true;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function addCells(x:Int, len:Int, covers:Pointer):Void { }	
+	public function addCells(x:Int, len:UInt, covers:Pointer):Void { }	
 	//---------------------------------------------------------------------------------------------------
-	public function addSpan(x:Int, len:Int, cover:Byte):Void
+	public function addSpan(x:Int, len:UInt, cover:Byte):Void
 	{
 		if (_x >= x && _x < x + len) _isHit = true;
 	}

@@ -60,7 +60,7 @@ class VertexBlockStorage
 		if(_verticesCount!=0)
 		{
 			var idx = (_verticesCount - 1) << 4;
-			ret = (_coordsStartPtr + idx + 8).getDouble();//_coords.ptr.getDouble(_coordsStartPtr + idx + 8);
+			ret = (_coordsStartPtr + idx + 8).getDouble();
 		}
 		return ret;
 	}
@@ -69,7 +69,7 @@ class VertexBlockStorage
 	private inline function get_verticesCount():UInt { return _verticesCount; }
 	public inline var verticesCount(get_verticesCount, null):UInt;
 	//---------------------------------------------------------------------------------------------------
-	public function removeAll():Void
+	public inline function removeAll():Void
 	{
 		_verticesCount = 0;
 		_commands.ptr = _commandsStartPtr;
@@ -97,7 +97,7 @@ class VertexBlockStorage
 		_commands.ptr++;
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function checkAllocation():Void
+	private inline function checkAllocation():Void
 	{
 		if (_verticesCount > _allocatedCount)
 		{
@@ -107,19 +107,17 @@ class VertexBlockStorage
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function modifyVertex(idx:Int, x:Float, y:Float, ?cmd:Int)
+	public inline function modifyVertex(idx:Int, x:Float, y:Float, ?cmd:Int)
 	{
-		var ptr = _coordsStartPtr + (idx << 4);
-		ptr.setDouble(x);
-		ptr += 8;
-		ptr.setDouble(y);
+		(_coordsStartPtr + (idx << 4)).setDouble(x);
+		(_coordsStartPtr + (idx << 4) + 8).setDouble(y);
 		if (cmd != null) 
 		{
 			(_commandsStartPtr + idx).setByte(cmd);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function modifyCommand(idx:Int, cmd:Int):Void
+	public inline function modifyCommand(idx:Int, cmd:Int):Void
 	{
 		(_commandsStartPtr + idx).setByte(cmd);
 	}
@@ -143,32 +141,24 @@ class VertexBlockStorage
 		(_commandsStartPtr + v2).setByte(tmpCmd);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getLastVertex(x:FloatRef, y:FloatRef):Int
+	public inline function getLastVertex(x:FloatRef, y:FloatRef):Int
 	{
-		if(_verticesCount != 0) return getVertex(_verticesCount - 1, x, y);
-		return PathCommands.STOP;
+		return (_verticesCount != 0) ? getVertex(_verticesCount - 1, x, y) : PathCommands.STOP;
 	}
 	//------------------------------------------------------------------------
-	public function getPrevVertex(x:FloatRef, y:FloatRef):Int
+	public inline function getPrevVertex(x:FloatRef, y:FloatRef):Int
 	{
-		if(_verticesCount > 1) return getVertex(_verticesCount - 2, x, y);
-		return PathCommands.STOP;
+		return (_verticesCount > 1) ? getVertex(_verticesCount - 2, x, y) : PathCommands.STOP;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getVertex(idx:Int, x:FloatRef, y:FloatRef):UInt
+	public inline function getVertex(idx:Int, x:FloatRef, y:FloatRef):UInt
 	{
-		//if (idx == 34) 
-		//{
-			//var stop = 1;
-		//}
-		var ptr = _coordsStartPtr + (idx << 4);
-		x.value = ptr.getDouble();
-		ptr += 8;
-		y.value = ptr.getDouble();
+		x.value = (_coordsStartPtr + (idx << 4)).getDouble();
+		y.value = (_coordsStartPtr + (idx << 4) + 8).getDouble();
 		return (_commandsStartPtr + idx).getByte();
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function getCommand(idx:Int):Int
+	public inline function getCommand(idx:Int):Int
 	{
 		return (_commandsStartPtr + idx).getByte();
 	}
