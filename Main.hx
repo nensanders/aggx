@@ -8,6 +8,7 @@ import flash.geom.Rectangle;
 import flash.Lib;
 import flash.Vector;
 import lib.ha.aggx.color.RgbaColor;
+import lib.ha.aggx.color.RgbaColorF;
 import lib.ha.aggx.gui.InteractivePolygon;
 import lib.ha.aggx.rasterizer.Scanline;
 import lib.ha.aggx.rasterizer.ScanlineRasterizer;
@@ -30,10 +31,12 @@ import lib.ha.aggxtest.AATest;
 import lib.ha.aggxtest.AlphaGradient;
 import lib.ha.aggxtest.Circles;
 import lib.ha.aggxtest.TransCurve1;
+import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.core.geometry.RectBox;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
 import lib.ha.core.memory.RgbaReaderWriter;
+import lib.ha.core.utils.SWFProfiler;
 import lib.ha.rfpx.TrueTypeCollection;
 import lib.ha.rfpx.TrueTypeLoader;
 using lib.ha.core.memory.RgbaReaderWriter;
@@ -61,15 +64,17 @@ class Main
 	//---------------------------------------------------------------------------------------------------
 	static function main() 
 	{
+		SWFProfiler.init();
 		clippingRenderer.clear(new RgbaColor(255, 255, 255));
 
-		//t0();
+		t0();
 		//t4();
 		//t5();
 		//t6();
 		//t7();
 		//t8();
-		t9();
+		//t9();
+		//t10();
 		
 		Lib.current.addChild(bitmap);
 	}
@@ -82,8 +87,8 @@ class Main
 	static function t0():Void
 	{
 		var loader = new TrueTypeLoader("c:\\times.ttf");
-		loader.load(t1);
-		//loader.load(t2);
+		//loader.load(t1);
+		loader.load(t2);
 	}
 	//---------------------------------------------------------------------------------------------------
 	static function t1(ttc:TrueTypeCollection):Void
@@ -191,8 +196,8 @@ class Main
 		path.lineTo(pixelBufferWidth + pixelOffset - tr, tr + pixelOffset);
 		path.lineTo(pixelBufferWidth + pixelOffset - tr, pixelBufferHeight + pixelOffset - tr);
 		path.lineTo(tr + pixelOffset, pixelBufferHeight + pixelOffset - tr);
-		path.lineTo(tr + pixelOffset, pixelBufferHeight + pixelOffset - tr);
-		path.curve4(pixelBufferWidth + pixelOffset - tr, pixelBufferHeight + pixelOffset - tr, pixelBufferWidth + pixelOffset - tr, pixelOffset + tr, pixelOffset + tr, pixelOffset + tr);
+		path.lineTo(tr + pixelOffset, pixelOffset + tr);
+		//path.curve4(pixelBufferWidth + pixelOffset - tr, pixelBufferHeight + pixelOffset - tr, pixelBufferWidth + pixelOffset - tr, pixelOffset + tr, pixelOffset + tr, pixelOffset + tr);
 		path.closePolygon();
 		
 		var curve = new ConvCurve(path);
@@ -292,6 +297,81 @@ class Main
 	{
 		var t = new Circles(renderingBuffer);
 		t.run();
-		blit();
+		//blit();
+		Lib.current.addEventListener(Event.ENTER_FRAME, function(e:Event) {
+			t.animate();
+			blit();
+		});
+	}
+	//---------------------------------------------------------------------------------------------------
+	static function t10():Void
+	{
+		var pixelOffset = 0.5;
+		var pexelAligner = new AffineTransformer();
+		pexelAligner.multiply(AffineTransformer.translator(.5, .5));
+		
+		var tr = 10.;
+		var toCenter = true;
+		
+		var path = new VectorPath();
+		path.transform(pexelAligner);
+		var curve = new ConvCurve(path);
+		var dash = new ConvDash(curve);
+		var stroke = new ConvStroke(dash);
+		
+		dash.addDash(10, 10);
+		stroke.width = 7;
+		
+		Lib.current.addEventListener(Event.ENTER_FRAME, function(e:Event) {
+			
+			var r = Std.int(Math.random() * 255);
+			var g = Std.int(Math.random() * 255);
+			var b = Std.int(Math.random() * 255);
+			var a = Std.int(Math.random() * 255);
+
+			clippingRenderer.clear(new RgbaColor(255, 255, 255));
+			path.removeAll();
+			
+			path.moveTo(tr, tr);
+			path.lineTo(pixelBufferWidth - tr, tr);
+			path.lineTo(pixelBufferWidth - tr, pixelBufferHeight - tr);
+			path.lineTo(tr, pixelBufferHeight - tr);
+			path.lineTo(tr, tr);
+			path.closePolygon();
+			
+			if (toCenter) 
+			{
+				tr += 3;
+				stroke.width -= 0.04;
+				if (tr > pixelBufferHeight / 2) 
+				{
+					tr = pixelBufferHeight / 2;
+					toCenter = false;
+					stroke.width = 0.5;
+				}
+			}
+			else 
+			{
+				tr -= 3;
+				stroke.width += 0.06;
+				if (tr < 10.) 
+				{
+					tr = 10.;
+					toCenter = true;
+					stroke.width = 7;
+				}
+			}
+
+			rasterizer.addPath(stroke);	
+			scanlineRenderer.color = new RgbaColor(g, r, b);
+			SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
+
+			rasterizer.addPath(curve);
+			scanlineRenderer.color = new RgbaColor(r, g, b, a);
+			SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
+			//
+			blit();
+			//t6();
+		});
 	}
 }
