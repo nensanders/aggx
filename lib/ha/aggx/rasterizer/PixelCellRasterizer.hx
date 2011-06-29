@@ -1,6 +1,11 @@
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
 import flash.Vector;
+import lib.ha.core.memory.MemoryBlock;
+import lib.ha.core.memory.MemoryManager;
+import lib.ha.core.memory.Pointer;
+import lib.ha.aggx.rasterizer.PixelCell;
+using lib.ha.aggx.rasterizer.PixelCell;
 //=======================================================================================================
 class SortedY
 {
@@ -17,39 +22,56 @@ class PixelCellRasterizer
 	private static inline var POLY_SUBPIXEL_MASK = POLY_SUBPIXEL_SCALE-1;
 	//---------------------------------------------------------------------------------------------------
 	private var _cellsCount:UInt;
-	private var _cells:Vector<PixelCell>;
-	private var _sortedCells:Vector<PixelCell>;
+	
+	private var _cells:MemoryBlock;
+	private var _cellsPtr:Pointer;
+	
+	private var _sortedCells:MemoryBlock;
+	private var _sortedCellsPtr:Pointer;
+	
 	private var _sortedY:Vector<SortedY>;
 	private var _currentCell:PixelCell;
-	private var _styleCell:PixelCell;
 	private var _minX:Int;
 	private var _minY:Int;
 	private var _maxX:Int;
 	private var _maxY:Int;
 	private var _isSorted:Bool;
+<<<<<<< .mine
+	
+	private var _tempCell:PixelCell;
+=======
 	private var _storage:PixelCellStorage;
+>>>>>>> .r9
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
 		_cellsCount = 0;
-		_cells = new Vector();
+		
+		_cells = MemoryManager.malloc(32768 << 4);
+		_cellsPtr = _cells.ptr;
+		
+		_sortedCells = MemoryManager.malloc(32768 << 4);
+		_sortedCellsPtr = _sortedCells.ptr;
+
 		_currentCell = new PixelCell();
-		_styleCell = new PixelCell();
-		_sortedCells = new Vector();
 		_sortedY = new Vector();
 		_minX = 0x7FFFFFFF;
 		_minY = 0x7FFFFFFF;
 		_maxX = -0x7FFFFFFF;
 		_maxY = -0x7FFFFFFF;
 		_isSorted = false;
+<<<<<<< .mine
+		
+		_tempCell = new PixelCell();
+=======
 		_storage = new PixelCellStorage();
+>>>>>>> .r9
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function reset():Void
 	{
 		_cellsCount = 0;
 		_currentCell.initial();
-		_styleCell.initial();
 		_isSorted = false;
 		_minX = 0x7FFFFFFF;
 		_minY = 0x7FFFFFFF;
@@ -75,9 +97,17 @@ class PixelCellRasterizer
 	private inline function get_isSorted():Bool { return _isSorted; }
 	public inline var isSorted(get_isSorted, null):Bool;
 	//---------------------------------------------------------------------------------------------------
+<<<<<<< .mine
+	public inline function getScanlineCells(y:Int):Pointer
+=======
 	public inline function getScanlineCells(y:Int):PixelCellStorage
+>>>>>>> .r9
 	{
+<<<<<<< .mine
+		return _sortedCellsPtr + (_sortedY[y - _minY].start << 4);
+=======
 		return _storage.set(_sortedCells, _sortedY[y - _minY].start);//{ data: _sortedCells, offset: _sortedY[y - _minY].start };
+>>>>>>> .r9
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function getScanlineCellsCount(y:Int):UInt
@@ -85,32 +115,45 @@ class PixelCellRasterizer
 		return _sortedY[y - _minY].num;
 	}
 	//---------------------------------------------------------------------------------------------------
+<<<<<<< .mine
+	public inline function addCurrentCell():Void
+=======
 	public inline function style(styleCell:PixelCell)
 	{
 		_styleCell.setStyleCell(styleCell);
 	}	
 	//---------------------------------------------------------------------------------------------------
 	public inline function addCurrentCell():Void
+>>>>>>> .r9
 	{
 		if ((_currentCell.area | _currentCell.cover) != 0)
 		{
+<<<<<<< .mine
+			(_cellsPtr + (_cellsCount << 4)).setAll(_currentCell);
+			++_cellsCount;
+=======
 			_cells[_cellsCount++] = new PixelCell(_currentCell);
 			//_cells[_cellsCount].set(_currentCell);
 			//_cellsCount++;
+>>>>>>> .r9
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function setCurrentCell(x:Int, y:Int):Void
 	{
-		if(_currentCell.isNotEqual(x, y, _styleCell))
+		if(_currentCell.isNotEqual(x, y))
 		{
 			addCurrentCell();
+<<<<<<< .mine
+			_currentCell.define(x, y, 0, 0);
+=======
 			_currentCell.define(x, y, 0, 0, _styleCell);
 			//_currentCell.setStyleCell(_styleCell);
 			//_currentCell.x = x;
 			//_currentCell.y = y;
 			//_currentCell.cover = 0;
 			//_currentCell.area = 0;
+>>>>>>> .r9
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -344,63 +387,64 @@ class PixelCellRasterizer
 		renderHLine(ey1, x_from, POLY_SUBPIXEL_SCALE - first, x2, fy2);
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function qsort(dataToSort:Vector<PixelCell>, beg:Int, end:Int):Void
+	private function qsort(beg:Pointer, end:Pointer):Void
 	{
 		if (end == beg)
 		{
 			return;
 		}
 		
-		var pivot = getPivotPoint(dataToSort, beg, end);
+		var pivot = getPivotPoint(beg, end);
 		
 		if (pivot > beg)
 		{
-			qsort(dataToSort, beg, pivot - 1);
+			qsort(beg, pivot - (1 << 4));
 		}
 		
 		if (pivot < end)
 		{
-			qsort(dataToSort, pivot + 1, end);
+			qsort(pivot + (1 << 4), end);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function getPivotPoint(dataToSort:Vector<PixelCell>, beg:Int, end:Int):Int
+	private function getPivotPoint(beg:Pointer, end:Pointer):Pointer
 	{
-		var pivot:Int = beg;
-		var m:Int = beg + 1;
-		var n:Int = end;
+		var size = 1 << 4;
+		var pivot:Pointer = beg;
+		var m:Pointer = beg + size;
+		var n:Pointer = end;
 		
-		while ((m < end) && dataToSort[pivot].x >= dataToSort[m].x)
+		while ((m < end) && (pivot.getX() >= m.getX()))
 		{
-			m++;
+			m += size;
 		}
 		
-		while ((n > beg) && (dataToSort[pivot].x <= dataToSort[n].x))
+		while ((n > beg) && (pivot.getX() <= n.getX()))
 		{
-			n--;
+			n -= size;
 		}
 		
 		while (m < n)
 		{
-			var t0 = dataToSort[m];
-			dataToSort[m] = dataToSort[n];
-			dataToSort[n] = t0;
+			m.getAll(_tempCell);
+			m.setAllEx(n);
+			n.setAll(_tempCell);
 			
-			while ((m < end) && dataToSort[pivot].x >= dataToSort[m].x)
+			while ((m < end) && (pivot.getX() >= m.getX()))
 			{
-				m++;
+				m += size;
 			}
 			
-			while ((n > beg) && (dataToSort[pivot].x <= dataToSort[n].x))
+			while ((n > beg) && (pivot.getX() <= n.getX()))
 			{
-				n--;
+				n -= size;
 			}
 		}
 		if (pivot != n)
-		{
-			var t1 = dataToSort[n];
-			dataToSort[n] = dataToSort[pivot];
-			dataToSort[pivot] = t1;
+		{	
+			n.getAll(_tempCell);
+			n.setAllEx(pivot);
+			pivot.setAll(_tempCell);
 		}		
 		return n;
 	}	
@@ -417,23 +461,21 @@ class PixelCellRasterizer
 
 		if (_cellsCount == 0) return;
 
-		_sortedCells = new Vector<PixelCell>(_cellsCount);
-
 		var _sortedYSize:UInt = _maxY - _minY + 1;
 		_sortedY = new Vector<SortedY>(_sortedYSize);
 		var i:UInt = 0;
 		while (i < _sortedYSize)
 		{
 			_sortedY[i] = new SortedY();
-			i++;
+			++i;
 		}
 
 		i = 0;
 		while(i < _cellsCount)
 		{
-			var index = _cells[i].y - _minY;
+			var index = (_cellsPtr + (i << 4)).getY() - _minY;
 			_sortedY[index].start++;
-			i++;
+			++i;
 		}
 
 		var start = 0;
@@ -449,22 +491,20 @@ class PixelCellRasterizer
 		i = 0;
 		while (i < _cellsCount)
 		{
-			var sortedIndex = _cells[i].y - _minY;
-			var curr_y_start = _sortedY[sortedIndex].start;
-			var curr_y_num = _sortedY[sortedIndex].num;
-			_sortedCells[curr_y_start + curr_y_num] = _cells[i];
+			var sortedIndex = (_cellsPtr + (i << 4)).getY() - _minY;
+			(_sortedCellsPtr + ((_sortedY[sortedIndex].start + _sortedY[sortedIndex].num) << 4)).setAllEx(_cellsPtr + (i << 4));
 			++_sortedY[sortedIndex].num;
-			i++;
+			++i;
 		}
 
 		i = 0;
-		while (i < _sortedYSize)		
+		while (i < _sortedYSize)
 		{
 			if (_sortedY[i].num != 0)
 			{
-				qsort(_sortedCells, _sortedY[i].start, _sortedY[i].start + _sortedY[i].num - 1);
+				qsort(_sortedCellsPtr + (_sortedY[i].start << 4), _sortedCellsPtr + ((_sortedY[i].start + _sortedY[i].num - 1) << 4));
 			}
-			i++;
+			++i;
 		}
 		
 		_isSorted = true;

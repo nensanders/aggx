@@ -114,7 +114,7 @@ class Circles
 				SolidScanlineRenderer.renderAASolidScanlines(_rasterizer, _scanline, _clippingRenderer, new RgbaColor(_points[i].color.r, _points[i].color.g, _points[i].color.b, Std.int(alpha * RgbaColor.BASE_MASK)));
 				drawn++;
 			}
-			i++;
+			++i;
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -138,14 +138,18 @@ class Circles
 			p.y = _renderingBuffer.height / 2.0 + y + Math.sin(angle) * distance;
 			p.color = new RgbaColorF(_splineR.get(z) * 0.8, _splineG.get(z) * 0.8, _splineB.get(z) * 0.8, 1.0).toRgbaColor();
 			_points[i] = p;
-			i++;
+			++i;
 		}
 	}	
 	//---------------------------------------------------------------------------------------------------
 	private inline function randomDouble(start:Float, end:Float):Float
 	{
+<<<<<<< .mine
+		return Math.random() * (end - start) + start;
+=======
 		//var r = Math.random();
 		return Math.random() * (end - start) + start;
+>>>>>>> .r9
 	}	
 }
 //=======================================================================================================

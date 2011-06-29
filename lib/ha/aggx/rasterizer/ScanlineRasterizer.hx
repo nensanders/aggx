@@ -5,6 +5,8 @@ import lib.ha.aggx.vectorial.IVertexSource;
 import lib.ha.aggx.vectorial.PathUtils;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.Ref;
+import lib.ha.aggx.rasterizer.PixelCell;
+using lib.ha.aggx.rasterizer.PixelCell;
 //=======================================================================================================
 class ScanlineRasterizer implements IRasterizer
 {	
@@ -118,6 +120,7 @@ class ScanlineRasterizer implements IRasterizer
 	//---------------------------------------------------------------------------------------------------
 	public function sweepScanline(sl:IScanline):Bool
 	{
+		var currentCell = new PixelCell();
 		while(true)
 		{
 			if(_scanY > _outline.maxY) return false;
@@ -128,16 +131,18 @@ class ScanlineRasterizer implements IRasterizer
 
 			while(numCells != 0)
 			{
-				var currentCell = cells.data[cells.offset];
+				cells.getAll(currentCell);
 				var x = currentCell.x;
 				var area = currentCell.area;
 				var alpha:Int;
 
 				cover += currentCell.cover;
 
-				while(--numCells != 0)
+				while(numCells != 0)
 				{
-					currentCell = cells.data[++cells.offset];
+					--numCells;
+					cells += 16;
+					cells.getAll(currentCell);
 					if(currentCell.x != x) break;
 					area += currentCell.area;
 					cover += currentCell.cover;
@@ -272,6 +277,9 @@ class ScanlineRasterizer implements IRasterizer
 		var ret = false;
 		if(_isAutoClose) closePolygon();
 		_outline.sortCells();
+<<<<<<< .mine
+		if (ret = (_outline.cellsCount != 0)) 
+=======
 		//if(_outline.cellsCount == 0)
 		//{
 			//return false;
@@ -279,6 +287,7 @@ class ScanlineRasterizer implements IRasterizer
 		//_scanY = _outline.minY;
 		//return true;
 		if (ret = (_outline.cellsCount != 0)) 
+>>>>>>> .r9
 		{
 			_scanY = _outline.minY;
 		}

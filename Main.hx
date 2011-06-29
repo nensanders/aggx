@@ -86,9 +86,15 @@ class Main
 	//---------------------------------------------------------------------------------------------------
 	static function t0():Void
 	{
+<<<<<<< .mine
+		var loader = new TrueTypeLoader("c:\\arial.ttf");
+		//loader.load(t1);
+		loader.load(t2);
+=======
 		var loader = new TrueTypeLoader("c:\\times.ttf");
 		//loader.load(t1);
 		loader.load(t2);
+>>>>>>> .r9
 	}
 	//---------------------------------------------------------------------------------------------------
 	static function t1(ttc:TrueTypeCollection):Void
@@ -186,10 +192,19 @@ class Main
 	static function t6():Void
 	{
 		var pixelOffset = 0.5;
-		var tr = 10.;
+		var pexelAligner = new AffineTransformer();
+		pexelAligner.multiply(AffineTransformer.translator(.5, .5));
 		
+		var tr = 10.;
 		var path = new VectorPath();
 		
+<<<<<<< .mine
+		path.moveTo(tr, tr);
+		path.lineTo(pixelBufferWidth - tr, tr);
+		path.lineTo(pixelBufferWidth - tr, pixelBufferHeight - tr);
+		path.lineTo(tr, pixelBufferHeight - tr);
+		path.curve4(pixelBufferWidth - tr, pixelBufferHeight - tr, pixelBufferWidth - tr, tr, tr, tr);
+=======
 		path.removeAll();
 		
 		path.moveTo(tr + pixelOffset, tr + pixelOffset);
@@ -198,15 +213,18 @@ class Main
 		path.lineTo(tr + pixelOffset, pixelBufferHeight + pixelOffset - tr);
 		path.lineTo(tr + pixelOffset, pixelOffset + tr);
 		//path.curve4(pixelBufferWidth + pixelOffset - tr, pixelBufferHeight + pixelOffset - tr, pixelBufferWidth + pixelOffset - tr, pixelOffset + tr, pixelOffset + tr, pixelOffset + tr);
+>>>>>>> .r9
 		path.closePolygon();
+		
+		path.transformAllPaths(pexelAligner);
 		
 		var curve = new ConvCurve(path);
 		var stroke = new ConvStroke(curve);
 		
 		stroke.width = 0.3;
-		rasterizer.addPath(stroke);	
+		rasterizer.addPath(stroke);
 		
-		scanlineRenderer.color = new RgbaColor(255, 0, 0, 128);
+		scanlineRenderer.color = new RgbaColor(255, 0, 0, 255);
 		SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
 		
 		rasterizer.addPath(curve);
@@ -292,6 +310,93 @@ class Main
 		
 		blit();	
 	}
+<<<<<<< .mine
+	//---------------------------------------------------------------------------------------------------
+	static function t9():Void
+	{
+		var t = new Circles(renderingBuffer);
+		t.run();
+		//blit();
+		Lib.current.addEventListener(Event.ENTER_FRAME, function(e:Event) {
+			t.animate();
+			blit();
+		});
+	}
+	//---------------------------------------------------------------------------------------------------
+	static function t10():Void
+	{
+		var pixelOffset = 0.5;
+		var pexelAligner = new AffineTransformer();
+		pexelAligner.multiply(AffineTransformer.translator(.5, .5));
+		
+		var tr = 10.;
+		var toCenter = true;
+		
+		var path = new VectorPath();
+		path.transformAllPaths(pexelAligner);
+		
+		var curve = new ConvCurve(path);
+		var dash = new ConvDash(curve);
+		var stroke = new ConvStroke(dash);
+		
+		dash.addDash(10, 10);
+		stroke.width = 7;
+		
+		Lib.current.addEventListener(Event.ENTER_FRAME, function(e:Event) {
+			
+			var r = Std.int(Math.random() * 255);
+			var g = Std.int(Math.random() * 255);
+			var b = Std.int(Math.random() * 255);
+			var a = Std.int(Math.random() * 255);
+
+			clippingRenderer.clear(new RgbaColor(255, 255, 255));
+			//t5();
+			
+			path.removeAll();
+			
+			path.moveTo(tr, tr);
+			path.lineTo(pixelBufferWidth - tr, tr);
+			path.lineTo(pixelBufferWidth - tr, pixelBufferHeight - tr);
+			path.lineTo(tr, pixelBufferHeight - tr);
+			path.lineTo(tr, tr);
+			path.closePolygon();
+			
+			if (toCenter) 
+			{
+				tr += 3;
+				stroke.width -= 0.04;
+				if (tr > pixelBufferHeight / 2) 
+				{
+					tr = pixelBufferHeight / 2;
+					toCenter = false;
+					stroke.width = 0.5;
+				}
+			}
+			else 
+			{
+				tr -= 3;
+				stroke.width += 0.06;
+				if (tr < 10.) 
+				{
+					tr = 10.;
+					toCenter = true;
+					stroke.width = 7;
+				}
+			}
+
+			rasterizer.addPath(stroke);	
+			scanlineRenderer.color = new RgbaColor(g, r, b);
+			SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
+
+			rasterizer.addPath(curve);
+			scanlineRenderer.color = new RgbaColor(r, g, b, a);
+			SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
+			//
+			blit();
+			//t6();
+		});
+	}
+=======
 	//---------------------------------------------------------------------------------------------------
 	static function t9():Void
 	{
@@ -374,4 +479,5 @@ class Main
 			//t6();
 		});
 	}
+>>>>>>> .r9
 }
