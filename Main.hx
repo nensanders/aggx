@@ -6,25 +6,17 @@ import flash.display.BitmapData;
 import flash.events.Event;
 import flash.geom.Rectangle;
 import flash.Lib;
-import flash.Vector;
 import lib.ha.aggx.color.RgbaColor;
-import lib.ha.aggx.color.RgbaColorF;
-import lib.ha.aggx.gui.InteractivePolygon;
 import lib.ha.aggx.rasterizer.Scanline;
 import lib.ha.aggx.rasterizer.ScanlineRasterizer;
 import lib.ha.aggx.renderer.ClippingRenderer;
 import lib.ha.aggx.renderer.PixelFormatRenderer;
 import lib.ha.aggx.renderer.SolidScanlineRenderer;
 import lib.ha.aggx.typography.FontEngine;
-import lib.ha.aggx.vectorial.converters.ConvBSpline;
 import lib.ha.aggx.vectorial.converters.ConvCurve;
 import lib.ha.aggx.vectorial.converters.ConvDash;
-import lib.ha.aggx.vectorial.converters.ConvSegmentator;
 import lib.ha.aggx.vectorial.converters.ConvStroke;
-import lib.ha.aggx.vectorial.converters.ConvTransform;
 import lib.ha.aggx.vectorial.LineCap;
-import lib.ha.aggx.vectorial.SimplePolygonVertexSource;
-import lib.ha.aggx.vectorial.TransSinglePath;
 import lib.ha.aggx.vectorial.VectorPath;
 import lib.ha.aggxtest.AADemo;
 import lib.ha.aggxtest.AATest;
@@ -32,16 +24,15 @@ import lib.ha.aggxtest.AlphaGradient;
 import lib.ha.aggxtest.Circles;
 import lib.ha.aggxtest.TransCurve1;
 import lib.ha.core.geometry.AffineTransformer;
-import lib.ha.core.geometry.RectBox;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
 import lib.ha.core.memory.RgbaReaderWriter;
 import lib.ha.core.utils.SWFProfiler;
 import lib.ha.rfpx.TrueTypeCollection;
 import lib.ha.rfpx.TrueTypeLoader;
-using lib.ha.core.memory.RgbaReaderWriter;
-import lib.ha.core.utils.PerfCounter;
 import lib.ha.aggx.RenderingBuffer;
+
+using lib.ha.core.memory.RgbaReaderWriter;
 //=======================================================================================================
 class Main
 {

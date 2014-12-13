@@ -1,5 +1,7 @@
 package lib.ha.aggx;
 //=======================================================================================================
+import lib.ha.aggx.color.IGradientFunction;
+
 class GradientDiamond implements IGradientFunction
 {
 	public function new() 

@@ -1,6 +1,5 @@
 package lib.ha.aggx;
 //=======================================================================================================
-import flash.Vector;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.Pointer;

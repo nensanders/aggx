@@ -1,6 +1,5 @@
 package lib.ha.aggx.vectorial.converters;
 //=======================================================================================================
-import lib.ha.aggx.IMarkerShape;
 import lib.ha.aggx.vectorial.generators.IMarkerGenerator;
 import lib.ha.aggx.vectorial.IMarkerShape;
 import lib.ha.aggx.vectorial.PathCommands;

@@ -1,6 +1,6 @@
 package lib.ha.aggx.color;
 //=======================================================================================================
-import lib.ha.core.utils.Calc;
+import lib.ha.core.math.Calc;
 //=======================================================================================================
 class GradientRadialFocus implements IGradientFunction
 {

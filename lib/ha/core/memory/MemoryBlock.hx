@@ -3,7 +3,6 @@ package lib.ha.core.memory;
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
 import flash.system.ApplicationDomain;
-import lib.ha.core.math.Calc;
 //=======================================================================================================
 class MemoryBlock
 {

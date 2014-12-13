@@ -3,7 +3,7 @@ package lib.ha.aggx.color;
 import lib.ha.aggx.calculus.Dda2LineInterpolator;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.core.memory.Ref;
-import lib.ha.core.utils.Calc;
+import lib.ha.core.math.Calc;
 //=======================================================================================================
 class SpanInterpolatorLinearSubdiv implements ISpanInterpolator
 {
