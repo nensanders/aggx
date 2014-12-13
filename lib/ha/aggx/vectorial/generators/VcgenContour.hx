@@ -10,7 +10,7 @@ import lib.ha.aggx.vectorial.VertexSequence;
 import lib.ha.core.math.Calc;
 import lib.ha.core.memory.Ref;
 //=======================================================================================================
-class VcgenContour implements ICurveGenerator, implements IVertexSource
+class VcgenContour implements ICurveGenerator implements IVertexSource
 {
 	private static inline var INITIAL = 0;
 	private static inline var READY = 1;
