@@ -28,23 +28,23 @@ class SpanGradientAlpha implements ISpanGenerator
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_interpolator():ISpanInterpolator { return _interpolator; }
 	private inline function set_interpolator(value:ISpanInterpolator):ISpanInterpolator { return _interpolator = value; }
-	public inline var interpolator(get_interpolator, set_interpolator):ISpanInterpolator;
+	public var interpolator(get, set):ISpanInterpolator;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_gradientFunction():IGradientFunction { return _gradientFunction; }
 	private inline function set_gradientFunction(value:IGradientFunction):IGradientFunction { return _gradientFunction = value; }
-	public inline var gradientFunction(get_gradientFunction, set_gradientFunction):IGradientFunction;
+	public var gradientFunction(get, set):IGradientFunction;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_alphaFunction():IAlphaFunction { return _alphaFunction; }
 	private inline function set_alphaFunction(value:IAlphaFunction):IAlphaFunction { return _alphaFunction = value; }
-	public inline var alphaFunction(get_alphaFunction, set_alphaFunction):IAlphaFunction;
+	public var alphaFunction(get, set):IAlphaFunction;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_d1():Float { return _d1 / GRADIENT_SUBPIXEL_SCALE; }
 	private inline function set_d1(value:Float):Float { return _d1 = Calc.iround(value * GRADIENT_SUBPIXEL_SCALE); }
-	public inline var d1(get_d1, set_d1):Float;
+	public var d1(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_d2():Float { return _d2 / GRADIENT_SUBPIXEL_SCALE; }
 	private inline function set_d2(value:Float):Float { return _d2 = Calc.iround(value * GRADIENT_SUBPIXEL_SCALE); }
-	public inline var d2(get_d2, set_d2):Float;
+	public var d2(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function prepare():Void { }
 	//---------------------------------------------------------------------------------------------------

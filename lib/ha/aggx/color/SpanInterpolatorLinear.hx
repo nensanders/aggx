@@ -25,7 +25,7 @@ class SpanInterpolatorLinear implements ISpanInterpolator
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_transformer():AffineTransformer { return _transformer; }
 	private inline function set_transformer(value:AffineTransformer):AffineTransformer { return _transformer = value; }
-	public inline var transformer(get_transformer, set_transformer):AffineTransformer;
+	public var transformer(get, set):AffineTransformer;
 	//---------------------------------------------------------------------------------------------------
 	public function begin(x:Float, y:Float, len:Int):Void
 	{

@@ -120,5 +120,5 @@ class FontEngine
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_path():VectorPath { return _path; }
-	public inline var path(get_path, null):VectorPath;
+	public var path(get, null):VectorPath;
 }

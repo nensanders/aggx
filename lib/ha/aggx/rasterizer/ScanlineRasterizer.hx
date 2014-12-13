@@ -73,19 +73,19 @@ class ScanlineRasterizer implements IRasterizer
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_fillingRule():Int { return _fillingRule; }
 	private inline function set_fillingRule(value:Int):Int { return _fillingRule = value; }
-	public inline var fillingRule(get_fillingRule, set_fillingRule):Int;
+	public var fillingRule(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_minX():Int { return _outline.minX; }
-	public inline var minX(get_minX, null):Int;
+	public var minX(get_minX, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_minY():Int { return _outline.minY; }
-	public inline var minY(get_minY, null):Int;
+	public var minY(get_minY, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_maxX():Int { return _outline.maxX; }
-	public inline var maxX(get_maxX, null):Int;
+	public var maxX(get_maxX, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_maxY():Int { return _outline.maxY; }
-	public inline var maxY(get_maxY, null):Int;
+	public var maxY(get_maxY, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	public function addPath(vs:IVertexSource, pathId:Int = 0)
 	{
@@ -277,17 +277,9 @@ class ScanlineRasterizer implements IRasterizer
 		var ret = false;
 		if(_isAutoClose) closePolygon();
 		_outline.sortCells();
-<<<<<<< .mine
+
 		if (ret = (_outline.cellsCount != 0)) 
-=======
-		//if(_outline.cellsCount == 0)
-		//{
-			//return false;
-		//}
-		//_scanY = _outline.minY;
-		//return true;
-		if (ret = (_outline.cellsCount != 0)) 
->>>>>>> .r9
+
 		{
 			_scanY = _outline.minY;
 		}

@@ -36,12 +36,9 @@ class PixelCellRasterizer
 	private var _maxX:Int;
 	private var _maxY:Int;
 	private var _isSorted:Bool;
-<<<<<<< .mine
-	
+
 	private var _tempCell:PixelCell;
-=======
-	private var _storage:PixelCellStorage;
->>>>>>> .r9
+
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
@@ -60,12 +57,9 @@ class PixelCellRasterizer
 		_maxX = -0x7FFFFFFF;
 		_maxY = -0x7FFFFFFF;
 		_isSorted = false;
-<<<<<<< .mine
-		
+
 		_tempCell = new PixelCell();
-=======
-		_storage = new PixelCellStorage();
->>>>>>> .r9
+
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function reset():Void
@@ -80,34 +74,30 @@ class PixelCellRasterizer
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_minX():Int { return _minX; }
-	public inline var minX(get_minX, null):Int;
+	public var minX(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_minY():Int { return _minY; }
-	public inline var minY(get_minY, null):Int;
+	public var minY(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_maxX():Int { return _maxX; }
-	public inline var maxX(get_maxX, null):Int;
+	public var maxX(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_maxY():Int { return _maxY; }
-	public inline var maxY(get_maxY, null):Int;
+	public var maxY(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_cellsCount():UInt { return _cellsCount; }
-	public inline var cellsCount(get_cellsCount, null):UInt;
+	public var cellsCount(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_isSorted():Bool { return _isSorted; }
-	public inline var isSorted(get_isSorted, null):Bool;
+	public var isSorted(get, null):Bool;
 	//---------------------------------------------------------------------------------------------------
-<<<<<<< .mine
+
 	public inline function getScanlineCells(y:Int):Pointer
-=======
-	public inline function getScanlineCells(y:Int):PixelCellStorage
->>>>>>> .r9
+
 	{
-<<<<<<< .mine
+
 		return _sortedCellsPtr + (_sortedY[y - _minY].start << 4);
-=======
-		return _storage.set(_sortedCells, _sortedY[y - _minY].start);//{ data: _sortedCells, offset: _sortedY[y - _minY].start };
->>>>>>> .r9
+
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function getScanlineCellsCount(y:Int):UInt
@@ -115,27 +105,16 @@ class PixelCellRasterizer
 		return _sortedY[y - _minY].num;
 	}
 	//---------------------------------------------------------------------------------------------------
-<<<<<<< .mine
+
 	public inline function addCurrentCell():Void
-=======
-	public inline function style(styleCell:PixelCell)
-	{
-		_styleCell.setStyleCell(styleCell);
-	}	
-	//---------------------------------------------------------------------------------------------------
-	public inline function addCurrentCell():Void
->>>>>>> .r9
+
 	{
 		if ((_currentCell.area | _currentCell.cover) != 0)
 		{
-<<<<<<< .mine
+
 			(_cellsPtr + (_cellsCount << 4)).setAll(_currentCell);
 			++_cellsCount;
-=======
-			_cells[_cellsCount++] = new PixelCell(_currentCell);
-			//_cells[_cellsCount].set(_currentCell);
-			//_cellsCount++;
->>>>>>> .r9
+
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -144,16 +123,9 @@ class PixelCellRasterizer
 		if(_currentCell.isNotEqual(x, y))
 		{
 			addCurrentCell();
-<<<<<<< .mine
+
 			_currentCell.define(x, y, 0, 0);
-=======
-			_currentCell.define(x, y, 0, 0, _styleCell);
-			//_currentCell.setStyleCell(_styleCell);
-			//_currentCell.x = x;
-			//_currentCell.y = y;
-			//_currentCell.cover = 0;
-			//_currentCell.area = 0;
->>>>>>> .r9
+
 		}
 	}
 	//---------------------------------------------------------------------------------------------------

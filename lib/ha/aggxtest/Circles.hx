@@ -144,12 +144,7 @@ class Circles
 	//---------------------------------------------------------------------------------------------------
 	private inline function randomDouble(start:Float, end:Float):Float
 	{
-<<<<<<< .mine
 		return Math.random() * (end - start) + start;
-=======
-		//var r = Math.random();
-		return Math.random() * (end - start) + start;
->>>>>>> .r9
 	}	
 }
 //=======================================================================================================

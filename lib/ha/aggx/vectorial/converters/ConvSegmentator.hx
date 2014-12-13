@@ -11,7 +11,7 @@ class ConvSegmentator extends ConvAdaptorVpgen
 		_generator = new VpgenSegmentator();
 	}
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_approximation_scale():Float { return cast(_generator, VpgenSegmentator).approximationScale; }
-	private inline function set_approximation_scale(value:Float):Float { return cast(_generator, VpgenSegmentator).approximationScale = value; }
-	public inline var approximationScale(get_approximation_scale, set_approximation_scale):Float;
+	private inline function get_approximationScale():Float { return cast(_generator, VpgenSegmentator).approximationScale; }
+	private inline function set_approximationScale(value:Float):Float { return cast(_generator, VpgenSegmentator).approximationScale = value; }
+	public var approximationScale(get, set):Float;
 }

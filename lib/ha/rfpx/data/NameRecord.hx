@@ -94,20 +94,20 @@ class NameRecord
 	}	
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_offset():UInt { return _offset; }
-	public inline var offset(get_offset, null):UInt;
+	public var offset(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_length():UInt { return _length; }
-	public inline var length(get_length, null):UInt;
+	public var length(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_platformID():UInt { return _platformID; }
-	public inline var platformID(get_platformID, null):UInt;
+	public var platformID(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_languageID():UInt { return _languageID; }
-	public inline var languageID(get_languageID, null):UInt;
+	public var languageID(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_nameID():UInt { return _nameID; }
-	public inline var nameID(get_nameID, null):UInt;
+	public var nameID(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_encodingID():UInt { return _encodingID; }
-	public inline var encodingID(get_encodingID, null):UInt;
+	public var encodingID(get, null):UInt;
 }

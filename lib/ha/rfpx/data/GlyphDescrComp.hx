@@ -28,5 +28,5 @@ class GlyphDescrComp
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_componentsCount():UInt { return _components.length; }
-	public inline var componentsCount(get_componentsCount, null):UInt;
+	public var componentsCount(get, null):UInt;
 }

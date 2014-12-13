@@ -22,7 +22,7 @@ class TrueTypeCollection extends EventDispatcher
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_fontCount():UInt { return _fonts.length; }
-	public inline var fontCount(get_fontCount, null):UInt;
+	public var fontCount(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	public static function create(file:URLStream, pathName:String = "" ):TrueTypeCollection
 	{

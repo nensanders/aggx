@@ -291,10 +291,10 @@ class AffineTransformer implements ITransformer
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_determinant():Float { return sx * sy - shy * shx; }
-	public inline var determinant(get_determinant, null):Float;
+	public var determinant(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_determinantReciprocal():Float { return 1.0 / (sx * sy - shy * shx); }
-	public inline var determinantReciprocal(get_determinantReciprocal, null):Float;
+	public var determinantReciprocal(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_scaling():Float 
 	{
@@ -302,7 +302,7 @@ class AffineTransformer implements ITransformer
 		var y = 0.707106781 * shy + 0.707106781 * sy;
 		return Math.sqrt(x * x + y * y);
 	}
-	public inline var scaling(get_scaling, null):Float;
+	public var scaling(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_rotation():Float 
 	{ 
@@ -314,5 +314,5 @@ class AffineTransformer implements ITransformer
 		transform(x2, y2);
 		return Math.atan2(y2.value - y1.value, x2.value - x1.value);
 	}
-	public inline var rotation(get_rotation, null):Float;
+	public var rotation(get, null):Float;
 }

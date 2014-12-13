@@ -58,15 +58,15 @@ class HheaTable
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfHMetrics():UInt { return _numberOfHMetrics; }
-	public inline var numberOfHMetrics(get_numberOfHMetrics, null):UInt;
+	public var numberOfHMetrics(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_ascender():Int { return _ascender; }
-	public inline var ascender(get_ascender, null):Int;
+	public var ascender(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_descender():Int { return _descender; }
-	public inline var descender(get_descender, null):Int;
+	public var descender(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lineGap():Int { return _lineGap; }
-	public inline var lineGap(get_lineGap, null):Int;
+	public var lineGap(get, null):Int;
 	
 }

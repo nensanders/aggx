@@ -31,7 +31,7 @@ class Scanline implements IScanline
 	public function reset(minX:Int, maxX:Int):Void
 	{
 		var maxLen:UInt = maxX - minX + 2;
-		if(maxLen > _spans.length)
+		if(maxLen > cast _spans.length)
 		{
 			_spans = new Vector(maxLen);
 			MemoryManager.realloc(_covers, maxLen);
@@ -112,11 +112,11 @@ class Scanline implements IScanline
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_spanCount():UInt { return _curSpanIndex; }
-	public inline var spanCount(get_spanCount, null):UInt;
+	public var spanCount(get_spanCount, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_y():Int { return _y; }
-	public inline var y(get_y, null):Int;
+	public var y(get_y, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_spanIterator():ISpanIterator { return new SpanIterator(_spans); }
-	public inline var spanIterator(get_spanIterator, null):ISpanIterator;
+	public var spanIterator(get_spanIterator, null):ISpanIterator;
 }

@@ -70,14 +70,14 @@ class VpgenSegmentator implements IPolygonGenerator
 		if(_cmd == PathCommands.STOP) _cmd = PathCommands.LINE_TO;
 	}
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_approximation_scale():Float { return _approximationScale; }
-	private inline function set_approximation_scale(value:Float):Float { return _approximationScale = value; }
-	public inline var approximationScale(get_approximation_scale, set_approximation_scale):Float;
+	private inline function get_approximationScale():Float { return _approximationScale; }
+	private inline function set_approximationScale(value:Float):Float { return _approximationScale = value; }
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_autoUnclose():Bool { return false; }
-	public inline var autoUnclose(get_autoUnclose, null):Bool;
+	public var autoUnclose(get, null):Bool;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_autoClose():Bool { return false; }
-	public inline var autoClose(get_autoClose, null):Bool;
+	public var autoClose(get, null):Bool;
 	
 }

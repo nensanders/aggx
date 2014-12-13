@@ -38,13 +38,13 @@ class PixelFormatRenderer
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_width():UInt { return _rbuf.width; }
-	public inline var width(get_width, null):UInt;
+	public var width(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_height():UInt { return _rbuf.height; }
-	public inline var height(get_height, null):UInt;
+	public var height(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_stride():Int { return _rbuf.stride; }
-	public inline var stride(get_stride, null):Int;
+	public var stride(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	public inline function getRowPtr(y:Int):Pointer { return _rbuf.getRowPtr(y); }
 	//---------------------------------------------------------------------------------------------------

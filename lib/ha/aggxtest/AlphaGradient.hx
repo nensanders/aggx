@@ -178,7 +178,7 @@ class AlphaArray implements IAlphaFunction
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_size():UInt { return _alphas.length; }
-	public inline var size(get_size, null):UInt;
+	public var size(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	public function get(idx:UInt):Int
 	{

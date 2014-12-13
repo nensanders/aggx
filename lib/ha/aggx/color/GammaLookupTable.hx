@@ -75,5 +75,5 @@ class GammaLookupTable
 		}
 		return _gamma;
 	}
-	public inline var gamma(get_gamma, set_gamma):Float;
+	public var gamma(get, set):Float;
 }

@@ -29,19 +29,19 @@ class QuadCurve implements IVertexSource
 		_curveDiv.approximationScale = value;
 		return value;
 	}
-	public inline var approximationScale(get_approximationScale, set_approximationScale):Float;	
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_approximationMethod():Int { return _approximationMethod; }
 	private inline function set_approximationMethod(value:Int):Int { return _approximationMethod = value; }
-	public inline var approximationMethod(get_approximationMethod, set_approximationMethod):Int;
+	public var approximationMethod(get, set):Int;
 	//---------------------------------------------------------------------------------------------------	
 	private inline function get_angleTolerance():Float { return _curveDiv.angleTolerance; }
 	private inline function set_angleTolerance(value:Float):Float { return _curveDiv.angleTolerance = value; }
-	public inline var angleTolerance(get_angleTolerance, set_angleTolerance):Float;
+	public var angleTolerance(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_cuspLimit():Float { return _curveDiv.cuspLimit; }
 	private inline function set_cuspLimit(value:Float):Float { return _curveDiv.cuspLimit = value; }
-	public inline var cuspLimit(get_cuspLimit, set_cuspLimit):Float;		
+	public var cuspLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function reset():Void
 	{ 

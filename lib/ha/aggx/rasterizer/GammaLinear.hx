@@ -26,9 +26,9 @@ class GammaLinear implements IGammaFunction
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_start():Float { return _start; }
 	private inline function set_start(value:Float):Float { return _start = value; }
-	public inline var start(get_start, set_start):Float;
+	public var start(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_end():Float { return _end; }
 	private inline function set_end(value:Float):Float { return _end = value; }
-	public inline var end(get_end, set_end):Float;
+	public var end(get, set):Float;
 }

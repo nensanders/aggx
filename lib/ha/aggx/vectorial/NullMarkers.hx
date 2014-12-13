@@ -13,7 +13,7 @@ class NullMarkers implements IMarkerGenerator
 	//---------------------------------------------------------------------------------------------------
 	public function prepareSrc() { }
 	//---------------------------------------------------------------------------------------------------
-	public function rewind(pathId:UInt):Void;
+	public function rewind(pathId:UInt):Void {}
 	//---------------------------------------------------------------------------------------------------
 	public function getVertex(x:FloatRef, y:FloatRef):UInt { return PathCommands.STOP; }
 }

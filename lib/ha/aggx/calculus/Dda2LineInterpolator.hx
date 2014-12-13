@@ -37,16 +37,16 @@ class Dda2LineInterpolator
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lft():Int { return _lft; }
-	public inline var lft(get_lft, null):Int;
+	public var lft(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_rem():Int { return _rem; }
-	public inline var rem(get_rem, null):Int;
+	public var rem(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_mod():Int { return _mod; }
-	public inline var mod(get_mod, null):Int;
+	public var mod(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_y():Int { return _y; }
-	public inline var y(get_y, null):Int;
+	public var y(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	public function op_inc():Void
 	{

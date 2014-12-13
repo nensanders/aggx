@@ -98,23 +98,23 @@ class Glyph
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_advanceWidth():Int { return _advanceWidth; }
-	public inline var advanceWidth(get_advanceWidth, null):Int;
+	public var advanceWidth(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_advanceHeight():Int { return _advanceHeight; }
-	public inline var advanceHeight(get_advanceHeight, null):Int;
+	public var advanceHeight(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_leftSideBearing():Int { return _leftSideBearing; }
-	public inline var leftSideBearing(get_leftSideBearing, null):Int;
+	public var leftSideBearing(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_record():GlyphRecord { return _record; }
-	public inline var record(get_record, null):GlyphRecord;
+	public var record(get, null):GlyphRecord;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_bounds():RectBox { return _bounds; }
-	public inline var bounds(get_bounds, null):RectBox;
+	public var bounds(get, null):RectBox;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_index():UInt { return _index; }
-	public inline var index(get_index, null):UInt;
+	public var index(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfContours():UInt { return _numberOfContours; }
-	public inline var numberOfContours(get_numberOfContours, null):UInt;
+	public var numberOfContours(get, null):UInt;
 }

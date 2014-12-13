@@ -78,20 +78,20 @@ class RenderingBuffer
 	}	
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_start():UInt { return _start; }
-	public inline var start(get_start, null):UInt;
+	public var start(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_width():UInt { return _width; }
-	public inline var width(get_width, null):UInt;
+	public var width(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_height():UInt { return _height; }
-	public inline var height(get_height, null):UInt;
+	public var height(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_stride():Int { return _stride; }
-	public inline var stride(get_stride, null):Int;
+	public var stride(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_strideAbs():UInt { return Calc.abs(_stride); }
-	public inline var strideAbs(get_strideAbs, null):UInt;	
+	public var strideAbs(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_buf():MemoryBlock { return MemoryBlock.clone(_buf); }
-	public inline var buf(get_buf, null):MemoryBlock;
+	public var buf(get, null):MemoryBlock;
 }

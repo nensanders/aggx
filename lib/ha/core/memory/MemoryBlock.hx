@@ -24,13 +24,13 @@ class MemoryBlock
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_ptr():Pointer { return _ptr; }
 	private inline function set_ptr(value:Pointer):Pointer { return _ptr = value; }
-	public inline var ptr(get_ptr, set_ptr):Pointer;
+	public var ptr(get, set):Pointer;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_start():UInt { return _start; }
-	public inline var start(get_start, null):UInt;
+	public var start(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_size():UInt { return _size; }
-	public inline var size(get_size, null):UInt;
+	public var size(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	public static function clone(block:MemoryBlock):MemoryBlock
 	{

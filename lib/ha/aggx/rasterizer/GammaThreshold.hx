@@ -16,5 +16,5 @@ class GammaThreshold implements IGammaFunction
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_threshold():Float { return _threshold; }
 	private inline function set_threshold(value:Float):Float { return _threshold = value; }
-	public inline var threshold(get_threshold, set_threshold):Float;
+	public var threshold(get, set):Float;
 }

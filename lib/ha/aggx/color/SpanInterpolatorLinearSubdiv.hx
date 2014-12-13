@@ -35,7 +35,7 @@ class SpanInterpolatorLinearSubdiv implements ISpanInterpolator
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_transformer():AffineTransformer { return _transformer; }
 	private inline function set_transformer(value:AffineTransformer):AffineTransformer { return _transformer = value; }
-	public inline var transformer(get_transformer, set_transformer):AffineTransformer;
+	public var transformer(get, set):AffineTransformer;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_subdivShift():Int { return _subdivShift; }
 	private inline function set_subdivShift(value:Int):Int
@@ -45,7 +45,7 @@ class SpanInterpolatorLinearSubdiv implements ISpanInterpolator
 		_subdivMask = _subdivSize-1;
 		return value;
 	}
-	public inline var subdivShift(get_subdivShift, set_subdivShift):Int;	
+	public var subdivShift(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	public function begin(x:Float, y:Float, len:Int):Void
 	{

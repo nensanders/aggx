@@ -91,8 +91,8 @@ class Typeface
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_charCode():UInt { return _charCode; }
-	public inline var charCode(get_charCode, null):UInt;
+	public var charCode(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_glyph():Glyph { return _glyph; }
-	public inline var glyph(get_glyph, null):Glyph;
+	public var glyph(get, null):Glyph;
 }

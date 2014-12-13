@@ -36,32 +36,22 @@ class VertexBlockStorage
 		if(_verticesCount != 0) cmd = getCommand(_verticesCount - 1);
 		return cmd;
 	}
-	public inline var lastCommand(get_lastCommand, null):Int;	
+	public var lastCommand(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lastX():Float
 	{
 		return _verticesCount != 0 ? _coordsX[_verticesCount - 1] : 0.0;
 	}
-	public inline var lastX(get_lastX, null):Float;
+	public var lastX(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lastY():Float
 	{
-<<<<<<< .mine
 		return _verticesCount != 0 ? _coordsY[_verticesCount - 1] : 0.0;
-=======
-		var ret = 0.0;
-		if(_verticesCount!=0)
-		{
-			var idx = (_verticesCount - 1) << 4;
-			ret = (_coordsStartPtr + idx + 8).getDouble();
-		}
-		return ret;
->>>>>>> .r9
 	}
-	public inline var lastY(get_lastY, null):Float;	
+	public var lastY(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_verticesCount():UInt { return _verticesCount; }
-	public inline var verticesCount(get_verticesCount, null):UInt;
+	public var verticesCount(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	public inline function removeAll():Void
 	{
@@ -99,13 +89,9 @@ class VertexBlockStorage
 	//---------------------------------------------------------------------------------------------------
 	public inline function modifyVertex(idx:Int, x:Float, y:Float, ?cmd:Int)
 	{
-<<<<<<< .mine
 		_coordsX[idx] = x;
 		_coordsY[idx] = y;
-=======
-		(_coordsStartPtr + (idx << 4)).setDouble(x);
-		(_coordsStartPtr + (idx << 4) + 8).setDouble(y);
->>>>>>> .r9
+
 		if (cmd != null) 
 		{
 			_commands[idx] = cmd;
@@ -144,15 +130,9 @@ class VertexBlockStorage
 	//---------------------------------------------------------------------------------------------------
 	public inline function getVertex(idx:Int, x:FloatRef, y:FloatRef):UInt
 	{
-<<<<<<< .mine
 		x.value = _coordsX[idx];
 		y.value = _coordsY[idx];
 		return _commands[idx];
-=======
-		x.value = (_coordsStartPtr + (idx << 4)).getDouble();
-		y.value = (_coordsStartPtr + (idx << 4) + 8).getDouble();
-		return (_commandsStartPtr + idx).getByte();
->>>>>>> .r9
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function getCommand(idx:Int):Int

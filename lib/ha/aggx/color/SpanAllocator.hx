@@ -13,7 +13,7 @@ class SpanAllocator implements ISpanAllocator
 	//---------------------------------------------------------------------------------------------------
 	public function allocate(spanLen:UInt):RgbaColorStorage
 	{
-		if (spanLen > _span.length)
+		if (spanLen > cast _span.length)
 		{
 			_span.length = 0;
 			_span.length = ((spanLen + 255) >> 8) << 8;
@@ -22,8 +22,8 @@ class SpanAllocator implements ISpanAllocator
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_span():RgbaColorStorage { return { data: _span, offset:0 }; }
-	public inline var span(get_span, null):RgbaColorStorage;
+	public var span(get, null):RgbaColorStorage;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_max_span_len():UInt { return _span.length; }
-	public inline var maxSpanLength(get_max_span_len, null):UInt;
+	private inline function get_maxSpanLength():UInt { return _span.length; }
+	public var maxSpanLength(get, null):UInt;
 }

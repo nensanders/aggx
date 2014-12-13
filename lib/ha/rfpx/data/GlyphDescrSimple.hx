@@ -116,10 +116,10 @@ class GlyphDescrSimple
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfPoints():UInt { return _numberOfPoints; }
-	public inline var numberOfPoints(get_numberOfPoints, null):UInt;
+	public var numberOfPoints(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfContours():UInt { return _endPtsOfContours.length; }
-	public inline var numberOfContours(get_numberOfContours, null):UInt;	
+	public var numberOfContours(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	public function getContourPoints(contourIndex:UInt, pts:Vector<GlyphPoint>, transform:AffineTransformer):Void
 	{

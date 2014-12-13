@@ -205,13 +205,13 @@ class TransSinglePath implements ITransformer
 		}
 		return ret;
 	}
-	public inline var totalLength(get_totalLength, null):Float;
+	public var totalLength(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_baseLength():Float { return _baseLength; }
 	private inline function set_baseLength(value:Float):Float { return _baseLength = value; }
-	public inline var baseLength(get_baseLength, set_baseLength):Float;
+	public var baseLength(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_preserveXScale():Bool { return _preserveXScale; }
 	private inline function set_preserveXScale(value:Bool):Bool { return _preserveXScale = value; }
-	public inline var preserveXScale(get_preserveXScale, set_preserveXScale):Bool;
+	public var preserveXScale(get, set):Bool;
 }

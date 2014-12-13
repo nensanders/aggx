@@ -19,7 +19,7 @@ class SpanIterator implements ISpanIterator
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_current():Span { return _spans[_index]; }
-	public inline var current(get_current, null):Span;
+	public var current(get_current, null):Span;
 	//---------------------------------------------------------------------------------------------------
 	public inline function next():Void { ++_index; }
 }

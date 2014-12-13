@@ -12,8 +12,8 @@ class LongHorMetric
 	}	
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_advanceWidth():UInt { return _advanceWidth; }
-	public inline var advanceWidth(get_advanceWidth, null):UInt;
+	public var advanceWidth(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lsb():Int { return _lsb; }
-	public inline var lsb(get_lsb, null):Int;
+	public var lsb(get, null):Int;
 }

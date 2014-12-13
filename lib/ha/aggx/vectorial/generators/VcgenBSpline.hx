@@ -10,7 +10,7 @@ import lib.ha.aggx.vectorial.VertexSequence;
 import lib.ha.core.geometry.Coord;
 import lib.ha.core.memory.Ref;
 //=======================================================================================================
-class VcgenBSpline implements ICurveGenerator,implements IVertexSource
+class VcgenBSpline implements ICurveGenerator implements IVertexSource
 {
 	private static inline var INITIAL = 0;
 	private static inline var READY = 1;
@@ -191,5 +191,5 @@ class VcgenBSpline implements ICurveGenerator,implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_interpolationStep():Float { return _interpolationStep; }
 	private inline function set_interpolationStep(value:Float):Float { return _interpolationStep = value; }
-	public inline var interpolationStep(get_interpolationStep, set_interpolationStep):Float;
+	public var interpolationStep(get, set):Float;
 }

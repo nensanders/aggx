@@ -181,16 +181,16 @@ class InteractivePolygon implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_node():Int { return _node; }
 	private inline function set_node(value:Int):Int { return _node = value; }
-	public inline var node(get_node, set_node):Int;
+	public var node(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_close():Bool { return _vs.close; }
 	private inline function set_close(value:Bool):Bool { return _vs.close = value; }
-	public inline var close(get_close, set_close):Bool;
+	public var close(get, set):Bool;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_polygon():Vector<Float> { return _polygon; }
-	public inline var polygon(get_polygon, null):Vector<Float>;
+	public var polygon(get, null):Vector<Float>;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfPoints():UInt { return _numberOfPoints; }
-	public inline var numberOfPoints(get_numberOfPoints, null):UInt;
+	public var numberOfPoints(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 }

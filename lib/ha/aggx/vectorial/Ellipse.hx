@@ -38,7 +38,7 @@ class Ellipse implements IVertexSource
 		calcNumSteps();
 		return value;
 	}
-	public inline var approximationScale(null, set_approximationScale):Float;	
+	public var approximationScale(null, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function init(x:Float, y:Float, rx:Float, ry:Float, numSteps:Int = 0, cw:Bool = false):Void
 	{

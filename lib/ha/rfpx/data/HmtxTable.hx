@@ -42,7 +42,7 @@ class HmtxTable
 	public function getLSB(idx:UInt):Int
 	{
 		var lsb = 0;
-		if (idx < _hMetrics.length)
+		if (idx < cast _hMetrics.length)
 		{
 			lsb = _hMetrics[idx].lsb;
 		}
@@ -56,7 +56,7 @@ class HmtxTable
 	public function getLHM(idx:UInt):LongHorMetric
 	{
 		var lhm = null;
-		if (idx < _hMetrics.length)
+		if (idx < cast _hMetrics.length)
 		{
 			lhm = _hMetrics[idx];
 		}

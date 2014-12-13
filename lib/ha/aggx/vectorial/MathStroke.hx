@@ -49,34 +49,34 @@ class MathStroke
 		_widthEps = _width / 1024.0;
 		return _width;
 	}
-	public inline var width(get_width, set_width):Float;	
+	public var width(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lineCap():Int { return _lineCap; }
 	private inline function set_lineCap(value:Int):Int { return _lineCap = value; }
-	public inline var lineCap(get_lineCap, set_lineCap):Int;
+	public var lineCap(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lineJoin():Int { return _lineJoin; }
 	private inline function set_lineJoin(value:Int):Int { return _lineJoin = value; }
-	public inline var lineJoin(get_lineJoin, set_lineJoin):Int;
+	public var lineJoin(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_innerJoin():Int { return _innerJoin; }
 	private inline function set_innerJoin(value:Int):Int { return _innerJoin = value; }
-	public inline var innerJoin(get_innerJoin, set_innerJoin):Int;
+	public var innerJoin(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_miterLimit():Float { return _miterLimit; }
 	private inline function set_miterLimit(value:Float):Float { return _miterLimit = value; }
-	public inline var miterLimit(get_miterLimit, set_miterLimit):Float;
+	public var miterLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_innerMiterLimit():Float { return _innerMiterLimit; }
 	private inline function set_innerMiterLimit(value:Float):Float { return _innerMiterLimit = value; }
-	public inline var innerMiterLimit(get_innerMiterLimit, set_innerMiterLimit):Float;
+	public var innerMiterLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_approximationScale():Float { return _approximationScale; }
 	private inline function set_approximationScale(value:Float):Float { return _approximationScale = value; }
-	public inline var approximationScale(get_approximationScale, set_approximationScale):Float;
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function set_miterLimitTheta(value:Float):Float { _miterLimit = 1.0 / Math.sin(value * 0.5); return value; }
-	public inline var miterLimitTheta(null, set_miterLimitTheta):Float;
+	public var miterLimitTheta(null, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function addVertex(vc:Vector<Coord>, x:Float, y:Float):Void	
 	{

@@ -49,8 +49,8 @@ class ContourSegment
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_type():Int { return _type; }
-	public inline var type(get_type, null):Int;
+	public var type(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfPoints():UInt { return _numberOfPoints; }
-	public inline var numberOfPoints(get_numberOfPoints, null):UInt;
+	public var numberOfPoints(get, null):UInt;
 }

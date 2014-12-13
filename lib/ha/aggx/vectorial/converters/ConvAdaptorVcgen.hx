@@ -37,10 +37,10 @@ class ConvAdaptorVcgen implements IVertexSource
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_generator():ICurveGenerator { return _generator; }
-	public inline var generator(get_generator, null):ICurveGenerator;
+	public var generator(get, null):ICurveGenerator;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_markers():IMarkerGenerator { return _markers; }
-	public inline var markers(get_markers, null):IMarkerGenerator;
+	public var markers(get, null):IMarkerGenerator;
 	//---------------------------------------------------------------------------------------------------
 	public function rewind(pathId:UInt):Void
 	{

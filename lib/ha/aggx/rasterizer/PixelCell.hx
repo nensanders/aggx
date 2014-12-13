@@ -17,7 +17,6 @@ class PixelCell
 	//---------------------------------------------------------------------------------------------------
 	public function new(?cell:PixelCell)
 	{
-<<<<<<< .mine
 		if (cell == null) 
 		{
 			initial();
@@ -29,21 +28,6 @@ class PixelCell
 			cover = cell.cover;
 			area = cell.area;
 		}
-=======
-		if (cell == null) 
-		{
-			initial();
-		}
-		else 
-		{
-			x = cell.x;
-			y = cell.y;
-			cover = cell.cover;
-			area = cell.area;
-			left = cell.left;
-			right = cell.right;
-		}
->>>>>>> .r9
 	}	
 	//---------------------------------------------------------------------------------------------------
 	public function initial():Void
@@ -95,21 +79,8 @@ class PixelCell
 		return untyped __vmem_get__(2, addr + PIXEL_CELL_AREA);
 	}
 	//---------------------------------------------------------------------------------------------------
-<<<<<<< .mine
+
 	public static inline function getAll(addr:Pointer, cell:PixelCell):Void
-=======
-	public function define(x_:Int, y_:Int, cover_:Int, area_:Int, styleCell:PixelCell):Void
-	{
-		x = x_;
-		y = y_;
-		cover = cover_;
-		area = area_;
-		left = styleCell.left;
-		right = styleCell.right;
-	}
-	//---------------------------------------------------------------------------------------------------
-	public inline function setStyleCell(cell:PixelCell)
->>>>>>> .r9
 	{
 		cell.define(
 			untyped __vmem_get__(2, addr + PIXEL_CELL_X),
@@ -118,11 +89,7 @@ class PixelCell
 			untyped __vmem_get__(2, addr + PIXEL_CELL_AREA));
 	}
 	//---------------------------------------------------------------------------------------------------
-<<<<<<< .mine
 	public static inline function setX(addr:Pointer, v:Int):Void
-=======
-	public inline function isNotEqual(ex:Int, ey:Int, cell:PixelCell):Bool
->>>>>>> .r9
 	{
 		untyped __vmem_set__(2, addr + PIXEL_CELL_X, v);
 	}

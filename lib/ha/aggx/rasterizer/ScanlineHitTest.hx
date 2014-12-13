@@ -29,18 +29,18 @@ class ScanlineHitTest implements IScanline
 	//---------------------------------------------------------------------------------------------------
 	public function addSpan(x:Int, len:UInt, cover:Byte):Void
 	{
-		if (_x >= x && _x < x + len) _isHit = true;
+		if (_x >= x && _x < x + cast len) _isHit = true;
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_spanCount():UInt { return 1; }
-	public inline var spanCount(get_spanCount, null):UInt;
+	public var spanCount(get_spanCount, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_isHit():Bool { return _isHit; }
-	public inline var isHit(get_isHit, null):Bool;
+	public var isHit(get_isHit, null):Bool;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_y():Int { return 0; }
-	public inline var y(get_y, null):Int;	
+	public var y(get_y, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_spanIterator():ISpanIterator { return null; }
-	public inline var spanIterator(get_spanIterator, null):ISpanIterator;
+	public var spanIterator(get_spanIterator, null):ISpanIterator;
 }

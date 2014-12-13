@@ -33,15 +33,15 @@ class CubicCurveFitterDiv implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_approximationScale():Float { return _approximationScale; }
 	private inline function set_approximationScale(value:Float):Float { return _approximationScale = value; }
-	public inline var approximationScale(get_approximationScale, set_approximationScale):Float;
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_angleTolerance():Float { return _angleTolerance; }
 	private inline function set_angleTolerance(value:Float):Float { return _angleTolerance = value; }
-	public inline var angleTolerance(get_angleTolerance, set_angleTolerance):Float;
+	public var angleTolerance(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_cuspLimit():Float { return _cuspLimit; }
 	private inline function set_cuspLimit(value:Float):Float { return _cuspLimit = value; }
-	public inline var cuspLimit(get_cuspLimit, set_cuspLimit):Float;	
+	public var cuspLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function init(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, x4:Float, y4:Float):Void
 	{
@@ -250,7 +250,7 @@ class CubicCurveFitterDiv implements IVertexSource
 	public function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
 		var cmd:UInt = PathCommands.STOP;
-		if (_count < _points.length) 
+		if (_count < cast _points.length)
 		{
 			var p = _points[_count++];
 			x.value = p.x;

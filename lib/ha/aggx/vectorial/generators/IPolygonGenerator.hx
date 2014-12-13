@@ -4,9 +4,9 @@ import lib.ha.core.memory.Ref;
 //=======================================================================================================
 interface IPolygonGenerator 
 {
-	public var autoClose(get_autoClose, null):Bool;
-	public var autoUnclose(get_autoUnclose, null):Bool;
-	public var approximationScale(get_approximation_scale, set_approximation_scale):Float;
+	public var autoClose(get, null):Bool;
+	public var autoUnclose(get, null):Bool;
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function reset():Void;
 	public function getVertex(x:FloatRef, y:FloatRef):UInt;	

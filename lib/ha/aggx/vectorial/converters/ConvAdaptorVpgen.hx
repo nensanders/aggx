@@ -126,7 +126,7 @@ class ConvAdaptorVpgen implements IVertexSource
 		return cmd;
 	}
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_vpgen():IPolygonGenerator { return _generator; }
-	public inline var generator(get_vpgen, null):IPolygonGenerator;
+	private inline function get_generator():IPolygonGenerator { return _generator; }
+	public var generator(get, null):IPolygonGenerator;
 	
 }

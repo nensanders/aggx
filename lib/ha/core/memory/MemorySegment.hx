@@ -25,7 +25,7 @@ class MemorySegment
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_accessor():MemoryAccessor { return _accessor; }
 	private inline function set_accessor(value:MemoryAccessor):MemoryAccessor { return _accessor = value; }
-	public inline var accessor(get_accessor, set_accessor):MemoryAccessor;
+	public var accessor(get, set):MemoryAccessor;
 	//---------------------------------------------------------------------------------------------------
 	public function free():Void
 	{	

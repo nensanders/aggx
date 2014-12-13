@@ -543,11 +543,11 @@ class VectorPath implements IVertexSource
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lastX():Float { return _vertices.lastX; }
-	public inline var lastX(get_lastX, null):Float;
+	public var lastX(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lastY():Float { return _vertices.lastY; }
-	public inline var lastY(get_lastY, null):Float;	
+	public var lastY(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_verticesCount():Int { return _vertices.verticesCount; }
-	public inline var verticesCount(get_verticesCount, null):Int;
+	public var verticesCount(get, null):Int;
 }

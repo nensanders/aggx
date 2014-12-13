@@ -39,15 +39,15 @@ class CubicCurveFitterInc implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_approximationScale():Float { return _scale; }
 	private inline function set_approximationScale(value:Float):Float { return _scale = value; }
-	public inline var approximationScale(get_approximationScale, set_approximationScale):Float;
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_angleTolerance():Float { return 0.0; }
 	private inline function set_angleTolerance(value:Float):Float { return value; }
-	public inline var angleTolerance(get_angleTolerance, null):Float;
+	public var angleTolerance(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_cuspLimit():Float { return 0.0; }
 	private inline function set_cuspLimit(value:Float):Float { return value; }
-	public inline var cuspLimit(get_cuspLimit, null):Float;	
+	public var cuspLimit(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function init(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, x4:Float, y4:Float):Void
 	{

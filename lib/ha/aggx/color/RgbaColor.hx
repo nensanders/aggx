@@ -36,14 +36,14 @@ class RgbaColor
 		return new RgbaColor(0, 0, 0, 0);
 	}
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_a():Float { return a / BASE_MASK; }
-	private inline function set_a(value:Float):Float
+	private inline function get_opacity():Float { return a / BASE_MASK; }
+	private inline function set_opacity(value:Float):Float
 	{
 		if(value < 0.0) value = 0.0;
 		if(value > 1.0) value = 1.0;
 		return a = Std.int(value * BASE_MASK);
 	}
-	public inline var opacity(get_a, set_a):Float;
+	public var opacity(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function set(color:RgbaColor):Void
 	{

@@ -40,16 +40,16 @@ class TrueTypeFont
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_ascender():Int { return _hhea.ascender; }
-	public inline var ascender(get_ascender, null):Int;
+	public var ascender(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_descender():Int { return _hhea.descender; }
-	public inline var descender(get_descender, null):Int;
+	public var descender(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lineGap():Int { return _hhea.lineGap; }
-	public inline var lineGap(get_lineGap, null):Int;
+	public var lineGap(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_unitsPerEm():UInt { return _head.unitsPerEm; }
-	public inline var unitsPerEm(get_unitsPerEm, null):UInt;
+	public var unitsPerEm(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	public function getGlyph(idx:Int):Glyph
 	{
@@ -65,7 +65,7 @@ class TrueTypeFont
 	private function getTableRecord(tag:UInt):TableRecord
 	{
 		var i:UInt = 0, numTables = _tableRecords.length;
-		while (i < numTables)
+		while (i < cast numTables)
 		{
 			if (_tableRecords[i].tag == tag) 
 			{

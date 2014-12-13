@@ -18,5 +18,5 @@ class GammaMultiply implements IGammaFunction
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_value():Float { return _mul; }
 	private inline function set_value(val:Float):Float { return _mul = val; }
-	public inline var value(get_value, set_value):Float;
+	public var value(get, set):Float;
 }

@@ -25,11 +25,11 @@ class EncodingRecord
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_offset():UInt { return _offset; }
-	public inline var offset(get_offset, null):UInt;
+	public var offset(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_platformID():UInt { return _platformID; }
-	public inline var platformID(get_platformID, null):UInt;
+	public var platformID(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_encodingID():UInt { return _encodingID; }
-	public inline var encodingID(get_encodingID, null):UInt;
+	public var encodingID(get, null):UInt;
 }

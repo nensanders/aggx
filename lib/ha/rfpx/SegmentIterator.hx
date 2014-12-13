@@ -31,5 +31,5 @@ class SegmentIterator
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_current():ContourSegment { return _contour._segments[_segmentIndex]; }
-	public inline var current(get_current, null):ContourSegment;
+	public var current(get, null):ContourSegment;
 }

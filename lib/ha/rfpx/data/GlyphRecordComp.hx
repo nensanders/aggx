@@ -113,16 +113,16 @@ class GlyphRecordComp
     }	
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_flags():UInt { return _flags; }
-	public inline var flags(get_flags, null):UInt;
+	public var flags(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_glyphIndex():UInt { return _glyphIndex; }
-	public inline var glyphIndex(get_glyphIndex, null):UInt;
+	public var glyphIndex(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_xtranslate():Int { return _xtranslate; }
-	public inline var tx(get_xtranslate, null):Int;
+	private inline function get_tx():Int { return _xtranslate; }
+	public var tx(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_ytranslate():Int { return _ytranslate; }
-	public inline var ty(get_ytranslate, null):Int;
+	private inline function get_ty():Int { return _ytranslate; }
+	public var ty(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_transformer():AffineTransformer 
 	{
@@ -130,5 +130,5 @@ class GlyphRecordComp
 		m.multiply(AffineTransformer.translator(_xtranslate, _ytranslate));
 		return m;
 	}
-	public inline var transformer(get_transformer, null):AffineTransformer;
+	public var transformer(get, null):AffineTransformer;
 }

@@ -43,29 +43,29 @@ class LineBresenhamInterpolator
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_isVertical():Bool { return _ver; }
-	public inline var isVertical(get_isVertical, null):Bool;
+	public var isVertical(get, null):Bool;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_length():UInt { return _length; }
-	public inline var length(get_length, null):UInt;
+	public var length(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_increment():Int { return _increment; }
-	public inline var increment(get_increment, null):Int;
+	public var increment(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_x1():Int { return _x1LR; }
-	public inline var x1(get_x1, null):Int;
+	public var x1(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_y1():Int { return _y1LR; }
-	public inline var y1(get_y1, null):Int;
+	public var y1(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_x2():Int { return lineLR(_interpolator.y); }
-	public inline var x2(get_x2, null):Int;
+	public var x2(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_y2():Int { return lineLR(_interpolator.y); }
-	public inline var y2(get_y2, null):Int;
+	public var y2(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_x2HR():Int { return _interpolator.y; }
-	public inline var x2HR(get_x2HR, null):Int;
+	public var x2HR(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_y2HR():Int { return _interpolator.y; }
-	public inline var y2HR(get_y2HR, null):Int;
+	public var y2HR(get, null):Int;
 }

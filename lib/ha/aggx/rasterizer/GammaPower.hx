@@ -16,5 +16,5 @@ class GammaPower implements IGammaFunction
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_gamma():Float { return _gamma; }
 	private inline function set_gamma(value:Float):Float { return _gamma = value; }
-	public inline var gamma(get_gamma, set_gamma):Float;
+	public var gamma(get, set):Float;
 }

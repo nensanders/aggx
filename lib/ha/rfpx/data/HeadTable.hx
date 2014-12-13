@@ -64,9 +64,9 @@ class HeadTable
 		_glyphDataFormat = data.getShort();
 	}
 	//---------------------------------------------------------------------------------------------------
-	public inline var indexToLocFormat(get_indexToLocFormat, null):Int;
+	public var indexToLocFormat(get, null):Int;
 	private inline function get_indexToLocFormat():Int { return _indexToLocFormat; }
 	//---------------------------------------------------------------------------------------------------
-	public inline var unitsPerEm(get_unitsPerEm, null):UInt;
+	public var unitsPerEm(get, null):UInt;
 	private inline function get_unitsPerEm():UInt { return _unitsPerEm; }
 }

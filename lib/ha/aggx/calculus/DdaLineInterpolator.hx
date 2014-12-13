@@ -41,8 +41,8 @@ class DdaLineInterpolator
 	}	
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_y():Int { return _y + (_dy >> (FRACTION_SHIFT - Y_SHIFT)); }
-	public inline var y(get_y, null):Int;
+	public var y(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_dy():Int { return _dy; }
-	public inline var dy(get_dy, null):Int;
+	public var dy(get, null):Int;
 }

@@ -26,5 +26,5 @@ class GradientLinearColor implements IColorFunction
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_size():Int { return _size; }
-	public inline var size(get_size, null):Int;
+	public var size(get, null):Int;
 }

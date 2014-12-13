@@ -37,5 +37,5 @@ class ConvTransform implements IVertexSource
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function set_transformer(value:ITransformer):ITransformer { return _transformer = value; }
-	public inline var transformer(null, set_transformer):ITransformer;
+	public var transformer(null, set):ITransformer;
 }

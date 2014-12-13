@@ -64,5 +64,5 @@ class MaxpTable
 	}	
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numGlyphs():UInt { return _numGlyphs; }
-	public inline var numGlyphs(get_numGlyphs, null):UInt;
+	public var numGlyphs(get, null):UInt;
 }

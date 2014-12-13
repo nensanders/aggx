@@ -103,5 +103,5 @@ class ConvMarker implements IVertexSource
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_transform():AffineTransformer { return _transform; }
-	public inline var transform(get_transform, null):AffineTransformer;
+	public var transform(get, null):AffineTransformer;
 }

@@ -46,7 +46,7 @@ class SimplePolygonVertexSource implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_close():Bool { return m_close; }
 	private inline function set_close(value:Bool):Bool { return m_close = value; }
-	public inline var close(get_close, set_close):Bool;
+	public var close(get, set):Bool;
 	//---------------------------------------------------------------------------------------------------
 	
 }

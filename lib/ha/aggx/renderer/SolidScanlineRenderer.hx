@@ -23,7 +23,7 @@ class SolidScanlineRenderer implements IRenderer
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_color():RgbaColor { return _color; }
 	private inline function set_color(value:RgbaColor):RgbaColor { return _color = value; }
-	public inline var color(get_color, set_color):RgbaColor;
+	public var color(get, set):RgbaColor;
 	//---------------------------------------------------------------------------------------------------
 	public function prepare():Void { }
 	//---------------------------------------------------------------------------------------------------

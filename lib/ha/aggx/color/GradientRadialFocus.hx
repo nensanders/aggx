@@ -61,11 +61,11 @@ class GradientRadialFocus implements IGradientFunction
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_radius():Int { return _r / gradient_subpixel_scale; }
-	public inline var radius(get_radius, null):Int;
+	public var radius(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_focusX():Int { return _fx / gradient_subpixel_scale; }
-	public inline var focusX(get_focusX, null):Int;
+	public var focusX(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_focusY():Int { return _fy / gradient_subpixel_scale; }
-	public inline var focusY(get_focusY, null):Int;
+	public var focusY(get, null):Int;
 }

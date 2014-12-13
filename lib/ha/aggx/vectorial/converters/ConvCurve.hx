@@ -36,7 +36,7 @@ class ConvCurve implements IVertexSource
 		_curve4.approximationScale = value;
 		return value;
 	}
-	public inline var approximationScale(get_approximationScale, set_approximationScale):Float;	
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_approximationMethod():Int { return _curve3.approximationMethod; }
 	private inline function set_approximationMethod(value:Int):Int
@@ -45,7 +45,7 @@ class ConvCurve implements IVertexSource
 		_curve4.approximationMethod = value;
 		return value;
 	}
-	public inline var approximationMethod(get_approximationMethod, set_approximationMethod):Int;
+	public var approximationMethod(get, set):Int;
 	//---------------------------------------------------------------------------------------------------	
 	private inline function get_angleTolerance():Float { return _curve3.angleTolerance; }
 	private inline function set_angleTolerance(value:Float):Float
@@ -54,7 +54,7 @@ class ConvCurve implements IVertexSource
 		_curve4.angleTolerance = value;
 		return value;
 	}
-	public inline var angleTolerance(get_angleTolerance, null):Float;
+	public var angleTolerance(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_cuspLimit():Float { return _curve4.cuspLimit; }
 	private inline function set_cuspLimit(value:Float):Float
@@ -63,7 +63,7 @@ class ConvCurve implements IVertexSource
 		_curve4.cuspLimit = value;
 		return value;
 	}
-	public inline var cuspLimit(get_cuspLimit, null):Float;			
+	public var cuspLimit(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function rewind(pathId:UInt)
 	{

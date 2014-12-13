@@ -26,10 +26,10 @@ class EllipseBresenhamInterpolator
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_dx():Int { return _dx; }
-	public inline var dx(get_dx, null):Int;
+	public var dx(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_dy():Int { return _dy; }
-	public inline var dy(get_dy, null):Int;
+	public var dy(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	public function op_inc():Void
 	{

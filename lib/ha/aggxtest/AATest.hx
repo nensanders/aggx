@@ -230,7 +230,7 @@ class ColorArray implements IColorFunction
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_size():UInt { return _colors.length; }
-	public inline var size(get_size, null):UInt;
+	public var size(get, null):UInt;
 }
 //=======================================================================================================
 class SimpleVertexSource implements IVertexSource

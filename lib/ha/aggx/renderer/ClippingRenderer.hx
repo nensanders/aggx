@@ -26,28 +26,28 @@ class ClippingRenderer
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_width():UInt { return _pixelFormatRenderer.width; }
-	public inline var width(get_width, null):UInt;
+	public var width(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_height():UInt { return _pixelFormatRenderer.height; }
-	public inline var height(get_height, null):UInt;
+	public var height(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_pixelFormatRenderer():PixelFormatRenderer { return _pixelFormatRenderer; }
-	public inline var pixelFormatRenderer(get_pixelFormatRenderer, null):PixelFormatRenderer;
+	public var pixelFormatRenderer(get, null):PixelFormatRenderer;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_clippingBox():RectBoxI { return _clippingBox; }
-	public inline var clippingBox(get_clippingBox, null):RectBoxI;
+	public var clippingBox(get, null):RectBoxI;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_xmin():Int { return _clippingBox.x1; }
-	public inline var minX(get_xmin, null):Int;
+	private inline function get_minX():Int { return _clippingBox.x1; }
+	public var minX(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_ymin():Int { return _clippingBox.y1; }
-	public inline var minY(get_ymin, null):Int;
+	private inline function get_minY():Int { return _clippingBox.y1; }
+	public var minY(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_xmax():Int { return _clippingBox.x2; }
-	public inline var maxX(get_xmax, null):Int;
+	private inline function get_maxX():Int { return _clippingBox.x2; }
+	public var maxX(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_ymax():Int { return _clippingBox.y2; }
-	public inline var maxY(get_ymax, null):Int;
+	private inline function get_maxY():Int { return _clippingBox.y2; }
+	public var maxY(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	public function setClippingBounds(x1:Int, y1:Int, x2:Int, y2:Int):Bool
 	{

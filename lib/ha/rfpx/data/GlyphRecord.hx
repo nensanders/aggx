@@ -45,27 +45,27 @@ class GlyphRecord
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_isSimple():Bool { return _isSimple; }
-	public inline var isSimple(get_isSimple, null):Bool;
+	public var isSimple(get, null):Bool;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_simpleDescr():GlyphDescrSimple { return _simpleDescr; }
-	public inline var simpleDescr(get_simpleDescr, null):GlyphDescrSimple;
+	public var simpleDescr(get, null):GlyphDescrSimple;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_compositeDescr():GlyphDescrComp { return _compositeDescr; }
-	public inline var compositeDescr(get_compositeDescr, null):GlyphDescrComp;
+	public var compositeDescr(get, null):GlyphDescrComp;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_xMin():Int { return _xMin; }
-	public inline var xMin(get_xMin, null):Int;
+	public var xMin(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_yMin():Int { return _yMin; }
-	public inline var yMin(get_yMin, null):Int;
+	public var yMin(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_xMax():Int { return _xMax; }
-	public inline var xMax(get_xMax, null):Int;
+	public var xMax(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_yMax():Int { return _yMax; }
-	public inline var yMax(get_yMax, null):Int;
+	public var yMax(get, null):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfContours():Int { return _numberOfContours; }
-	public inline var numberOfContours(get_numberOfContours, null):Int;
+	public var numberOfContours(get, null):Int;
 	
 }

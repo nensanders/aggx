@@ -31,5 +31,5 @@ class OffsetTable
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numTables():UInt { return _numTables; }
-	public inline var numTables(get_numTables, null):UInt;
+	public var numTables(get, null):UInt;
 }

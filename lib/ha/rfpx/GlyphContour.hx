@@ -84,8 +84,8 @@ class GlyphContour
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfSegments():UInt { return _numberOfSegments; }
-	public inline var numberOfSegments(get_numberOfSegments, null):UInt;
+	public var numberOfSegments(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_segmentIterator():SegmentIterator { return new SegmentIterator(this); }
-	public inline var segmentIterator(get_segmentIterator, null):SegmentIterator;
+	public var segmentIterator(get, null):SegmentIterator;
 }

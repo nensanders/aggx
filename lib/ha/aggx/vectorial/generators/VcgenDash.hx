@@ -10,7 +10,7 @@ import lib.ha.aggx.vectorial.VertexSequence;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.math.Calc;
 //=======================================================================================================
-class VcgenDash implements ICurveGenerator, implements IVertexSource //Vertex Curve Generator
+class VcgenDash implements ICurveGenerator implements IVertexSource //Vertex Curve Generator
 {
 	private static var MAX_DASHES:UInt = 32;
 	//---------------------------------------------------------------------------------------------------
@@ -73,11 +73,11 @@ class VcgenDash implements ICurveGenerator, implements IVertexSource //Vertex Cu
 		calcDashStart(Calc.fabs(value));
 		return value;
 	}
-	public inline var dashStart(null, set_dashStart):Float;	
+	public var dashStart(null, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_shorten():Float { return _shorten; }
 	private inline function set_shorten(value:Float):Float { return _shorten = value; }
-	public inline var shorten(get_shorten, set_shorten):Float;
+	public var shorten(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private function calcDashStart(ds:Float):Void
 	{

@@ -28,12 +28,12 @@ class TableRecord
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_tag():UInt { return _tag; }
-	public inline var tag(get_tag, null):UInt;
+	public var tag(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_offset():UInt { return _offset; }
-	public inline var offset(get_offset, null):UInt;
+	public var offset(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_length():UInt { return _length; }
-	public inline var length(get_length, null):UInt;
+	public var length(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 }

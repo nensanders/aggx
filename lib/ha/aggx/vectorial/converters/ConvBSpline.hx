@@ -13,5 +13,5 @@ class ConvBSpline extends ConvAdaptorVcgen
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_interpolationStep():Float { return cast(_generator, VcgenBSpline).interpolationStep; }
 	private inline function set_interpolationStep(value:Float):Float { return cast(_generator, VcgenBSpline).interpolationStep = value; }
-	public inline var interpolationStep(get_interpolationStep, set_interpolationStep):Float;
+	public var interpolationStep(get, set):Float;
 }

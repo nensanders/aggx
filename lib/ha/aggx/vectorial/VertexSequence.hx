@@ -12,7 +12,7 @@ class VertexSequence
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_size():UInt { return _storage.length; }
-	public inline var size(get_size, null):UInt;	
+	public var size(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
 	public inline function add(vd:IDistanceProvider):Void
 	{

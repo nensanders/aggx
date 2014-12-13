@@ -16,36 +16,36 @@ class ConvStroke extends ConvAdaptorVcgen
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_width():Float { return _gen.width; }
 	private inline function set_width(value:Float):Float { return _gen.width = value; }
-	public inline var width(get_width, set_width):Float;		
+	public var width(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lineCap():Int { return _gen.lineCap; }
 	private inline function set_lineCap(value:Int):Int { return _gen.lineCap = value; }
-	public inline var lineCap(get_lineCap, set_lineCap):Int;
+	public var lineCap(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lineJoin():Int { return _gen.lineJoin; }
 	private inline function set_lineJoin(value:Int):Int { return _gen.lineJoin = value; }
-	public inline var lineJoin(get_lineJoin, set_lineJoin):Int;
+	public var lineJoin(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_innerJoin():Int { return _gen.innerJoin; }
 	private inline function set_innerJoin(value:Int):Int { return _gen.innerJoin = value; }
-	public inline var innerJoin(get_innerJoin, set_innerJoin):Int;
+	public var innerJoin(get, set):Int;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_miterLimit():Float { return _gen.miterLimit; }
 	private inline function set_miterLimit(value:Float):Float { return _gen.miterLimit = value; }
-	public inline var miterLimit(get_miterLimit, set_miterLimit):Float;
+	public var miterLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_innerMiterLimit():Float { return _gen.innerMiterLimit; }
 	private inline function set_innerMiterLimit(value:Float):Float { return _gen.innerMiterLimit = value; }
-	public inline var innerMiterLimit(get_innerMiterLimit, set_innerMiterLimit):Float;
+	public var innerMiterLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_approximationScale():Float { return _gen.approximationScale; }
 	private inline function set_approximationScale(value:Float):Float { return _gen.approximationScale = value; }
-	public inline var approximationScale(get_approximationScale, set_approximationScale):Float;
+	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function set_miterLimitTheta(value:Float):Float { return _gen.miterLimit = value; }
-	public inline var miterLimitTheta(null, set_miterLimitTheta):Float;	
+	public var miterLimitTheta(null, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_shorten():Float { return _gen.shorten; }
 	private inline function set_shorten(value:Float):Float { return _gen.shorten = value; }
-	public inline var shorten(get_shorten, set_shorten):Float;
+	public var shorten(get, set):Float;
 }

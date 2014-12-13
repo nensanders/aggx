@@ -24,8 +24,8 @@ class ConvDash extends ConvAdaptorVcgen
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_shorten():Float { return cast(_generator, VcgenDash).shorten; }
 	private inline function set_shorten(value:Float):Float { return cast(_generator, VcgenDash).shorten = value; }
-	public inline var shorten(get_shorten, set_shorten):Float;	
+	public var shorten(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function set_dashStart(value:Float):Float { return cast(_generator, VcgenDash).dashStart = value; }
-	public inline var dashStart(null, set_dashStart):Float;
+	public var dashStart(null, set):Float;
 }
