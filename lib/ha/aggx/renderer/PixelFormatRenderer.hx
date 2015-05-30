@@ -204,7 +204,7 @@ class PixelFormatRenderer
 			do
 			{
 				var cover = covers.getByte();
-				var alpha = (color.a * (cover + 1)) >> 8;
+				var alpha:UInt = (color.a * (cover + 1)) >> 8;
 				if(alpha == RgbaColor.BASE_MASK)
 				{
 					color.a = RgbaColor.BASE_MASK;
@@ -230,7 +230,7 @@ class PixelFormatRenderer
 			{
 				var p = _rbuf.getRowPtr(y++) + x;
 				var cover = covers.getByte();
-				var alpha = (color.a * (cover + 1)) >> 8;
+				var alpha:UInt = (color.a * (cover + 1)) >> 8;
 				if(alpha == RgbaColor.BASE_MASK)
 				{
 					color.a = RgbaColor.BASE_MASK;

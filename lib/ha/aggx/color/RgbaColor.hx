@@ -26,10 +26,10 @@ class RgbaColor
 	public static inline var BASE_SCALE:UInt = 1 << BASE_SHIFT;
 	public static inline var BASE_MASK:UInt = BASE_SCALE-1;
 	//---------------------------------------------------------------------------------------------------
-	public var r:Int;
-	public var g:Int;
-	public var b:Int;
-	public var a:Int;
+	public var r:UInt;
+	public var g:UInt;
+	public var b:UInt;
+	public var a:UInt;
 	//---------------------------------------------------------------------------------------------------
 	public function new(red:Int=0, green:Int=0, blue:Int=0, alpha:Int = 255)	
 	{
@@ -95,7 +95,7 @@ class RgbaColor
 		return this;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function premultiplyBy(alpha:Int):RgbaColor
+	public function premultiplyBy(alpha:UInt):RgbaColor
 	{
 		if(a == BASE_MASK && alpha >= BASE_MASK) return this;
 		if(a == 0 || alpha == 0)
@@ -103,9 +103,9 @@ class RgbaColor
 			r = g = b = a = 0;
 			return this;
 		}
-		var red = Std.int((r * alpha) / a);
-		var green = Std.int((g * alpha) / a);
-		var blue = Std.int((b * alpha) / a);
+		var red:UInt = Std.int((r * alpha) / a);
+		var green:UInt = Std.int((g * alpha) / a);
+		var blue:UInt = Std.int((b * alpha) / a);
 		r = ((red > alpha) ? alpha : red);
 		g = ((green > alpha) ? alpha : green);
 		b = ((blue > alpha) ? alpha : blue);
@@ -121,9 +121,9 @@ class RgbaColor
 			r = g = b = 0;
 			return this;
 		}
-		var red = Std.int((r * BASE_MASK) / a);
-		var green = Std.int((g * BASE_MASK) / a);
-		var blue = Std.int((b * BASE_MASK) / a);
+		var red:UInt = Std.int((r * BASE_MASK) / a);
+		var green:UInt  = Std.int((g * BASE_MASK) / a);
+		var blue:UInt = Std.int((b * BASE_MASK) / a);
 		
 		r = ((red > BASE_MASK) ? BASE_MASK : red);
 		g = ((green > BASE_MASK) ? BASE_MASK : green);
@@ -144,8 +144,8 @@ class RgbaColor
 	//---------------------------------------------------------------------------------------------------
 	public function add(color:RgbaColor, cover:Int)
 	{
-		var cr:Int, cg:Int, cb:Int, ca:Int;
-		if(cover == CoverScale.COVER_MASK)
+		var cr:UInt, cg:UInt, cb:UInt, ca:UInt;
+		if(cast(cover, UInt) == CoverScale.COVER_MASK)
 		{
 			if(color.a == BASE_MASK)
 			{
