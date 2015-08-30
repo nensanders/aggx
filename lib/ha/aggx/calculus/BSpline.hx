@@ -18,33 +18,35 @@
 
 package lib.ha.aggx.calculus;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.FloatStorage;
 import lib.ha.core.memory.Ref;
+import lib.ha.core.utils.ArrayUtil;
+using lib.ha.core.utils.ArrayUtil;
 //=======================================================================================================
 class BSpline 
 {
 	private var _max:Int;
 	private var _num:Int;
-	private var _x:Vector<Float>;
-	private var _y:Vector<Float>;
-	private var _am:Vector<Float>;
+	private var _x:Array<Float>;
+	private var _y:Array<Float>;
+	private var _am:Array<Float>;
 	private var _lastIdx:Int;
 	//---------------------------------------------------------------------------------------------------
-	public function new(?num:Int, ?x:Vector<Float>, ?y:Vector<Float>) 
+	public function new(?num:Int, ?x:Array<Float>, ?y:Array<Float>)
 	{
-		_am = new Vector();
-		_x = new Vector();
-		_y = new Vector();
+		_am = new Array();
+		_x = new Array();
+		_y = new Array();
 		init(num, x, y);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function init(num:Int, ?x:Vector<Float>, ?y:Vector<Float>)
+	public function init(num:Int, ?x:Array<Float>, ?y:Array<Float>)
 	{
 		if (num > 2 && num > _max)
 		{
 			_max = num;
-			_am.length = num * 3;
+			_am = _am.shrink(num * 3);
 			_x[_x.length] = _am[_max];
 			_y[_y.length] = _am[_max * 2];
 			if (x != null && y != null)			

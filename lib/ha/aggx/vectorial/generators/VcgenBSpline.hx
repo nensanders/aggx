@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.vectorial.generators;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.calculus.BSpline;
 import lib.ha.aggx.vectorial.IVertexSource;
 import lib.ha.aggx.vectorial.PathCommands;

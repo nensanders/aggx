@@ -1,6 +1,6 @@
 package lib.ha.aggxtest;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.color.GradientCircle;
 import lib.ha.aggx.color.GradientXY;
 import lib.ha.aggx.color.IAlphaFunction;

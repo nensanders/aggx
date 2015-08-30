@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.renderer;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.color.GammaLookupTable;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.color.RgbaColorStorage;

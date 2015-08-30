@@ -18,23 +18,24 @@
 
 package lib.ha.aggx.color;
 //=======================================================================================================
-import flash.Vector;
+import lib.ha.core.utils.ArrayUtil;
+using lib.ha.core.utils.ArrayUtil;
 //=======================================================================================================
 class SpanAllocator implements ISpanAllocator
 {
-	private var _span:Vector<RgbaColor>;
+	private var _span:Array<RgbaColor>;
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
-		_span = new Vector();
+		_span = new Array();
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function allocate(spanLen:UInt):RgbaColorStorage
 	{
 		if (spanLen > cast _span.length)
 		{
-			_span.length = 0;
-			_span.length = ((spanLen + 255) >> 8) << 8;
+			_span = _span.shrink(0);
+            _span = _span.shrink(((spanLen + 255) >> 8) << 8);
 		}
 		return { data: _span, offset:0 };
 	}

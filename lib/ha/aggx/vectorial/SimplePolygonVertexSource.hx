@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.Ref;
 //=======================================================================================================
 class SimplePolygonVertexSource implements IVertexSource

@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
@@ -43,7 +43,7 @@ class Scanline implements IScanline
 		_lastX = 0x7FFFFFF0;
 		_curSpanIndex = 0;
 		_covers = MemoryManager.malloc();
-		_spans = new Vector();
+		_spans = new Vector(1);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function reset(minX:Int, maxX:Int):Void

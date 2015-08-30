@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
 import lib.ha.core.memory.Pointer;
@@ -69,7 +69,7 @@ class PixelCellRasterizer
 		_sortedCellsPtr = _sortedCells.ptr;
 
 		_currentCell = new PixelCell();
-		_sortedY = new Vector();
+		_sortedY = null; //new Vector(1);
 		_minX = 0x7FFFFFFF;
 		_minY = 0x7FFFFFFF;
 		_maxX = -0x7FFFFFFF;

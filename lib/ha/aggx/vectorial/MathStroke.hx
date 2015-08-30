@@ -18,11 +18,13 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
-import flash.Vector;
 import lib.ha.core.geometry.Coord;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.math.Calc;
+import lib.ha.core.utils.ArrayUtil;
+using lib.ha.core.utils.ArrayUtil;
 //=======================================================================================================
+
 class MathStroke 
 {
 	private var _width:Float;
@@ -96,12 +98,12 @@ class MathStroke
 	private inline function set_miterLimitTheta(value:Float):Float { _miterLimit = 1.0 / Math.sin(value * 0.5); return value; }
 	public var miterLimitTheta(null, set):Float;
 	//---------------------------------------------------------------------------------------------------
-	private inline function addVertex(vc:Vector<Coord>, x:Float, y:Float):Void	
+	private inline function addVertex(vc:Array<Coord>, x:Float, y:Float):Void
 	{
 		vc[vc.length] = new Coord(x, y);
 	}	
 	//---------------------------------------------------------------------------------------------------
-	private function calcArc(vc:Vector<Coord>, x:Float, y:Float, dx1:Float, dy1:Float, dx2:Float, dy2:Float):Void
+	private function calcArc(vc:Array<Coord>, x:Float, y:Float, dx1:Float, dy1:Float, dx2:Float, dy2:Float):Void
 	{
 		var a1 = Math.atan2(dy1 * _widthSign, dx1 * _widthSign);
 		var a2 = Math.atan2(dy2 * _widthSign, dx2 * _widthSign);
@@ -142,7 +144,7 @@ class MathStroke
 		addVertex(vc, x + dx2, y + dy2);
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function calcMiter(vc:Vector<Coord>, v0:IDistanceProvider, v1:IDistanceProvider, v2:IDistanceProvider, dx1:Float, dy1:Float, dx2:Float, dy2:Float, lj:Int, mlimit:Float, dbevel:Float):Void	
+	private function calcMiter(vc:Array<Coord>, v0:IDistanceProvider, v1:IDistanceProvider, v2:IDistanceProvider, dx1:Float, dy1:Float, dx2:Float, dy2:Float, lj:Int, mlimit:Float, dbevel:Float):Void
 	{
 		var xi = v1.x;
 		var yi = v1.y;
@@ -206,9 +208,9 @@ class MathStroke
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function calcCap(vc:Vector<Coord>, v0:IDistanceProvider, v1:IDistanceProvider, len:Float):Void
+	public function calcCap(vc:Array<Coord>, v0:IDistanceProvider, v1:IDistanceProvider, len:Float):Void
 	{
-		vc.length = 0;
+        vc.shrink(0); // TODO Warning just works for as,js,cpp
 
 		var dx1 = (v1.y - v0.y) / len;
 		var dy1 = (v1.x - v0.x) / len;
@@ -264,14 +266,14 @@ class MathStroke
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function calcJoin(vc:Vector<Coord>, v0:IDistanceProvider, v1:IDistanceProvider, v2:IDistanceProvider, len1:Float, len2:Float):Void
+	public function calcJoin(vc:Array<Coord>, v0:IDistanceProvider, v1:IDistanceProvider, v2:IDistanceProvider, len1:Float, len2:Float):Void
 	{
 		var dx1 = _width * (v1.y - v0.y) / len1;
 		var dy1 = _width * (v1.x - v0.x) / len1;
 		var dx2 = _width * (v2.y - v1.y) / len2;
 		var dy2 = _width * (v2.x - v1.x) / len2;
 
-		vc.length = 0;
+		vc.shrink(0); // TODO Warning just works for as,js,cpp
 
 		var cp = Calc.crossProduct(v0.x, v0.y, v1.x, v1.y, v2.x, v2.y);
 		if(cp != 0 && (cp > 0) == (_width > 0))

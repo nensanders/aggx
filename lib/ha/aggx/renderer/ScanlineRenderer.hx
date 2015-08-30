@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.renderer;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.color.ISpanAllocator;
 import lib.ha.aggx.color.ISpanGenerator;
 import lib.ha.aggx.rasterizer.IRasterizer;

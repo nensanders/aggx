@@ -18,7 +18,6 @@
 
 package lib.ha.aggx.vectorial.generators;
 //=======================================================================================================
-import flash.Vector;
 import lib.ha.aggx.vectorial.IVertexSource;
 import lib.ha.aggx.vectorial.MathStroke;
 import lib.ha.aggx.vectorial.PathCommands;
@@ -45,7 +44,7 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 	//---------------------------------------------------------------------------------------------------
 	private var _stroker:MathStroke;
 	private var _srcVertices:VertexSequence;
-	private var _outVertices:Vector<Coord>;
+	private var _outVertices:Array<Coord>;
 	private var _shorten:Float;
 	private var _isClosed:Int;
 	private var _status:Int;
@@ -57,7 +56,7 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 	{
 		_stroker = new MathStroke();
 		_srcVertices = new VertexSequence();
-		_outVertices = new Vector();
+		_outVertices = new Array();
 		_outVertexIndex = 0;
 		_srcVertexIndex = 0;
 		_status = INITIAL;

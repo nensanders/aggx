@@ -18,7 +18,7 @@
 
 package lib.ha.core.geometry;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.math.Calc;
 //=======================================================================================================

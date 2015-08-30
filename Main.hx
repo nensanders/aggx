@@ -59,6 +59,7 @@ class Main
 		clippingRenderer.clear(new RgbaColor(255, 255, 255));
 
 		t0();
+		//t3();
 		//t4();
 		//t5();
 		//t6();

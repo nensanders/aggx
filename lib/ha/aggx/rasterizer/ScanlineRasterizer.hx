@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.vectorial.IVertexSource;
 import lib.ha.aggx.vectorial.PathUtils;
 import lib.ha.core.memory.Byte;

@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.gui;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.vectorial.converters.ConvStroke;
 import lib.ha.aggx.vectorial.Ellipse;
 import lib.ha.aggx.vectorial.IVertexSource;

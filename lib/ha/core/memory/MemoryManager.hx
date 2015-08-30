@@ -20,7 +20,6 @@ package lib.ha.core.memory;
 //=======================================================================================================
 import flash.Memory;
 import flash.system.ApplicationDomain;
-import flash.Vector;
 import haxe.io.BytesData;
 import lib.ha.core.math.Calc;
 //=======================================================================================================
@@ -36,7 +35,7 @@ private typedef MemoryBlockFriend =
 class MemoryManager
 {
 	private static var _lastBlock:MemoryBlockFriend;
-	private static var blocks:Vector<MemoryBlock> = new Vector();
+	private static var blocks:Array<MemoryBlock> = new Array();
 	//---------------------------------------------------------------------------------------------------
 	public static function malloc(?size:Int):MemoryBlock
 	{

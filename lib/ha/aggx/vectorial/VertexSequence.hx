@@ -18,15 +18,16 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
-import flash.Vector;
+import lib.ha.core.utils.ArrayUtil;
+using lib.ha.core.utils.ArrayUtil;
 //=======================================================================================================
 class VertexSequence
 {
-	private var _storage:Vector<IDistanceProvider>;
+	private var _storage:Array<IDistanceProvider>;
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
-		_storage = new Vector();
+		_storage = new Array();
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_size():UInt { return _storage.length; }
@@ -46,7 +47,7 @@ class VertexSequence
 	//---------------------------------------------------------------------------------------------------
 	public inline function removeAll():Void
 	{
-		_storage.length = 0;
+		_storage = _storage.shrink(0);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function removeLast():Void

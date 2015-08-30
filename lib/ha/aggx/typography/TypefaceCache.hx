@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.typography;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.rfpx.TrueTypeFont;
 //=======================================================================================================
 class TypefaceCache 

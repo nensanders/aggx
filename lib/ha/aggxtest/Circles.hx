@@ -1,6 +1,6 @@
 package lib.ha.aggxtest;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.calculus.BSpline;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.color.RgbaColorF;
@@ -22,12 +22,12 @@ class Circles
 	public static var SELECTIVITY = 0.1;//0...1
 	public static var SIZE = .4;//0...1
 	//---------------------------------------------------------------------------------------------------
-	private static var splineRx = Vector.ofArray([0.000000, 0.200000, 0.400000, 0.910484, 0.957258, 1.000000 ]);
-	private static var splineRy = Vector.ofArray([1.000000, 0.800000, 0.600000, 0.066667, 0.169697, 0.600000 ]);
-	private static var splineGx = Vector.ofArray([0.000000, 0.292244, 0.485655, 0.564859, 0.795607, 1.000000 ]);
-	private static var splineGy = Vector.ofArray([0.000000, 0.607260, 0.964065, 0.892558, 0.435571, 0.000000 ]);
-	private static var splineBx = Vector.ofArray([0.000000, 0.055045, 0.143034, 0.433082, 0.764859, 1.000000 ]);
-	private static var splineBy = Vector.ofArray([0.385480, 0.128493, 0.021416, 0.271507, 0.713974, 1.000000 ]);
+	private static var splineRx = [0.000000, 0.200000, 0.400000, 0.910484, 0.957258, 1.000000 ];
+	private static var splineRy = [1.000000, 0.800000, 0.600000, 0.066667, 0.169697, 0.600000 ];
+	private static var splineGx = [0.000000, 0.292244, 0.485655, 0.564859, 0.795607, 1.000000 ];
+	private static var splineGy = [0.000000, 0.607260, 0.964065, 0.892558, 0.435571, 0.000000 ];
+	private static var splineBx = [0.000000, 0.055045, 0.143034, 0.433082, 0.764859, 1.000000 ];
+	private static var splineBy = [0.385480, 0.128493, 0.021416, 0.271507, 0.713974, 1.000000 ];
 	//---------------------------------------------------------------------------------------------------
 	private var _renderingBuffer:RenderingBuffer;
 	private var _pixelFormatRenderer:PixelFormatRenderer;

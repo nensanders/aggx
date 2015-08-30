@@ -18,7 +18,6 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
-import flash.Vector;
 import lib.ha.core.geometry.Coord;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.math.Calc;
@@ -34,7 +33,7 @@ class QuadCurveFitterDiv implements IVertexSource
 	private var _distanceToleranceSquare:Float;
 	private var _angleTolerance:Float;
 	private var _count:UInt;
-	private var _points:Vector<Coord>;
+	private var _points:Array<Coord>;
 	//---------------------------------------------------------------------------------------------------
 	public function new(?x1:Float, ?y1:Float, ?x2:Float, ?y2:Float, ?x3:Float, ?y3:Float) 
 	{
@@ -61,7 +60,7 @@ class QuadCurveFitterDiv implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function init(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float):Void
 	{
-		_points = new Vector();
+		_points = new Array();
 		_distanceToleranceSquare = 0.5 / _approximationScale;
 		_distanceToleranceSquare *= _distanceToleranceSquare;
 		bezier(x1, y1, x2, y2, x3, y3);
@@ -145,7 +144,7 @@ class QuadCurveFitterDiv implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function reset()
 	{
-		_points = new Vector();
+		_points = new Array();
 		_count = 0;
 	}
 	//---------------------------------------------------------------------------------------------------

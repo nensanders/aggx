@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.typography;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.rasterizer.GammaPower;
 import lib.ha.aggx.rasterizer.Scanline;
 import lib.ha.aggx.rasterizer.ScanlineRasterizer;
