@@ -18,7 +18,6 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
-import flash.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -29,19 +28,19 @@ class CmapTable
 	private var _tableRecord:TableRecord;
 	private var _version:UInt;							//USHORT
 	private var _numTables:UInt;						//USHORT
-	private var _formats0:Vector<CmapFormat0>;			//Apple
-	private var _formats2:Vector<CmapFormat2>;
-	private var _formats4:Vector<CmapFormat4>;			//Microsoft
-	private var _formats6:Vector<CmapFormat6>;
+	private var _formats0:Array<CmapFormat0>;			//Apple
+	private var _formats2:Array<CmapFormat2>;
+	private var _formats4:Array<CmapFormat4>;			//Microsoft
+	private var _formats6:Array<CmapFormat6>;
 	//---------------------------------------------------------------------------------------------------
 	public function new(record:TableRecord, data:Pointer)
 	{
 		_tableRecord = record;
 		
-		_formats0 = new Vector();
-		_formats2 = new Vector();
-		_formats4 = new Vector();
-		_formats6 = new Vector();
+		_formats0 = new Array();
+		_formats2 = new Array();
+		_formats4 = new Array();
+		_formats6 = new Array();
 		
 		var dataPtr = data;
 		

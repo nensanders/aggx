@@ -18,7 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -34,6 +34,7 @@ class CmapFormat6
 	//---------------------------------------------------------------------------------------------------
 	public function new(data:Pointer) 
 	{
+        trace("Format6");
 		_format = 0;
 		
 		_length = data.getUShort();

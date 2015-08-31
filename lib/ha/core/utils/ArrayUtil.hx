@@ -27,7 +27,7 @@ class ArrayUtil
     inline public static function alloc<T>(x:Int):Array<T>
     {
 #if debug
-        assert(x >= 0, "x >= 0");
+       // assert(x >= 0, "x >= 0");
 #end
 
         var a:Array<T>;
