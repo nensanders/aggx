@@ -18,9 +18,6 @@
 
 package lib.ha.core.memory;
 //=======================================================================================================
-import flash.display.BitmapData;
-import flash.geom.Rectangle;
-import flash.system.ApplicationDomain;
 //=======================================================================================================
 class MemoryBlock
 {
@@ -55,15 +52,5 @@ class MemoryBlock
 		b._start = b._ptr = block._start;
 		b._size = block._size;
 		return b;
-	}
-	//---------------------------------------------------------------------------------------------------
-	public static inline function blit(block:MemoryBlock, bitmap:BitmapData, rect:Rectangle):Void
-	{
-		var pos = ApplicationDomain.currentDomain.domainMemory.position;
-		ApplicationDomain.currentDomain.domainMemory.position = block._start;
-		bitmap.lock();
-		bitmap.setPixels(rect, ApplicationDomain.currentDomain.domainMemory);
-		bitmap.unlock();
-		ApplicationDomain.currentDomain.domainMemory.position = pos;
 	}
 }

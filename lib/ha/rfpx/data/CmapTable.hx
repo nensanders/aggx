@@ -61,14 +61,10 @@ class CmapTable
 			cmapFormatPtr += 2;
 			switch (cmapFormatType)
 			{
-				case 0:
-					_formats0[_formats0.length] = new CmapFormat0(cmapFormatPtr, encRecord);
-				case 2:
-					_formats2[_formats2.length] = new CmapFormat2(cmapFormatPtr);
-				case 4:
-					_formats4[_formats4.length] = new CmapFormat4(cmapFormatPtr);
-				case 6:
-					_formats6[_formats6.length] = new CmapFormat6(cmapFormatPtr);
+				case 0: _formats0.push(new CmapFormat0(cmapFormatPtr, encRecord));
+				case 2: _formats2.push(new CmapFormat2(cmapFormatPtr));
+				case 4: _formats4.push(new CmapFormat4(cmapFormatPtr));
+				case 6: _formats6.push(new CmapFormat6(cmapFormatPtr));
 			}
 			++i;
 		}

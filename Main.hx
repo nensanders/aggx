@@ -5,6 +5,7 @@ import flash.display.PixelSnapping;
 import flash.display.BitmapData;
 import flash.events.Event;
 import flash.geom.Rectangle;
+import flash.system.ApplicationDomain;
 import flash.Lib;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.rasterizer.Scanline;
@@ -34,6 +35,7 @@ import lib.ha.aggx.RenderingBuffer;
 
 using lib.ha.core.memory.RgbaReaderWriter;
 //=======================================================================================================
+@:access(lib.ha.core.memory.MemoryBlock)
 class Main
 {
 	//---------------------------------------------------------------------------------------------------
@@ -73,14 +75,14 @@ class Main
 	//---------------------------------------------------------------------------------------------------
 	static inline function blit():Void
 	{
-		MemoryBlock.blit(pixelBuffer, bitmapData, bitmapRectangle);
+		blitToBitmap(pixelBuffer, bitmapData, bitmapRectangle);
 	}
 	//---------------------------------------------------------------------------------------------------
 	static function t0():Void
 	{
 		var loader = new TrueTypeLoader("arial.ttf");
-		//loader.load(t1);
-		loader.load(t2);
+		loader.load(t1);
+		//loader.load(t2);
 	}
 	//---------------------------------------------------------------------------------------------------
 	static function t1(ttc:TrueTypeCollection):Void
@@ -372,4 +374,15 @@ class Main
 			//t6();
 		});
 	}
+
+    //---------------------------------------------------------------------------------------------------
+    public static inline function blitToBitmap(block:MemoryBlock, bitmap:BitmapData, rect:Rectangle):Void
+    {
+        var pos = ApplicationDomain.currentDomain.domainMemory.position;
+        ApplicationDomain.currentDomain.domainMemory.position = block._start;
+        bitmap.lock();
+        bitmap.setPixels(rect, ApplicationDomain.currentDomain.domainMemory);
+        bitmap.unlock();
+        ApplicationDomain.currentDomain.domainMemory.position = pos;
+    }
 }
