@@ -22,7 +22,6 @@ import flash.events.Event;
 import flash.net.URLRequest;
 import flash.net.URLStream;
 import flash.utils.Endian;
-import flash.Vector;
 import haxe.io.BytesData;
 import lib.ha.core.utils.PerfCounter;
 //=======================================================================================================

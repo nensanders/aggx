@@ -18,7 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -65,8 +65,9 @@ class NameTable
 		if (_format == 1)
 		{
 			_langTagCount = data.getUShort();
+            _langTagRecord = new Vector(_langTagCount);
 			i = 0;
-			while (i < _langTagCount) 
+			while (i < _langTagCount)
 			{
 				var len = data.getUShort();
 				data += 2;

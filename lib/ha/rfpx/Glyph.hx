@@ -18,7 +18,7 @@
 
 package lib.ha.rfpx;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.geometry.Coord;
 import lib.ha.core.geometry.RectBox;
 import lib.ha.core.geometry.AffineTransformer;
@@ -83,13 +83,17 @@ class Glyph
 		}
 		else 
 		{
-			_outline.length += numCont;
+            // Todo Possibly slow growing of a vector. Maybe refactor with array
+            var newLength: Int = _outline.length + numCont;
+            var tempOutline = new Vector(newLength);
+            for (i in 0..._outline.length) tempOutline[i] = _outline[i];
+			_outline = tempOutline;
 		}
 		var i:UInt = 0;
 
 		while (i < numCont)
 		{
-			var contourPoints = new Vector<GlyphPoint>();
+			var contourPoints = new Array<GlyphPoint>();
 			descr.getContourPoints(i, contourPoints, transformer);
 			_outline[_numberOfContours] = new GlyphContour(contourPoints);
 			++_numberOfContours;

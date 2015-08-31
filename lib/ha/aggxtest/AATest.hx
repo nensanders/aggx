@@ -1,6 +1,6 @@
 package lib.ha.aggxtest;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.color.GammaLookupTable;
 import lib.ha.aggx.color.GradientX;
 import lib.ha.aggx.color.IColorFunction;
@@ -247,8 +247,8 @@ class SimpleVertexSource implements IVertexSource
 		_count = 0;
 		_x = new Vector(8);
 		_y = new Vector(8);
-		_cmd = new Vector(8);
-		_cmd[_cmd.length] = PathCommands.STOP;
+		_cmd = new Vector(9);
+		_cmd[8] = PathCommands.STOP;
 		if (x1 != null && x2 != null && y1 != null && y2 != null && x3 != null && y3 != null)
 		{
 			init3(x1, y1, x2, y2, x3, y3);

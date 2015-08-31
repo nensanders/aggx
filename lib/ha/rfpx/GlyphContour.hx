@@ -18,23 +18,22 @@
 
 package lib.ha.rfpx;
 //=======================================================================================================
-import flash.Vector;
 import lib.ha.core.geometry.Coord;
 import lib.ha.core.utils.Bits;
 //=======================================================================================================
 class GlyphContour
 {
-	private var _segments:Vector<ContourSegment>;
+	private var _segments:Array<ContourSegment>;
 	private var _numberOfSegments:UInt;
 	//---------------------------------------------------------------------------------------------------
-	public function new(points:Vector<GlyphPoint>) 
+	public function new(points:Array<GlyphPoint>)
 	{
-		_segments = new Vector();
+		_segments = new Array();
 		_numberOfSegments = 0;
 		construct(points);
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function construct(points:Vector<GlyphPoint>):Void
+	private function construct(points:Array<GlyphPoint>):Void
 	{
 		var ON_CURVE = 0;
 		var numPoints:UInt = points.length;

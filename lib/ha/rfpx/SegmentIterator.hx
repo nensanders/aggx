@@ -18,11 +18,10 @@
 
 package lib.ha.rfpx;
 //=======================================================================================================
-import flash.Vector;
 //=======================================================================================================
 private typedef GlyphContourFriend =
 {
-	private var _segments:Vector<ContourSegment>;
+	private var _segments:Array<ContourSegment>;
 	private var _numberOfSegments:UInt;
 }
 //=======================================================================================================

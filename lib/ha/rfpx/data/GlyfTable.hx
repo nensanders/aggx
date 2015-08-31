@@ -18,7 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
 //=======================================================================================================

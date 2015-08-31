@@ -18,12 +18,12 @@
 
 package lib.ha.rfpx;
 //=======================================================================================================
+import haxe.ds.Vector;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 import flash.net.URLRequest;
 import flash.net.URLStream;
-import flash.Vector;
 import haxe.io.BytesData;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;

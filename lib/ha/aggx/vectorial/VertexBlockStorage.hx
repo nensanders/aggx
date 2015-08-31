@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
-import flash.Vector;
+import lib.ha.core.utils.ArrayUtil;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
@@ -28,6 +28,7 @@ import lib.ha.core.memory.MemoryReader;
 using lib.ha.core.memory.MemoryReader;
 import lib.ha.core.memory.MemoryWriter;
 using lib.ha.core.memory.MemoryWriter;
+using lib.ha.core.utils.ArrayUtil;
 //=======================================================================================================
 class VertexBlockStorage 
 {
@@ -35,16 +36,16 @@ class VertexBlockStorage
 	//---------------------------------------------------------------------------------------------------
 	private var _verticesCount:UInt;
 	private var _allocatedCount:UInt;
-	private var _coordsX:Vector<Float>;
-	private var _coordsY:Vector<Float>;
-	private var _commands:Vector<Byte>;
+	private var _coordsX:Array<Float>;
+	private var _coordsY:Array<Float>;
+	private var _commands:Array<Byte>;
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
 		_allocatedCount = BLOCK_SIZE;
-		_coordsX = new Vector(BLOCK_SIZE);
-		_coordsY = new Vector(BLOCK_SIZE);
-		_commands = new Vector(BLOCK_SIZE);
+		_coordsX = ArrayUtil.alloc(BLOCK_SIZE);
+		_coordsY = ArrayUtil.alloc(BLOCK_SIZE);
+		_commands = ArrayUtil.alloc(BLOCK_SIZE);
 		_verticesCount = 0;
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -78,9 +79,10 @@ class VertexBlockStorage
 	//---------------------------------------------------------------------------------------------------
 	public function freeAll():Void
 	{
-		_coordsX.length = 0;
-		_coordsY.length = 0;
-		_commands.length = 0;
+        _coordsX.shrink(0);
+		_coordsY.shrink(0);
+		_commands.shrink(0);
+
 		_verticesCount = 0;
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -98,10 +100,10 @@ class VertexBlockStorage
 		if (_verticesCount > _allocatedCount)
 		{
 			_allocatedCount += BLOCK_SIZE;
-			
-			_coordsX.length += BLOCK_SIZE;
-			_coordsY.length += BLOCK_SIZE;
-			_commands.length += BLOCK_SIZE;
+
+            _coordsX[_coordsX.length - 1 + BLOCK_SIZE] = 0.0;
+			_coordsY[_coordsY.length - 1 + BLOCK_SIZE] = 0.0;
+			_commands[_commands.length - 1 + BLOCK_SIZE] = 0;
 		}
 	}
 	//---------------------------------------------------------------------------------------------------

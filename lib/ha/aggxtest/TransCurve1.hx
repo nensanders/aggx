@@ -1,6 +1,6 @@
 package lib.ha.aggxtest;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.gui.InteractivePolygon;
 import lib.ha.aggx.rasterizer.Scanline;
@@ -114,23 +114,23 @@ class TransCurve1
 		var x = 0.;
 		var y = 0.;
 		
-		//var c:UInt = _string.length;
-		//var i:UInt = 0;
-		//while (i < c)
-		//{
-			//if (x > _tcurve.totalLength) break;
-			//
-			//var face = _fontEngine.vectorizeCharacter(_string.charCodeAt(i), _fontSize, x, y);
-			//_rasterizer.reset();
-			//_rasterizer.addPath(_ftrans);
-			//_scanlineRenderer.color = new RgbaColor(27, 106, 240);
-			//SolidScanlineRenderer.renderScanlines(_rasterizer, _scanline, _scanlineRenderer);
-			//
-			//x += face.glyph.advanceWidth * _fontScale;
-			//y = 0;
-			//
-			//++i;
-		//}
+		var c:UInt = _string.length;
+		var i:UInt = 0;
+		while (i < c)
+		{
+			if (x > _tcurve.totalLength) break;
+
+			var face = _fontEngine.vectorizeCharacter(_string.charCodeAt(i), _fontSize, x, y);
+			_rasterizer.reset();
+			_rasterizer.addPath(_ftrans);
+			_scanlineRenderer.color = new RgbaColor(27, 106, 240);
+			SolidScanlineRenderer.renderScanlines(_rasterizer, _scanline, _scanlineRenderer);
+
+			x += face.glyph.advanceWidth * _fontScale;
+			y = 0;
+
+			++i;
+		}
 		
 		_rasterizer.addPath(_stroke);
 		_scanlineRenderer.color = new RgbaColor(136, 207, 100);

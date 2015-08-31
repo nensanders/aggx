@@ -18,7 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
@@ -35,7 +35,7 @@ class GlyphDescrSimple
 	//private var _flags:Vector<Int>;					//BYTE[]
 	private var _xCoordinates:Vector<Int>;			//BYTE/SHORT
 	private var _yCoordinates:Vector<Int>;			//BYTE/SHORT
-	private var _onCurve:Vector<Bool>;
+	private var _onCurve:Vector<Bool>;          // TODO Unused?
 	private var _tags:Vector<UInt>;
 	private var _numberOfPoints:UInt;
 	//---------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ class GlyphDescrSimple
 	private inline function get_numberOfContours():UInt { return _endPtsOfContours.length; }
 	public var numberOfContours(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
-	public function getContourPoints(contourIndex:UInt, pts:Vector<GlyphPoint>, transform:AffineTransformer):Void
+	public function getContourPoints(contourIndex:UInt, pts:Array<GlyphPoint>, transform:AffineTransformer):Void
 	{
 		var from:UInt = 0, to:UInt = _endPtsOfContours[contourIndex];
 		if (contourIndex > 0)
@@ -159,8 +159,7 @@ class GlyphDescrSimple
 				x = Std.int(rx.value);
 				y = Std.int(ry.value);
 			}
-			
-			pts[pts.length] = new GlyphPoint(x, y, _tags[from]);
+            pts.push(new GlyphPoint(x, y, _tags[from]));
 			++from;
 		}
 	}

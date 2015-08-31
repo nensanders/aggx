@@ -79,8 +79,8 @@ class Main
 	static function t0():Void
 	{
 		var loader = new TrueTypeLoader("arial.ttf");
-		loader.load(t1);
-		//loader.load(t2);
+		//loader.load(t1);
+		loader.load(t2);
 	}
 	//---------------------------------------------------------------------------------------------------
 	static function t1(ttc:TrueTypeCollection):Void

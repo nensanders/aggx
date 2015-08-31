@@ -18,7 +18,8 @@
 
 package lib.ha.rfpx;
 //=======================================================================================================
-import flash.Vector;
+
+import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
 import lib.ha.rfpx.data.GlyfTable;

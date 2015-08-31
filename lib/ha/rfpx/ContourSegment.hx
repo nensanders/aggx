@@ -18,7 +18,6 @@
 
 package lib.ha.rfpx;
 //=======================================================================================================
-import flash.Vector;
 import lib.ha.core.geometry.Coord;
 //=======================================================================================================
 class ContourSegment
@@ -27,13 +26,13 @@ class ContourSegment
 	public static inline var LINE = 1;
 	public static inline var CURVE = 2;
 	//---------------------------------------------------------------------------------------------------
-	private var _points:Vector<Coord>;
+	private var _points:Array<Coord>;
 	private var _numberOfPoints:UInt;
 	private var _type:Int;
 	//---------------------------------------------------------------------------------------------------
 	private function new()
 	{
-		_points = new Vector();
+		_points = new Array();
 		_numberOfPoints = 0;
 		_type = -1;
 	}

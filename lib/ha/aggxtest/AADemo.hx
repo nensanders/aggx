@@ -1,6 +1,6 @@
 package lib.ha.aggxtest;
 //=======================================================================================================
-import flash.Vector;
+import haxe.ds.Vector;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.rasterizer.GammaNone;
 import lib.ha.aggx.rasterizer.GammaPower;
