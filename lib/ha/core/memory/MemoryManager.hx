@@ -19,7 +19,6 @@
 package lib.ha.core.memory;
 //=======================================================================================================
 import haxe.io.BytesData;
-import lib.ha.core.math.Calc;
 //=======================================================================================================
 private typedef MemoryBlockFriend =
 {
@@ -156,7 +155,8 @@ class MemoryManager
 	//---------------------------------------------------------------------------------------------------
 	private static inline function roundToNext1024(size:UInt):UInt
 	{
-		size = Calc.umax(size, 1024);
-		return size + ((size % 1024) > 0 ? 1024 : 0);
+        var remainder: UInt = size % 1024;
+        if (remainder == 0) return size;
+        return size + 1024 - remainder;
 	}
 }
