@@ -18,8 +18,6 @@
 
 package lib.ha.core.memory;
 //=======================================================================================================
-import flash.Memory;
-import flash.system.ApplicationDomain;
 import haxe.io.BytesData;
 import lib.ha.core.math.Calc;
 //=======================================================================================================
@@ -51,7 +49,7 @@ class MemoryManager
 	//---------------------------------------------------------------------------------------------------
 	public static function mallocEx(bytes:BytesData):MemoryBlock
 	{
-		if (bytes.bytesAvailable < 1024)
+		if (bytes.bytesAvailable < 1024)// TODO Check
 		{
 			bytes.length = 1024;
 		}
@@ -69,7 +67,7 @@ class MemoryManager
 			var offset = size-block._size;
 			block._size = size;
 			var prev:MemoryBlockFriend = _lastBlock;
-			ApplicationDomain.currentDomain.domainMemory.length += offset;
+            MemoryAccess.resizeOffset(offset);
 			while (prev._start != block._start)
 			{
 				MemoryUtils.copy(prev._start + offset, prev._start, prev._size);
@@ -87,7 +85,7 @@ class MemoryManager
 			var offset = size;
 			block._size += size;
 			var prev:MemoryBlockFriend = _lastBlock;
-			ApplicationDomain.currentDomain.domainMemory.length += offset;
+            MemoryAccess.resizeOffset(offset);
 			while (prev._start != block._start)
 			{
 				MemoryUtils.copy(prev._start + offset, prev._start, prev._size);
@@ -109,7 +107,7 @@ class MemoryManager
 			MemoryUtils.copy(next._ptr + offset, next._ptr, next._size);
 			next = next._next;
 		}
-		ApplicationDomain.currentDomain.domainMemory.length += offset;
+        MemoryAccess.resizeOffset(offset);
 	}
 	//---------------------------------------------------------------------------------------------------
 	private static function mallocImpl(?size:Int, block:MemoryBlockFriend):Void
@@ -119,7 +117,7 @@ class MemoryManager
 		{
 			var bytes = new BytesData();
 			bytes.length = size;
-			Memory.select(bytes);
+			MemoryAccess.select(bytes);
 			block._start = block._ptr = 0;
 			block._size = size;
 			_lastBlock = block;
@@ -131,7 +129,7 @@ class MemoryManager
 			block._start = block._ptr = _lastBlock._start + _lastBlock._size;
 			block._size = size;
 			_lastBlock = block;
-			ApplicationDomain.currentDomain.domainMemory.length += size;
+            MemoryAccess.resizeOffset(size);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -139,7 +137,7 @@ class MemoryManager
 	{
 		if (_lastBlock == null)
 		{
-			Memory.select(bytes);
+			MemoryAccess.select(bytes);
 			block._start = block._ptr = 0;
 			block._size = bytes.length;
 			_lastBlock = block;
@@ -151,8 +149,8 @@ class MemoryManager
 			block._start = block._ptr = _lastBlock._start + _lastBlock._size;
 			block._size = bytes.length;
 			_lastBlock = block;
-			ApplicationDomain.currentDomain.domainMemory.length += bytes.length;
-			bytes.readBytes(ApplicationDomain.currentDomain.domainMemory, block._start, block._size);			
+            MemoryAccess.resizeOffset(bytes.length);
+            MemoryAccess.writeBytes(bytes, block._start, block._size);
 		}
 	}	
 	//---------------------------------------------------------------------------------------------------

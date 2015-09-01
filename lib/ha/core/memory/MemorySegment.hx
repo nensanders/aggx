@@ -18,7 +18,6 @@
 
 package lib.ha.core.memory;
 //=======================================================================================================
-import flash.Memory;
 //=======================================================================================================
 class MemorySegment
 {
@@ -102,7 +101,7 @@ class MemorySegment
 	//---------------------------------------------------------------------------------------------------
 	public inline function wipe():Void
 	{
-		for (i in offset...offset + size) Memory.setByte(begin + i, 0);
+		for (i in offset...offset + size) MemoryAccess.setInt8(begin + i, 0);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function copy():MemorySegment

@@ -18,7 +18,7 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
-import lib.ha.core.memory.Byte;
+import lib.ha.core.memory.MemoryAccess;
 import lib.ha.core.memory.Pointer;
 //=======================================================================================================
 class PixelCell
@@ -79,67 +79,67 @@ class PixelCell
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getX(addr:Pointer):Int
 	{
-		return untyped __vmem_get__(2, addr + PIXEL_CELL_X);
+		return MemoryAccess.getInt32(addr + PIXEL_CELL_X);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getY(addr:Pointer):Int
 	{
-		return untyped __vmem_get__(2, addr + PIXEL_CELL_Y);
+		return MemoryAccess.getInt32(addr + PIXEL_CELL_Y);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getCover(addr:Pointer):Int
 	{
-		return untyped __vmem_get__(2, addr + PIXEL_CELL_COVER);
+		return MemoryAccess.getInt32(addr + PIXEL_CELL_COVER);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getArea(addr:Pointer):Int
 	{
-		return untyped __vmem_get__(2, addr + PIXEL_CELL_AREA);
+		return MemoryAccess.getInt32(addr + PIXEL_CELL_AREA);
 	}
 	//---------------------------------------------------------------------------------------------------
 
 	public static inline function getAll(addr:Pointer, cell:PixelCell):Void
 	{
 		cell.define(
-			untyped __vmem_get__(2, addr + PIXEL_CELL_X),
-			untyped __vmem_get__(2, addr + PIXEL_CELL_Y),
-			untyped __vmem_get__(2, addr + PIXEL_CELL_COVER),
-			untyped __vmem_get__(2, addr + PIXEL_CELL_AREA));
+            MemoryAccess.getInt32(addr + PIXEL_CELL_X),
+            MemoryAccess.getInt32(addr + PIXEL_CELL_Y),
+            MemoryAccess.getInt32(addr + PIXEL_CELL_COVER),
+            MemoryAccess.getInt32(addr + PIXEL_CELL_AREA));
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setX(addr:Pointer, v:Int):Void
 	{
-		untyped __vmem_set__(2, addr + PIXEL_CELL_X, v);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_X, v);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setY(addr:Pointer, v:Int):Void
 	{
-		untyped __vmem_set__(2, addr + PIXEL_CELL_Y, v);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_Y, v);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setCover(addr:Pointer, v:Int):Void
 	{
-		untyped __vmem_set__(2, addr + PIXEL_CELL_COVER, v);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_COVER, v);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setArea(addr:Pointer, v:Int):Void
 	{
-		untyped __vmem_set__(2, addr + PIXEL_CELL_AREA, v);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_AREA, v);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setAll(addr:Pointer, cell:PixelCell):Void
 	{
-		untyped __vmem_set__(2, addr + PIXEL_CELL_X, cell.x);
-		untyped __vmem_set__(2, addr + PIXEL_CELL_Y, cell.y);
-		untyped __vmem_set__(2, addr + PIXEL_CELL_COVER, cell.cover);
-		untyped __vmem_set__(2, addr + PIXEL_CELL_AREA, cell.area);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_X, cell.x);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_Y, cell.y);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_COVER, cell.cover);
+        MemoryAccess.setInt32(addr + PIXEL_CELL_AREA, cell.area);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setAllEx(addr:Pointer, cellPtr:Pointer):Void
 	{
-		untyped __vmem_set__(2, addr + PIXEL_CELL_X, untyped __vmem_get__(2, cellPtr + PIXEL_CELL_X));
-		untyped __vmem_set__(2, addr + PIXEL_CELL_Y, untyped __vmem_get__(2, cellPtr + PIXEL_CELL_Y));
-		untyped __vmem_set__(2, addr + PIXEL_CELL_COVER, untyped __vmem_get__(2, cellPtr + PIXEL_CELL_COVER));
-		untyped __vmem_set__(2, addr + PIXEL_CELL_AREA, untyped __vmem_get__(2, cellPtr + PIXEL_CELL_AREA));
+        MemoryAccess.setInt32(addr + PIXEL_CELL_X, MemoryAccess.getInt32(cellPtr + PIXEL_CELL_X));
+        MemoryAccess.setInt32(addr + PIXEL_CELL_Y, MemoryAccess.getInt32(cellPtr + PIXEL_CELL_Y));
+        MemoryAccess.setInt32(addr + PIXEL_CELL_COVER, MemoryAccess.getInt32(cellPtr + PIXEL_CELL_COVER));
+        MemoryAccess.setInt32(addr + PIXEL_CELL_AREA, MemoryAccess.getInt32(cellPtr + PIXEL_CELL_AREA));
 	}
 }

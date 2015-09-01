@@ -32,46 +32,46 @@ class RgbaReaderWriter
 	//---------------------------------------------------------------------------------------------------	
 	public static inline function getR(addr:Pointer):Byte
 	{
-		return untyped __vmem_get__(0, addr + R);
+        return MemoryAccess.getInt8(addr + R);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getG(addr:Pointer):Byte
 	{
-		return untyped __vmem_get__(0, addr + G);
+		return MemoryAccess.getInt8(addr + G);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getB(addr:Pointer):Byte
 	{
-		return untyped __vmem_get__(0, addr + B);
+		return MemoryAccess.getInt8(addr + B);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getA(addr:Pointer):Byte
 	{
-		return untyped __vmem_get__(0, addr + A);
+		return MemoryAccess.getInt8(addr + A);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setR(addr:Pointer, val:Byte):Void
 	{
-		untyped __vmem_set__(0, addr + R, val);
+        MemoryAccess.setInt8(addr + R, val);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setG(addr:Pointer, val:Byte):Void
 	{
-		untyped __vmem_set__(0, addr + G, val);
+        MemoryAccess.setInt8(addr + G, val);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setB(addr:Pointer, val:Byte):Void
 	{
-		untyped __vmem_set__(0, addr + B, val);
+        MemoryAccess.setInt8(addr + B, val);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setA(addr:Pointer, val:Byte):Void
 	{
-		untyped __vmem_set__(0, addr + A, val);
+        MemoryAccess.setInt8(addr + A, val);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setFull(addr:Pointer, r:Byte, g:Byte, b:Byte, a:Byte):Void
 	{
-		untyped __vmem_set__(2, addr, ((r << RS) | (g << GS) | (b << BS) | (a << AS)));
+        MemoryAccess.setInt32(addr, ((r << RS) | (g << GS) | (b << BS) | (a << AS))); // Packing 4 Bytes into 1 Int32
 	}
 }

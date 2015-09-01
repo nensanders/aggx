@@ -18,9 +18,9 @@
 
 package lib.ha.core.utils;
 //=======================================================================================================
-import flash.Memory;
+import lib.ha.core.memory.MemoryAccess;
 //=======================================================================================================
-class Bits 
+class Bits
 {
 	inline public static var BIT_01 = 0x1;
 	inline public static var BIT_02 = 0x2;
@@ -121,16 +121,16 @@ class Bits
 		if (x == 0) return 0;
 		else
 		{
-			if (Memory.getByte(956) != 31)
+			if (MemoryAccess.getInt8(956) != 31)
 			{
 				var x = 0x077CB531;
 				for (i in 0...32)
 				{
-					Memory.setI32(cast(1020 - ((x >>> 27) << 2), UInt), i);
+                    MemoryAccess.setInt32(cast(1020 - ((x >>> 27) << 2), UInt), i);
 					x <<= 1;
 				}
 			}
-			return Memory.getI32(cast(1020 - ((((x & -x) * 0x077CB531) >>> 27) << 2), UInt));
+			return MemoryAccess.getInt32(cast(1020 - ((((x & -x) * 0x077CB531) >>> 27) << 2), UInt));
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
