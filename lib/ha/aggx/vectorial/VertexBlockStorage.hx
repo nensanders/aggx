@@ -20,9 +20,6 @@ package lib.ha.aggx.vectorial;
 //=======================================================================================================
 import lib.ha.core.utils.ArrayUtil;
 import lib.ha.core.memory.Byte;
-import lib.ha.core.memory.MemoryBlock;
-import lib.ha.core.memory.MemoryManager;
-import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReader;
 using lib.ha.core.memory.MemoryReader;

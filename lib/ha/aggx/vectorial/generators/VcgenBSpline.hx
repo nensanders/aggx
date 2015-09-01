@@ -18,14 +18,12 @@
 
 package lib.ha.aggx.vectorial.generators;
 //=======================================================================================================
-import haxe.ds.Vector;
 import lib.ha.aggx.calculus.BSpline;
 import lib.ha.aggx.vectorial.IVertexSource;
 import lib.ha.aggx.vectorial.PathCommands;
 import lib.ha.aggx.vectorial.PathUtils;
 import lib.ha.aggx.vectorial.VertexDistance;
 import lib.ha.aggx.vectorial.VertexSequence;
-import lib.ha.core.geometry.Coord;
 import lib.ha.core.memory.Ref;
 //=======================================================================================================
 class VcgenBSpline implements ICurveGenerator implements IVertexSource

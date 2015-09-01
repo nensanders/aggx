@@ -19,9 +19,7 @@
 package lib.ha.aggx.typography;
 //=======================================================================================================
 import lib.ha.aggx.vectorial.VectorPath;
-import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.core.geometry.Coord;
-import lib.ha.core.memory.Ref;
 import lib.ha.rfpx.ContourSegment;
 import lib.ha.rfpx.Glyph;
 //=======================================================================================================

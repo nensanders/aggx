@@ -18,7 +18,6 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
-import haxe.ds.Vector;
 import lib.ha.core.geometry.Coord;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.math.Calc;

@@ -18,7 +18,6 @@
 
 package lib.ha.aggx.typography;
 //=======================================================================================================
-import haxe.ds.Vector;
 import lib.ha.aggx.rasterizer.GammaPower;
 import lib.ha.aggx.rasterizer.Scanline;
 import lib.ha.aggx.rasterizer.ScanlineRasterizer;
@@ -27,11 +26,6 @@ import lib.ha.aggx.renderer.SolidScanlineRenderer;
 import lib.ha.aggx.vectorial.converters.ConvCurve;
 import lib.ha.aggx.vectorial.VectorPath;
 import lib.ha.core.geometry.AffineTransformer;
-import lib.ha.core.memory.MemoryBlock;
-import lib.ha.core.memory.MemoryManager;
-import lib.ha.core.utils.Bits;
-import lib.ha.core.math.Calc;
-import lib.ha.rfpx.ContourSegment;
 import lib.ha.rfpx.Glyph;
 import lib.ha.rfpx.TrueTypeCollection;
 import lib.ha.rfpx.TrueTypeFont;
