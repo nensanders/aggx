@@ -47,16 +47,19 @@ class SpanInterpolatorLinear implements ISpanInterpolator
 	//---------------------------------------------------------------------------------------------------
 	public function begin(x:Float, y:Float, len:Int):Void
 	{
-		var tx = Ref.float5.set(x);
-		var ty = Ref.float6.set(y);
+		var tx = Ref.getFloat().set(x);
+		var ty = Ref.getFloat().set(y);
 
 		_transformer.transform(tx, ty);
+
 		var x1:Int = Calc.iround(tx.value * SUBPIXEL_SCALE);
 		var y1:Int = Calc.iround(ty.value * SUBPIXEL_SCALE);
 
 		tx.value = x + len;
 		ty.value = y;
+
 		_transformer.transform(tx, ty);
+
 		var x2 = Calc.iround(tx.value * SUBPIXEL_SCALE);
 		var y2 = Calc.iround(ty.value * SUBPIXEL_SCALE);
 
@@ -66,12 +69,13 @@ class SpanInterpolatorLinear implements ISpanInterpolator
 	//---------------------------------------------------------------------------------------------------
 	public function resynchronize(xe:Float, ye:Float, len:Int):Void
 	{
-		var tx = Ref.float8.set(xe);
-		var ty = Ref.float9.set(ye);
+		var tx = Ref.getFloat().set(xe);
+		var ty = Ref.getFloat().set(ye);
 		
 		_transformer.transform(tx, ty);
-		_liX = new Dda2LineInterpolator(_liX.y, Calc.iround(tx.value * SUBPIXEL_SCALE), len);
-		_liY = new Dda2LineInterpolator(_liY.y, Calc.iround(ty.value * SUBPIXEL_SCALE), len);	
+
+		_liX = new Dda2LineInterpolator(_liX.y, Calc.iround(Ref.putFloat(tx).value * SUBPIXEL_SCALE), len);
+		_liY = new Dda2LineInterpolator(_liY.y, Calc.iround(Ref.putFloat(ty).value * SUBPIXEL_SCALE), len);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function op_inc():Void

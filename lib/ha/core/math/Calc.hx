@@ -18,14 +18,16 @@
 
 package lib.ha.core.math;
 //=======================================================================================================
+import lib.ha.aggx.vectorial.VertexSequence;
 import lib.ha.core.memory.Ref;
 //=======================================================================================================
 class Calc 
 {
-	public inline static var VERTEX_DIST_EPSILON = 1e-14;
-	public inline static var INTERSECTION_EPSILON = 1.0e-30;
+	public inline static var VERTEX_DIST_EPSILON: Float = 1.0e-14;
+	public inline static var INTERSECTION_EPSILON: Float = 1.0e-30;
 	public inline static var PI = 3.14159265358979323846;
 	public inline static var PI2 = 6.28318530717958647692;
+    public inline static var PI180 = 0.01745329251994329576; // PI / 180
 	//---------------------------------------------------------------------------------------------------
 	public static inline function min(value1:Int, value2:Int):Int
 	{
@@ -64,7 +66,7 @@ class Calc
 	//---------------------------------------------------------------------------------------------------
 	public static inline function fabs(value:Float):Float
 	{
-		return value < 0 ? -value : value;
+		return Math.abs(value);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function iround(value:Float):Int
@@ -91,9 +93,9 @@ class Calc
 	//---------------------------------------------------------------------------------------------------
 	public static inline function squaredDistance(x1:Float, y1:Float, x2:Float, y2:Float):Float
 	{
-		var __dx = x2 - x1;
-		var __dy = y2 - y1;
-		return __dx * __dx + __dy * __dy;
+		var dx = x2 - x1;
+		var dy = y2 - y1;
+		return dx * dx + dy * dy;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function crossProduct(x1:Float, y1:Float, x2:Float, y2:Float, x:Float, y:Float):Float
@@ -119,5 +121,28 @@ class Calc
 	public static inline function isEqualEps(v1:Float, v2:Float, epsilon:Float):Bool
 	{
 		return Calc.fabs(v1 - v2) <= epsilon;
-	}	
+	}
+
+    public static inline function calcPolygonArea(st: VertexSequence): Float
+    {
+        var sum: Float = 0.0;
+        var x: Float = st.get(0).x;
+        var y: Float = st.get(0).y;
+        var xs = x;
+        var ys = y;
+
+        for (i in 1...st.size)
+        {
+            var v = st.get(i);
+            sum += x * v.y - y * v.x;
+            x = v.x;
+            y = v.y;
+        }
+        return (sum + x * ys - y * xs) * 0.5;
+    }
+
+    public static inline function deg2rad(degree: Float): Float
+    {
+        return degree * PI180;
+    }
 }

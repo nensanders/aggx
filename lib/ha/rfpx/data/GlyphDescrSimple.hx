@@ -66,6 +66,7 @@ class GlyphDescrSimple
 		
 		var count:UInt = 0, c:UInt = 0;
 		_tags = new Vector(_numberOfPoints);
+        for (i in 0..._numberOfPoints) _tags[i] = 0; // TODO check js
 		
 		i = 0;
 		while (i < _numberOfPoints) 
@@ -141,26 +142,30 @@ class GlyphDescrSimple
 	//---------------------------------------------------------------------------------------------------
 	public function getContourPoints(contourIndex:UInt, pts:Array<GlyphPoint>, transform:AffineTransformer):Void
 	{
-		var from:UInt = 0, to:UInt = _endPtsOfContours[contourIndex];
+		var _from:UInt = 0, _to:UInt = _endPtsOfContours[contourIndex];
 		if (contourIndex > 0)
 		{
-			from = _endPtsOfContours[contourIndex - 1] + 1;
+			_from = _endPtsOfContours[contourIndex - 1] + 1;
 		}
-		while (from <= to)
+        var rx = Ref.getFloat();
+        var ry = Ref.getFloat();
+		while (_from <= _to)
 		{
-			var x = _xCoordinates[from];
-			var y = _yCoordinates[from];
+			var x = _xCoordinates[_from];
+			var y = _yCoordinates[_from];
 			
 			if (transform != null)
 			{
-				var rx = Ref.float1.set(x);
-				var ry = Ref.float2.set(y);
+				rx.set(x);
+				ry.set(y);
 				transform.transform(rx, ry);
 				x = Std.int(rx.value);
 				y = Std.int(ry.value);
 			}
-            pts.push(new GlyphPoint(x, y, _tags[from]));
-			++from;
+            pts.push(new GlyphPoint(x, y, _tags[_from]));
+			++_from;
 		}
+        Ref.putFloat(rx);
+        Ref.putFloat(ry);
 	}
 }

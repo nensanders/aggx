@@ -18,19 +18,19 @@
 
 package lib.ha.rfpx;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
-import flash.events.Event;
-import flash.events.EventDispatcher;
-import flash.events.IEventDispatcher;
-import flash.net.URLRequest;
-import flash.net.URLStream;
-import haxe.io.BytesData;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
 import lib.ha.rfpx.data.TTCHeader;
 //=======================================================================================================
-class TrueTypeCollection extends EventDispatcher
+class TrueTypeCollection
 {
+    private function new()
+    {
+
+    }
+
 	private var _data:MemoryBlock;
 	private var _fonts:Vector<TrueTypeFont>;
 	//---------------------------------------------------------------------------------------------------
@@ -42,18 +42,16 @@ class TrueTypeCollection extends EventDispatcher
 	private inline function get_fontCount():UInt { return _fonts.length; }
 	public var fontCount(get, null):UInt;
 	//---------------------------------------------------------------------------------------------------
-	public static function create(file:URLStream, pathName:String = "" ):TrueTypeCollection
+	public static function create(file:Data, pathName:String = "" ):TrueTypeCollection
 	{
 		var fc = new TrueTypeCollection();
 		fc.read(file, pathName);
 		return fc;
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function read(file:URLStream, pathName:String = ""):Void
+	private function read(file:Data, pathName:String = ""):Void
 	{
-		var bytes = new BytesData();
-		file.readBytes(bytes, 0, file.bytesAvailable);
-		_data = MemoryManager.mallocEx(bytes);
+		_data = MemoryManager.mallocEx(file);
 		if(TTCHeader.isTTC(_data))
 		{
 			//_ttcHeader = new TTCHeader(_data);
@@ -71,7 +69,6 @@ class TrueTypeCollection extends EventDispatcher
 			_fonts[0] = new TrueTypeFont(this);
 			_fonts[0].read(_data.ptr);
 		}
-		file.close();
 	}
 	//---------------------------------------------------------------------------------------------------
 }

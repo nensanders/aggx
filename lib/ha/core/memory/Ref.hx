@@ -33,34 +33,53 @@ typedef PointerRef = RefBase<Pointer>;
 //=======================================================================================================
 class Ref
 {
-	public static var int1 = new RefBase<Int>();
-	public static var int2 = new RefBase<Int>();
-	public static var int3 = new RefBase<Int>();
-	public static var int4 = new RefBase<Int>();
-	public static var int5 = new RefBase<Int>();
-	public static var int6 = new RefBase<Int>();
-	public static var int7 = new RefBase<Int>();
-	public static var int8 = new RefBase<Int>();
-	public static var int9 = new RefBase<Int>();
-	public static var int10 = new RefBase<Int>();
-	public static var int11 = new RefBase<Int>();
-	public static var int12 = new RefBase<Int>();
-	//---------------------------------------------------------------------------------------------------
-	public static var float1 = new RefBase<Float>();
-	public static var float2 = new RefBase<Float>();
-	public static var float3 = new RefBase<Float>();
-	public static var float4 = new RefBase<Float>();
-	public static var float5 = new RefBase<Float>();
-	public static var float6 = new RefBase<Float>();
-	public static var float7 = new RefBase<Float>();
-	public static var float8 = new RefBase<Float>();
-	public static var float9 = new RefBase<Float>();
-	public static var float10 = new RefBase<Float>();
-	public static var float11 = new RefBase<Float>();
-	public static var float12 = new RefBase<Float>();
-	//---------------------------------------------------------------------------------------------------
-	public static var pointer1 = new RefBase<Pointer>();
-	public static var pointer2 = new RefBase<Pointer>();
-	public static var pointer3 = new RefBase<Pointer>();
-	public static var pointer4 = new RefBase<Pointer>();
+    private static var intPool: Array<RefBase<Int>> = new Array();
+    private static var floatPool: Array<RefBase<Float>> = new Array();
+
+    public static function getInt(): RefBase<Int>
+    {
+        var result: RefBase<Int>;
+        if (intPool.length > 0)
+        {
+            result = intPool.pop();
+        }
+        else
+        {
+            result = new RefBase<Int>();
+        }
+        result.value = 0;
+        return result;
+    }
+
+    public static function putInt(value: RefBase<Int>): RefBase<Int>
+    {
+        intPool.push(value);
+        return value;
+    }
+
+    public static function getFloat(): RefBase<Float>
+    {
+        var result: RefBase<Float>;
+        if (floatPool.length > 0)
+        {
+            result = floatPool.pop();
+        }
+        else
+        {
+            result = new RefBase<Float>();
+        }
+        result.value = 0.0;
+        return result;
+    }
+
+    public static function putFloat(value: RefBase<Float>): RefBase<Float>
+    {
+        floatPool.push(value);
+        return value;
+    }
+
+    public static function getPointer(): RefBase<Pointer>
+    {
+        return new RefBase<Pointer>();
+    }
 }

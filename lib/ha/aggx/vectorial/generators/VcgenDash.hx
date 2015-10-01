@@ -65,6 +65,7 @@ class VcgenDash implements ICurveGenerator implements IVertexSource //Vertex Cur
 		_status = INITIAL;
 		_srcVertexIndex = 0;
 		_dashes = new Vector(MAX_DASHES);
+        //for (i in 0...MAX_DASHES) _dashes[i] = 0.0; // TODO check with JS
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function removeAllDashes():Void
@@ -165,8 +166,6 @@ class VcgenDash implements ICurveGenerator implements IVertexSource //Vertex Cur
 			{
 			case INITIAL:
 				rewind(0);
-				_status = READY;
-
 			case READY:
 				if(_numDashes < 2 || _srcVertices.size < 2)
 				{
@@ -188,9 +187,8 @@ class VcgenDash implements ICurveGenerator implements IVertexSource //Vertex Cur
 			case POLYLINE:
 				{
 					var dash_rest = _dashes[_currentDashIndex] - _currentDashStart;
-					var r = (_currentDashIndex & 1);
 					
-					cmd = ((_currentDashIndex & 1) == 1) ? PathCommands.MOVE_TO : PathCommands.LINE_TO;
+					cmd = ((_currentDashIndex & 1) != 0) ? PathCommands.MOVE_TO : PathCommands.LINE_TO;
 
 					if(_currentRest > dash_rest)
 					{

@@ -44,6 +44,7 @@ class InteractivePolygon implements IVertexSource
 	public function new(numPoints:UInt, pointRadius:Float) 
 	{
 		_polygon = new Vector(numPoints * 2);
+        for (i in 0...polygon.length) polygon[i] = 0.0; // TODO Needed for Javascript
 		_numberOfPoints = numPoints;
 		_edge = -1;
 		_node = -1;

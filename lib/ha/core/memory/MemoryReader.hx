@@ -24,14 +24,14 @@ class MemoryReader
 {	
 	public static inline function getChar(addr:Pointer):Int
 	{
-		var x0 = MemoryAccess.getInt8(addr);
+		var x0 = MemoryAccess.getUInt8(addr);
 		var y0 = (x0 << 24) >> 24;
 		return y0;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getByte(addr:Pointer):Int
 	{
-		return MemoryAccess.getInt8(addr);
+		return MemoryAccess.getUInt8(addr);
 	}	
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getShort(addr:Pointer):Int

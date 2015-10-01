@@ -18,92 +18,137 @@
 
 package lib.ha.core.memory;
 
+import types.DataStringTools;
+import types.Data;
 import haxe.io.BytesData;
-import flash.Memory;
-import flash.system.ApplicationDomain;
+
+using types.DataStringTools;
 
 class MemoryAccess
 {
-    public static inline function select( b : flash.utils.ByteArray ) : Void {
-        ApplicationDomain.currentDomain.domainMemory = b;
+    static public var domainMemory: Data;
+
+    public static inline function select( b : Data ) : Void {
+        domainMemory = b;
     }
 
     public static inline function resize(newSize: Int): Void {
-        ApplicationDomain.currentDomain.domainMemory.length = newSize;
+        domainMemory.resize(newSize);
     }
 
     public static inline function resizeOffset(offset: Int): Void {
-        ApplicationDomain.currentDomain.domainMemory.length += offset;
+        var newSize: Int = domainMemory.allocedLength + offset;
+        resize(newSize);
     }
 
     public static inline function copy(dst:Pointer, src:Pointer, size:UInt):Void {
-        var pos = ApplicationDomain.currentDomain.domainMemory.position;
-        ApplicationDomain.currentDomain.domainMemory.position = src;
-        ApplicationDomain.currentDomain.domainMemory.readBytes(ApplicationDomain.currentDomain.domainMemory, dst, size);
-        ApplicationDomain.currentDomain.domainMemory.position = pos;
+
+        var pos = domainMemory.offset;
+
+        var temp = new Data(size);
+        temp.offset = 0;
+        temp.offsetLength = temp.allocedLength;
+
+        domainMemory.offset = src;
+        domainMemory.offsetLength = size;
+
+        temp.writeData(domainMemory);
+
+        domainMemory.offset = dst;
+        domainMemory.writeData(temp);
+
+        temp.resize(0);
+        temp = null;
+
+        domainMemory.offset = pos;
     }
 
-    public static inline function writeBytes(bytes: BytesData, offset: UInt, size: UInt){
-        bytes.readBytes(ApplicationDomain.currentDomain.domainMemory, offset, size);
+    public static inline function writeBytes(bytes: Data, offset: UInt, size: UInt)
+    {
+        domainMemory.offset = offset;
+        bytes.offsetLength = size;
+        domainMemory.writeData(bytes);
     }
 
     public static inline function getUTF8String(addr:Pointer, len:Int):String
     {
-        ApplicationDomain.currentDomain.domainMemory.position = addr;
-        var s = ApplicationDomain.currentDomain.domainMemory.readUTFBytes(len);
-        ApplicationDomain.currentDomain.domainMemory.position = addr;
-        return s;
+        domainMemory.offset = addr;
+        domainMemory.offsetLength = len;
+        return domainMemory.readString();
     }
 
-    public static inline function setInt8( addr : Int, v : Int ) : Void {
-        Memory.setByte(addr,v);
+    public static inline function setUInt8( addr : Int, v : Int ) : Void
+    {
+        domainMemory.offset = addr; // TODO maybe cache this
+        domainMemory.writeUInt8(v);
     }
 
-    public static inline function setInt16( addr : Int, v : Int ) : Void {
-        Memory.setI16(addr,v);
+    public static inline function setInt16( addr : Int, v : Int ) : Void
+    {
+        domainMemory.offset = addr;
+        domainMemory.writeInt16(v);
     }
 
-    public static inline function setInt32( addr : Int, v : Int ) : Void {
-        Memory.setI32(addr,v);
+    public static inline function setInt32( addr : Int, v : Int ) : Void
+    {
+        domainMemory.offset = addr;
+        domainMemory.writeInt32(v);
     }
 
-    public static inline function setFloat32( addr : Int, v : Float ) : Void {
-        Memory.setFloat(addr,v);
+    public static inline function setFloat32( addr : Int, v : Float ) : Void
+    {
+        domainMemory.offset = addr;
+        domainMemory.writeFloat32(v);
     }
 
-    public static inline function setFloat64( addr : Int, v : Float ) : Void {
-        Memory.setDouble(addr,v);
+    public static inline function setFloat64( addr : Int, v : Float ) : Void
+    {
+        domainMemory.offset = addr;
+        domainMemory.writeFloat64(v);
     }
 
-    public static inline function getInt8( addr : Int ) : Int {
-        return Memory.getByte(addr);
+    public static inline function getUInt8( addr : Int ) : Int
+    {
+        domainMemory.offset = addr;
+        return domainMemory.readUInt8();
     }
 
-    public static inline function getUInt16( addr : Int ) : Int {
-        return Memory.getUI16(addr);
+    public static inline function getUInt16( addr : Int ) : Int
+    {
+        domainMemory.offset = addr;
+        return domainMemory.readUInt16();
     }
 
-    public static inline function getInt32( addr : Int ) : Int {
-        return Memory.getI32(addr);
+    public static inline function getInt32( addr : Int ) : Int
+    {
+        domainMemory.offset = addr;
+        return domainMemory.readInt32();
     }
 
-    public static inline function getFloat32( addr : Int ) : Float {
-        return Memory.getFloat(addr);
+    public static inline function getFloat32( addr : Int ) : Float
+    {
+        domainMemory.offset = addr;
+        return domainMemory.readFloat32();
     }
 
-    public static inline function getFloat64( addr : Int ) : Float {
-        return Memory.getDouble(addr);
+    public static inline function getFloat64( addr : Int ) : Float
+    {
+        domainMemory.offset = addr;
+        return domainMemory.readFloat64();
     }
 
-    public static inline function signExtend1( v : Int ) : Int {
-        return Memory.signExtend1(v);
+    public static inline function signExtend1( v : Int ) : Int
+    {
+        return v;
     }
 
-    public static inline function signExtend8( v : Int ) : Int {
-        return Memory.signExtend8(v);
+    public static inline function signExtend8( v : Int ) : Int
+    {
+        return v;
     }
 
-    public static inline function signExtend16( v : Int ) : Int {
-        return Memory.signExtend16(v);
+    public static inline function signExtend16( v : Int ) : Int
+    {
+        return v;
     }
 }

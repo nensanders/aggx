@@ -43,6 +43,7 @@ class CmapFormat0
 		var upper = getUpper129(encRecord.platformID, encRecord.encodingID, _language);
 		
 		_glyphIdArray = new Vector(256);
+        for (i in 0...256) _glyphIdArray[i] = 0; // TODO JS
 		
 		var i:UInt = 0;
 		while (i < 126)

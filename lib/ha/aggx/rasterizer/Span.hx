@@ -22,9 +22,9 @@ import lib.ha.core.memory.Pointer;
 //=======================================================================================================
 class Span 
 {
-	public var x:Int;
-	public var len:Int;
-	public var covers:Pointer;
+	public var x:Int = 0;
+	public var len:Int = 0;
+	public var covers:Pointer = -1;
 	//---------------------------------------------------------------------------------------------------
 	public function new() { }
 }

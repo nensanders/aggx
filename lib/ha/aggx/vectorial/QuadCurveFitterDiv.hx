@@ -155,7 +155,7 @@ class QuadCurveFitterDiv implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
-		if(_count >= cast _points.length) return PathCommands.STOP;
+		if(_count >= _points.length) return PathCommands.STOP;
 		var p = _points[_count++];
 		x.value = p.x;
 		y.value = p.y;

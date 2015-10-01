@@ -57,6 +57,7 @@ class ConvAdaptorVpgen implements IVertexSource
 	public function getVertex(x:FloatRef, y:FloatRef):UInt 
 	{
 		var cmd = PathCommands.STOP;
+        var count: Int = 0;
 		while(true)
 		{
 			cmd = _generator.getVertex(x, y);
@@ -83,11 +84,12 @@ class ConvAdaptorVpgen implements IVertexSource
 				continue;
 			}
 
-			var rtx = Ref.float11;
-			var rty = Ref.float12;
+			var rtx = Ref.getFloat();
+			var rty = Ref.getFloat();
 			cmd = _source.getVertex(rtx, rty);
-			var tx = rtx.value;
-			var ty = rty.value;
+			var tx = Ref.putFloat(rtx).value;
+			var ty = Ref.putFloat(rty).value;
+
 			if(PathUtils.isVertex(cmd))
 			{
 				if(PathUtils.isMoveTo(cmd)) 

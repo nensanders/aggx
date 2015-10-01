@@ -121,7 +121,7 @@ class Bits
 		if (x == 0) return 0;
 		else
 		{
-			if (MemoryAccess.getInt8(956) != 31)
+			if (MemoryAccess.getUInt8(956) != 31)
 			{
 				var x = 0x077CB531;
 				for (i in 0...32)

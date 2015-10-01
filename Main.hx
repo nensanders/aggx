@@ -95,7 +95,7 @@ class Main
 		var string6 = "абвгдеёжзийклмнопрстуфхцшщэюя";
 		
 		var fontEngine = new FontEngine(ttc);
-		var fontSize = 18;
+		var fontSize = 30;
 
 		scanlineRenderer.color = new RgbaColor(240, 27, 106);
 
@@ -229,7 +229,7 @@ class Main
 		path.closePolygon();		
 		
 		var curve = new ConvCurve(path);
-		var dash = new ConvDash(curve);
+        var dash = new ConvDash(curve);
 		var stroke = new ConvStroke(dash);
 		
 		dash.addDash(10, 10);

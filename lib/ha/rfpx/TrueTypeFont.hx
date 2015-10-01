@@ -113,7 +113,7 @@ class TrueTypeFont
 	public function read(data:Pointer):Void
 	{
 		_data = data;
-		var refPtr = Ref.pointer1.set(_data);
+		var refPtr = Ref.getPointer().set(_data);
 		var ot = new OffsetTable(refPtr);
 		var numTables = ot.numTables;
 		_tableRecords = new Vector(numTables);

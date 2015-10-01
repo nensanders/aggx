@@ -42,12 +42,12 @@ class VertexSequence
 				removeLast();
 			}
 		}
-		_storage[_storage.length] = vd;
+        _storage.push(vd);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function removeAll():Void
 	{
-		_storage = _storage.shrink(0);
+		_storage = new Array();
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function removeLast():Void
@@ -58,7 +58,7 @@ class VertexSequence
 	public inline function modifyLast(v:IDistanceProvider):Void
 	{
 		removeLast();
-		_storage[_storage.length] = v;
+        _storage.push(v);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function prev(idx:Int):IDistanceProvider

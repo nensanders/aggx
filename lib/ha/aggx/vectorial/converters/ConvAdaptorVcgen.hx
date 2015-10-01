@@ -35,8 +35,8 @@ class ConvAdaptorVcgen implements IVertexSource
 	private var _markers:IMarkerGenerator;
 	private var _status:Int;
 	private var _lastCmd:Int;
-	private var _startX:Float;
-	private var _startY:Float;
+	private var _startX:Float = 0.0;
+	private var _startY:Float = 0.0;
 	//---------------------------------------------------------------------------------------------------
 	private function new(vs:IVertexSource, ?markers:IMarkerGenerator) 
 	{
@@ -76,11 +76,11 @@ class ConvAdaptorVcgen implements IVertexSource
 			{
 			case INITIAL:
 				_markers.removeAll();
-				var rm_start_x = Ref.float11.set(_startX);
-				var rm_start_y = Ref.float12.set(_startY);
+				var rm_start_x = Ref.getFloat().set(_startX);
+				var rm_start_y = Ref.getFloat().set(_startY);
 				_lastCmd = _source.getVertex(rm_start_x, rm_start_y);
-				_startX = rm_start_x.value;
-				_startY = rm_start_y.value;
+				_startX = Ref.putFloat(rm_start_x).value;
+				_startY = Ref.putFloat(rm_start_y).value;
 				_status = ACCUMULATE;
 
 			case ACCUMULATE:

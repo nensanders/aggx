@@ -50,7 +50,7 @@ class NameTable
 		var strDataPtr = dataPtr + _stringOffset;
 		_nameRecord = new Vector(_count);
 		
-		var refPtr = Ref.pointer1.set(data);
+		var refPtr = Ref.getPointer().set(data);
 		
 		var i:UInt = 0, nameRecord:NameRecord;
 		while (i < _count) 

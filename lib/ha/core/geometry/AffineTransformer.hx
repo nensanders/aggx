@@ -296,16 +296,16 @@ class AffineTransformer implements ITransformer
 	//---------------------------------------------------------------------------------------------------
 	public function scale(x:FloatRef, y:FloatRef):Void
 	{
-		var x1 = Ref.float1.set(0.0);
-		var y1 = Ref.float2.set(0.0);
-		var x2 = Ref.float3.set(1.0);
-		var y2 = Ref.float4.set(1.0);
+		var x1 = Ref.getFloat().set(0.0);
+		var y1 = Ref.getFloat().set(0.0);
+		var x2 = Ref.getFloat().set(1.0);
+		var y2 = Ref.getFloat().set(1.0);
 		var t = AffineTransformer.of(this);
 		t = t.multiply(AffineTransformer.rotator(-rotation));
 		t.transform(x1, y1);
 		t.transform(x2, y2);
-		x.value = x2.value - x1.value;
-		y.value = y2.value- y1.value;
+		x.value = Ref.putFloat(x2).value - Ref.putFloat(x1).value;
+		y.value = Ref.putFloat(y2).value - Ref.putFloat(y1).value;
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_determinant():Float { return sx * sy - shy * shx; }
@@ -323,14 +323,14 @@ class AffineTransformer implements ITransformer
 	public var scaling(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_rotation():Float 
-	{ 
-		var x1 = Ref.float1.set(0.0);
-		var y1 = Ref.float2.set(0.0);
-		var x2 = Ref.float3.set(1.0);
-		var y2 = Ref.float4.set(0.0);
+	{
+        var x1 = Ref.getFloat().set(0.0);
+        var y1 = Ref.getFloat().set(0.0);
+        var x2 = Ref.getFloat().set(1.0);
+        var y2 = Ref.getFloat().set(0.0);
 		transform(x1, y1);
 		transform(x2, y2);
-		return Math.atan2(y2.value - y1.value, x2.value - x1.value);
+		return Math.atan2(Ref.putFloat(y2).value - Ref.putFloat(y1).value, Ref.putFloat(x2).value - Ref.putFloat(x1).value);
 	}
 	public var rotation(get, null):Float;
 }

@@ -49,7 +49,7 @@ class CmapTable
 		_numTables = data.getUShort();
 		data += 2;
 
-		var refPtr = Ref.pointer1.set(data);
+		var refPtr = Ref.getPointer().set(data);
 		
 		var i:UInt = 0;
 		while (i < _numTables)

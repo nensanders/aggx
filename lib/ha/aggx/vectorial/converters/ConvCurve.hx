@@ -47,7 +47,7 @@ class ConvCurve implements IVertexSource
 		_source = source;
 	}
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_approximationScale():Float { return _curve3.approximationScale; }
+	private inline function get_approximationScale():Float { return _curve4.approximationScale; }
 	private inline function set_approximationScale(value:Float):Float
 	{
 		_curve3.approximationScale = value;
@@ -56,7 +56,7 @@ class ConvCurve implements IVertexSource
 	}
 	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_approximationMethod():Int { return _curve3.approximationMethod; }
+	private inline function get_approximationMethod():Int { return _curve4.approximationMethod; }
 	private inline function set_approximationMethod(value:Int):Int
 	{
 		_curve3.approximationMethod = value;
@@ -65,14 +65,14 @@ class ConvCurve implements IVertexSource
 	}
 	public var approximationMethod(get, set):Int;
 	//---------------------------------------------------------------------------------------------------	
-	private inline function get_angleTolerance():Float { return _curve3.angleTolerance; }
+	private inline function get_angleTolerance():Float { return _curve4.angleTolerance; }
 	private inline function set_angleTolerance(value:Float):Float
 	{
 		_curve3.angleTolerance = value;
 		_curve4.angleTolerance = value;
 		return value;
 	}
-	public var angleTolerance(get, null):Float;
+	public var angleTolerance(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_cuspLimit():Float { return _curve4.cuspLimit; }
 	private inline function set_cuspLimit(value:Float):Float
@@ -81,7 +81,7 @@ class ConvCurve implements IVertexSource
 		_curve4.cuspLimit = value;
 		return value;
 	}
-	public var cuspLimit(get, null):Float;
+	public var cuspLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	public function rewind(pathId:UInt)
 	{
@@ -108,10 +108,10 @@ class ConvCurve implements IVertexSource
 			return PathCommands.LINE_TO;
 		}
 
-		var ct2_x = Ref.float1;
-		var ct2_y = Ref.float2;
-		var end_x = Ref.float3;
-		var end_y = Ref.float4;
+		var ct2_x = Ref.getFloat();
+		var ct2_y = Ref.getFloat();
+		var end_x = Ref.getFloat();
+		var end_y = Ref.getFloat();
 
 		var cmd = _source.getVertex(x, y);
 		switch(cmd)
@@ -121,15 +121,25 @@ class ConvCurve implements IVertexSource
 
 			_curve3.init(_lastX, _lastY, x.value, y.value, end_x.value, end_y.value);
 
+            Ref.putFloat(ct2_x); // Wasn't used in this case;
+            Ref.putFloat(ct2_y); // Wasn't used in this case;
+            Ref.putFloat(end_x);
+            Ref.putFloat(end_y);
+
 			_curve3.getVertex(x, y);
 			_curve3.getVertex(x, y);
 			cmd = PathCommands.LINE_TO;
 
 		case PathCommands.CURVE4:
-			_source.getVertex(ct2_x, ct2_y);
-			_source.getVertex(end_x, end_y);
+            _source.getVertex(ct2_x, ct2_y);
+            _source.getVertex(end_x, end_y);
 
 			_curve4.init(_lastX, _lastY, x.value, y.value, ct2_x.value, ct2_y.value, end_x.value, end_y.value);
+
+            Ref.putFloat(ct2_x);
+            Ref.putFloat(ct2_y);
+            Ref.putFloat(end_x);
+            Ref.putFloat(end_y);
 
 			_curve4.getVertex(x, y);
 			_curve4.getVertex(x, y);

@@ -18,6 +18,8 @@
 
 package lib.ha.aggx.vectorial.generators;
 //=======================================================================================================
+import lib.ha.aggx.vectorial.PathUtils;
+import lib.ha.core.geometry.Coord;
 import lib.ha.aggx.vectorial.IVertexSource;
 import lib.ha.aggx.vectorial.MathStroke;
 import lib.ha.aggx.vectorial.PathCommands;
@@ -40,7 +42,7 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
 	private var _stroker:MathStroke;
 	private var _width:Float;
 	private var _srcVertices:VertexSequence;
-	private var _outVertices:VertexSequence;
+	private var _outVertices:Array<Coord>;
 	private var _status:UInt;
 	private var _srcVertex:UInt;
 	private var _outVertex:UInt;
@@ -53,7 +55,7 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
 		_stroker = new MathStroke();
 		_width = 1.;
 		_srcVertices = new VertexSequence();
-		_outVertices = new VertexSequence();
+		_outVertices = new Array();
 		_status = INITIAL;
 		_srcVertex = 0;
 		_outVertex = 0;
@@ -79,12 +81,12 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
             {
                 if(!PathUtils.isOriented(_orientation))
                 {
-                    _orientation = (calc_polygon_area(_srcVertices) > 0.0) ? PathFlags.CCW : PathFlags.CW;
+                    _orientation = (Calc.calcPolygonArea(_srcVertices) > 0.0) ? PathFlags.CCW : PathFlags.CW;
                 }
             }
             if(PathUtils.isOriented(_orientation))
             {
-                _stroker.width(PathUtils.isCCW(_orientation) ? _width : -_width);
+                _stroker.width = (PathUtils.isCCW(_orientation) ? _width : -_width);
             }
         }
         _status = READY;
@@ -124,25 +126,26 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
                 }
 				else 
 				{
-					_stroker.calcJoin(_outVertices, 
+					_stroker.calcJoin(_outVertices,
 										_srcVertices.prev(_srcVertex), 
 										_srcVertices.curr(_srcVertex), 
 										_srcVertices.next(_srcVertex), 
 										_srcVertices.prev(_srcVertex).dist,
 										_srcVertices.curr(_srcVertex).dist);
+
 					++_srcVertex;
 					_status = OUT_VERTICES;
 					_outVertex = 0;
 				}
 
             case OUT_VERTICES:
-                if(_outVertex >= _outVertices.size)
+                if(_outVertex >= _outVertices.length)
                 {
                     _status = OUTLINE;
                 }
                 else
                 {
-                    var c = _outVertices.get(_outVertex++);
+                    var c = _outVertices[_outVertex++];
                     x.value = c.x;
                     y.value = c.y;
                     return cmd;
@@ -181,7 +184,7 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
                     _closed = PathUtils.getCloseFlag(cmd);
                     if(_orientation == PathFlags.NONE) 
                     {
-                        _orientation = get_orientation(cmd);
+                        _orientation = PathUtils.getOrientation(cmd);
                     }
                 }
             }

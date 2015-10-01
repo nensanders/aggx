@@ -191,8 +191,8 @@ class TransSinglePath implements ITransformer
 	//---------------------------------------------------------------------------------------------------
 	public function addPath(vs:IVertexSource, pathId:UInt = 0):Void
 	{
-		var x = Ref.float1;
-		var y = Ref.float2;
+		var x = Ref.getFloat();
+		var y = Ref.getFloat();
 
 		var cmd:UInt;
 		vs.rewind(pathId);
@@ -210,6 +210,9 @@ class TransSinglePath implements ITransformer
 				}
 			}
 		}
+
+        Ref.putFloat(x);
+        Ref.putFloat(y);
 		finalizePath();
 	}
 	//---------------------------------------------------------------------------------------------------

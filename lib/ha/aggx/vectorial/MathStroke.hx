@@ -153,11 +153,11 @@ class MathStroke
 		var miter_limit_exceeded = true;
 		var intersection_failed  = true;
 
-		var rxi = Ref.float9.set(xi);
-		var ryi = Ref.float10.set(xi);
+		var rxi = Ref.getFloat().set(xi);
+		var ryi = Ref.getFloat().set(xi);
 		if(Calc.intersection(v0.x + dx1, v0.y - dy1, v1.x + dx1, v1.y - dy1, v1.x + dx2, v1.y - dy2, v2.x + dx2, v2.y - dy2, rxi, ryi))
 		{
-			di = Calc.distance(v1.x, v1.y, xi = rxi.value, yi = ryi.value);
+			di = Calc.distance(v1.x, v1.y, xi = Ref.putFloat(rxi).value, yi = Ref.putFloat(ryi).value);
 			if(di <= lim)
 			{
 				addVertex(vc, xi, yi);
@@ -328,11 +328,11 @@ class MathStroke
 			{
 				if (_approximationScale * (_widthAbs - dbevel) < _widthEps)				
 				{
-					var rdx = Ref.float7.set(dx);
-					var rdy = Ref.float8.set(dy);
+					var rdx = Ref.getFloat().set(dx);
+					var rdy = Ref.getFloat().set(dy);
 					if(Calc.intersection(v0.x + dx1, v0.y - dy1, v1.x + dx1, v1.y - dy1, v1.x + dx2, v1.y - dy2, v2.x + dx2, v2.y - dy2, rdx, rdy))
 					{
-						addVertex(vc, rdx.value, rdy.value);
+						addVertex(vc, Ref.putFloat(rdx).value, Ref.putFloat(rdy).value);
 					}
 					else
 					{

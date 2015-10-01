@@ -101,7 +101,7 @@ class Os2Table
 		_familyClass = ptr.getShort();
 		ptr += 2;
 		
-		var refPtr = Ref.pointer1.set(ptr);
+		var refPtr = Ref.getPointer().set(ptr);
 		_panose = new Panose(refPtr);
 		ptr = refPtr.value;
 		

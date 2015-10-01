@@ -29,9 +29,8 @@ class GlyphDescrComp
 	public function new(data:Pointer) 
 	{
 		_components = new Array();
-		var dataRef = Ref.pointer1.set(data);
+		var dataRef = Ref.getPointer().set(data);
 		var comp:GlyphRecordComp;
-		
 		do
 		{
 			_components[_components.length] = comp = new GlyphRecordComp(dataRef);

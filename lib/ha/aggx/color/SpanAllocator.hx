@@ -34,8 +34,7 @@ class SpanAllocator implements ISpanAllocator
 	{
 		if (spanLen > cast _span.length)
 		{
-			_span = _span.shrink(0);
-            _span = _span.shrink(((spanLen + 255) >> 8) << 8);
+			_span = ArrayUtil.alloc(((spanLen + 255) >> 8) << 8);
 		}
 		return { data: _span, offset:0 };
 	}

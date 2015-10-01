@@ -31,7 +31,7 @@ class Scanline implements IScanline
 {
 	private var _minX:Int;
 	private var _lastX:Int;
-	private var _y:Int;
+	private var _y:Int = 0;
 	private var _covers:MemoryBlock;
 	private var _spans:Vector<Span>;
 	private var _currentSpan:Span;

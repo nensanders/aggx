@@ -27,10 +27,14 @@ using lib.ha.aggx.rasterizer.PixelCell;
 //=======================================================================================================
 class SortedY
 {
-	public var start:Int;
-	public var num:UInt;
+	public var start:Int = 0;
+	public var num:UInt = 0;
 	//---------------------------------------------------------------------------------------------------
-	public function new() { }	
+	public function new()
+    {
+        start = 0;
+        num = 0;
+    }
 }
 //=======================================================================================================
 class PixelCellRasterizer
@@ -69,7 +73,7 @@ class PixelCellRasterizer
 		_sortedCellsPtr = _sortedCells.ptr;
 
 		_currentCell = new PixelCell();
-		_sortedY = null; //new Vector(1);
+		_sortedY = null;
 		_minX = 0x7FFFFFFF;
 		_minY = 0x7FFFFFFF;
 		_maxX = -0x7FFFFFFF;
@@ -111,11 +115,8 @@ class PixelCellRasterizer
 	//---------------------------------------------------------------------------------------------------
 
 	public inline function getScanlineCells(y:Int):Pointer
-
 	{
-
 		return _sortedCellsPtr + (_sortedY[y - _minY].start << 4);
-
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function getScanlineCellsCount(y:Int):UInt
@@ -125,14 +126,11 @@ class PixelCellRasterizer
 	//---------------------------------------------------------------------------------------------------
 
 	public inline function addCurrentCell():Void
-
 	{
 		if ((_currentCell.area | _currentCell.cover) != 0)
 		{
-
 			(_cellsPtr + (_cellsCount << 4)).setAll(_currentCell);
 			++_cellsCount;
-
 		}
 	}
 	//---------------------------------------------------------------------------------------------------

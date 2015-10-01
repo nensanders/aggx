@@ -47,7 +47,6 @@ class VpgenSegmentator implements IPolygonGenerator
 	public function getVertex(x:FloatRef, y:FloatRef):UInt 
 	{
 		if(_cmd == PathCommands.STOP) return PathCommands.STOP;
-
 		var cmd = _cmd;
 		_cmd = PathCommands.LINE_TO;
 		if(_dl >= 1.0 - _ddl)

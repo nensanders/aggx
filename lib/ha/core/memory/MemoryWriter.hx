@@ -22,7 +22,7 @@ class MemoryWriter
 {
 	public static inline function setByte(addr:Pointer, v:Int):Void
 	{
-        MemoryAccess.setInt8(addr, v);
+        MemoryAccess.setUInt8(addr, v);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setShort(addr:Pointer, v:Int):Void

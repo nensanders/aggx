@@ -70,8 +70,8 @@ class SpanGradient implements ISpanGenerator
 	{
 		var dd = _d2 - _d1;
 		if (dd < 1) dd = 1;
-		var x = Ref.int1.set(x_);
-		var y = Ref.int2.set(y_);
+		var x = Ref.getInt().set(x_);
+		var y = Ref.getInt().set(y_);
 		var offset = span.offset;
 		_interpolator.begin(x_ + 0.5, y_ + 0.5, len);
 		do
@@ -80,10 +80,12 @@ class SpanGradient implements ISpanGenerator
 			var d = _gradientFunction.calculate(x.value >> DOWNSCALE_SHIFT, y.value >> DOWNSCALE_SHIFT, _d2);
 			d = Std.int(((d - _d1) * _colorFunction.size) / dd);
 			if(d < 0) d = 0;
-			if(d >= cast _colorFunction.size) d = _colorFunction.size - 1;
+			if(d >= _colorFunction.size) d = _colorFunction.size - 1;
 			span.data[offset++] = _colorFunction.get(d);
 			_interpolator.op_inc();
 		}
 		while (--len != 0);
+        Ref.putInt(x);
+        Ref.putInt(y);
 	}
 }

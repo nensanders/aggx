@@ -37,8 +37,8 @@ class TransCurve1
 	private var _fontSize:UInt;
 	private var _string:String;
 	private var _poly:InteractivePolygon;
-	private var _dx:Vector<Float>;
-	private var _dy:Vector<Float>;
+//	private var _dx:Vector<Float>;
+//	private var _dy:Vector<Float>;
 	private var _path:SimplePolygonVertexSource;
 	private var _bspline:ConvBSpline;
 	private var _tcurve:TransSinglePath;
@@ -64,8 +64,8 @@ class TransCurve1
 		_poly = new InteractivePolygon(NUMBER_OF_POINTS, 3.0);
 		initPoly();
 		
-		_dx = new Vector(6);
-		_dy = new Vector(6);
+//		_dx = new Vector(6);
+//		_dy = new Vector(6);
 		_path = new SimplePolygonVertexSource(_poly.polygon, _poly.numberOfPoints, false, CLOSE);
 		_bspline = new ConvBSpline(_path);
 		_bspline.interpolationStep = 1 / NUMBER_OF_INTERMEDIATE_POINTS;

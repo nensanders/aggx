@@ -23,14 +23,14 @@ class MemoryReaderEx
 {
 	public static inline function getChar(addr:Int):Int
 	{
-		var x0 = MemoryAccess.getInt8(addr);
+		var x0 = MemoryAccess.getUInt8(addr);
 		var y0 = (x0 << 24) >> 24; // TODO Is this like sign-extensions?
 		return y0;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getByte(addr:Int):Int
 	{
-		return MemoryAccess.getInt8(addr);
+		return MemoryAccess.getUInt8(addr);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public static inline function getInt(addr:Int):Int

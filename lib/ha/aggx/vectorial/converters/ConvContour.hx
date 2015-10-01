@@ -54,7 +54,7 @@ class ConvContour extends ConvAdaptorVcgen
 	public var innerMiterLimit(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_approximationScale():Float { return cast(_generator, VcgenContour).approximationScale; }
-	private inline function set_approximationScale(value:Float):Float { return cast(_generator, VcgenStroke).approximationScale = value; }
+	private inline function set_approximationScale(value:Float):Float { return cast(_generator, VcgenContour).approximationScale = value; }
 	public var approximationScale(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
 	private inline function set_miterLimitTheta(value:Float):Float { return cast(_generator, VcgenContour).miterLimit = value; }

@@ -47,7 +47,7 @@ class ScanlineRasterizer implements IRasterizer
 	private var _startX:Float;
 	private var _startY:Float;
 	private var _status:Int;
-	private var _scanY:Int;
+	private var _scanY:Int = 0;
 	//---------------------------------------------------------------------------------------------------
 	public function new(?gammaFunction:IGammaFunction)
 	{
@@ -107,8 +107,8 @@ class ScanlineRasterizer implements IRasterizer
 	//---------------------------------------------------------------------------------------------------
 	public function addPath(vs:IVertexSource, pathId:Int = 0)
 	{
-		var x = Ref.float1;
-		var y = Ref.float2;
+		var x = Ref.getFloat();
+		var y = Ref.getFloat();
 		
 		var cmd:Int;
 		vs.rewind(pathId);
@@ -117,6 +117,9 @@ class ScanlineRasterizer implements IRasterizer
 		{
 			addVertex(x.value, y.value, cmd);
 		}
+
+        Ref.putFloat(x);
+        Ref.putFloat(y);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function calculateAlpha(area:Int):Int
@@ -296,8 +299,7 @@ class ScanlineRasterizer implements IRasterizer
 		if(_isAutoClose) closePolygon();
 		_outline.sortCells();
 
-		if (ret = (_outline.cellsCount != 0)) 
-
+		if (ret = (_outline.cellsCount != 0))
 		{
 			_scanY = _outline.minY;
 		}

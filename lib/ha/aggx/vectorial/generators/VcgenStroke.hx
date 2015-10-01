@@ -148,9 +148,9 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 			{
 			case INITIAL:
 				rewind(0);
-
+                _status = READY;
 			case READY:
-				if(_srcVertices.size < cast (2 + (_isClosed != 0 ? 1 : 0)))
+				if(_srcVertices.size < (2 + (_isClosed != 0 ? 1 : 0)))
 				{
 					cmd = PathCommands.STOP;
 				}
@@ -188,7 +188,7 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 				}
 				else
 				{
-					if(_srcVertexIndex >= cast(_srcVertices.size - 1))
+					if(_srcVertexIndex >= (_srcVertices.size - 1))
 					{
 						_status = CAP2;
 						proceed = false;
@@ -213,7 +213,7 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 				cmd = PathCommands.MOVE_TO;
 
 			case OUTLINE2:
-				if(_srcVertexIndex <= cast(_isClosed == 0 ? 1 : 0))
+				if(_srcVertexIndex <= (_isClosed == 0 ? 1 : 0))
 				{
 					_status = END_POLY2;
 					_prevStatus = STOP;
@@ -234,7 +234,7 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 				}
 
 			case OUT_VERTICES:
-				if(_outVertexIndex >= cast _outVertices.length)
+				if(_outVertexIndex >= _outVertices.length)
 				{
 					_status = _prevStatus;
 				}

@@ -94,7 +94,9 @@ class CubicCurveFitterDiv implements IVertexSource
 
 		var d2 = Calc.fabs(((x2 - x4) * dy - (y2 - y4) * dx));
 		var d3 = Calc.fabs(((x3 - x4) * dy - (y3 - y4) * dx));
-		var da1, da2, k;
+		var da1: Float = 0.0;
+        var da2: Float = 0.0;
+        var k: Float = 0.0;
 
 		var c0 = (d2 > CURVE_COLLINEARITY_EPSILON ? 1 : 0) << 1;
 		var c1 = d3 > CURVE_COLLINEARITY_EPSILON ? 1 : 0;
@@ -121,13 +123,31 @@ class CubicCurveFitterDiv implements IVertexSource
 				{
 					return;
 				}
-				if (d2 <= 0) d2 = Calc.squaredDistance(x2, y2, x1, y1);
-				else if (d2 >= 1) d2 = Calc.squaredDistance(x2, y2, x4, y4);
-				else d2 = Calc.squaredDistance(x2, y2, x1 + d2 * dx, y1 + d2 * dy);
+				if (d2 <= 0)
+                {
+                    d2 = Calc.squaredDistance(x2, y2, x1, y1);
+                }
+				else if (d2 >= 1)
+                {
+                    d2 = Calc.squaredDistance(x2, y2, x4, y4);
+                }
+				else
+                {
+                    d2 = Calc.squaredDistance(x2, y2, x1 + d2 * dx, y1 + d2 * dy);
+                }
 
-				if (d3 <= 0) d3 = Calc.squaredDistance(x3, y3, x1, y1);
-				else if (d3 >= 1) d3 = Calc.squaredDistance(x3, y3, x4, y4);
-				else d3 = Calc.squaredDistance(x3, y3, x1 + d3 * dx, y1 + d3 * dy);
+				if (d3 <= 0)
+                {
+                    d3 = Calc.squaredDistance(x3, y3, x1, y1);
+                }
+				else if (d3 >= 1)
+                {
+                    d3 = Calc.squaredDistance(x3, y3, x4, y4);
+                }
+				else
+                {
+                    d3 = Calc.squaredDistance(x3, y3, x1 + d3 * dx, y1 + d3 * dy);
+                }
 			}
 			if(d2 > d3)
 			{
@@ -267,7 +287,7 @@ class CubicCurveFitterDiv implements IVertexSource
 	public function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
 		var cmd:UInt = PathCommands.STOP;
-		if (_count < cast _points.length)
+		if (_count < _points.length)
 		{
 			var p = _points[_count++];
 			x.value = p.x;

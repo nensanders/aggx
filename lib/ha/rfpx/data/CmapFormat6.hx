@@ -34,7 +34,6 @@ class CmapFormat6
 	//---------------------------------------------------------------------------------------------------
 	public function new(data:Pointer) 
 	{
-        trace("Format6");
 		_format = 0;
 		
 		_length = data.getUShort();

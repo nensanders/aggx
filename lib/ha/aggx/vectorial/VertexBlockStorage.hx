@@ -18,31 +18,22 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
-import lib.ha.core.utils.ArrayUtil;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.Ref;
-import lib.ha.core.memory.MemoryReader;
-using lib.ha.core.memory.MemoryReader;
-import lib.ha.core.memory.MemoryWriter;
-using lib.ha.core.memory.MemoryWriter;
-using lib.ha.core.utils.ArrayUtil;
 //=======================================================================================================
 class VertexBlockStorage 
 {
-	private static inline var BLOCK_SIZE = 256;
 	//---------------------------------------------------------------------------------------------------
 	private var _verticesCount:UInt;
-	private var _allocatedCount:UInt;
 	private var _coordsX:Array<Float>;
 	private var _coordsY:Array<Float>;
 	private var _commands:Array<Byte>;
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
-		_allocatedCount = BLOCK_SIZE;
-		_coordsX = ArrayUtil.alloc(BLOCK_SIZE);
-		_coordsY = ArrayUtil.alloc(BLOCK_SIZE);
-		_commands = ArrayUtil.alloc(BLOCK_SIZE);
+		_coordsX = new Array();
+		_coordsY = new Array();
+		_commands = new Array();
 		_verticesCount = 0;
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -71,37 +62,26 @@ class VertexBlockStorage
 	//---------------------------------------------------------------------------------------------------
 	public inline function removeAll():Void
 	{
+        _coordsX = new Array();
+        _coordsY = new Array();
+        _commands = new Array();
 		_verticesCount = 0;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function freeAll():Void
 	{
-        _coordsX.shrink(0);
-		_coordsY.shrink(0);
-		_commands.shrink(0);
-
+        _coordsX = new Array();
+        _coordsY = new Array();
+        _commands = new Array();
 		_verticesCount = 0;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function addVertex(x:Float, y:Float, cmd:Byte):Void
 	{
-		checkAllocation();
-		_coordsX[_verticesCount] = x;
-		_coordsY[_verticesCount] = y;
-		_commands[_verticesCount] = cmd;
+		_coordsX.push(x);
+		_coordsY.push(y);
+		_commands.push(cmd);
 		_verticesCount++;
-	}
-	//---------------------------------------------------------------------------------------------------
-	private inline function checkAllocation():Void
-	{
-		if (_verticesCount > _allocatedCount)
-		{
-			_allocatedCount += BLOCK_SIZE;
-
-            _coordsX[_coordsX.length - 1 + BLOCK_SIZE] = 0.0;
-			_coordsY[_coordsY.length - 1 + BLOCK_SIZE] = 0.0;
-			_commands[_commands.length - 1 + BLOCK_SIZE] = 0;
-		}
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function modifyVertex(idx:Int, x:Float, y:Float, ?cmd:Int)

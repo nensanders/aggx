@@ -18,7 +18,7 @@
 
 package lib.ha.core.memory;
 //=======================================================================================================
-import haxe.io.BytesData;
+import types.Data;
 //=======================================================================================================
 private typedef MemoryBlockFriend =
 {
@@ -46,11 +46,11 @@ class MemoryManager
 		return block;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public static function mallocEx(bytes:BytesData):MemoryBlock
+	public static function mallocEx(bytes:Data):MemoryBlock
 	{
-		if (bytes.bytesAvailable < 1024)// TODO Check
+		if (bytes.allocedLength < 1024)// TODO Check
 		{
-			bytes.length = 1024;
+			bytes.resize(1024);
 		}
 		var block = new MemoryBlock();
 		mallocExImpl(bytes, block);
@@ -109,13 +109,12 @@ class MemoryManager
         MemoryAccess.resizeOffset(offset);
 	}
 	//---------------------------------------------------------------------------------------------------
-	private static function mallocImpl(?size:Int, block:MemoryBlockFriend):Void
+	private static function mallocImpl(size:Int, block:MemoryBlockFriend):Void
 	{
 		size = roundToNext1024(size);
 		if (_lastBlock == null) 
 		{
-			var bytes = new BytesData();
-			bytes.length = size;
+			var bytes = new Data(size);
 			MemoryAccess.select(bytes);
 			block._start = block._ptr = 0;
 			block._size = size;
@@ -132,13 +131,13 @@ class MemoryManager
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	private static function mallocExImpl(bytes:BytesData, block:MemoryBlockFriend):Void
+	private static function mallocExImpl(bytes:Data, block:MemoryBlockFriend):Void
 	{
 		if (_lastBlock == null)
 		{
 			MemoryAccess.select(bytes);
 			block._start = block._ptr = 0;
-			block._size = bytes.length;
+			block._size = bytes.allocedLength;
 			_lastBlock = block;
 		}
 		else 
@@ -146,9 +145,9 @@ class MemoryManager
 			_lastBlock._next = cast block;
 			block._prev = cast _lastBlock;
 			block._start = block._ptr = _lastBlock._start + _lastBlock._size;
-			block._size = bytes.length;
+			block._size = bytes.allocedLength;
 			_lastBlock = block;
-            MemoryAccess.resizeOffset(bytes.length);
+            MemoryAccess.resizeOffset(bytes.allocedLength);
             MemoryAccess.writeBytes(bytes, block._start, block._size);
 		}
 	}	

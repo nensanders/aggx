@@ -33,8 +33,10 @@ class BSpline
 	private var _am:Array<Float>;
 	private var _lastIdx:Int;
 	//---------------------------------------------------------------------------------------------------
-	public function new(?num:Int, ?x:Array<Float>, ?y:Array<Float>)
+	public function new(?num:Int = 0, ?x:Array<Float>, ?y:Array<Float>)
 	{
+        _max = 0;
+        _num = 0;
 		_am = new Array();
 		_x = new Array();
 		_y = new Array();
@@ -46,7 +48,7 @@ class BSpline
 		if (num > 2 && num > _max)
 		{
 			_max = num;
-			_am = _am.shrink(num * 3);
+			_am = ArrayUtil.alloc(num * 3);
 			_x[_x.length] = _am[_max];
 			_y[_y.length] = _am[_max * 2];
 			if (x != null && y != null)			
@@ -94,6 +96,7 @@ class BSpline
 			n1 = 3 * _num;
 
 			var al = new Vector<Float>(n1);
+            for (i in 0...n1) al[i] = 0.0; // TODO this is needed for JS
 			
 			var temp = { data: al, offset:0 };
 			
@@ -191,14 +194,14 @@ class BSpline
 	{
 		if(_num > 2)
 		{
-			var i = Ref.int1;
+			var i = Ref.getInt();
 
 			if (x < _x[0]) return extrapolationLeft(x);
 			if (x >= _x[_num - 1]) return extrapolationRight(x);
 
 			var pmx = { data: _x, offset:0 };
 			bsearch(_num, pmx, x, i);
-			return interpolation(x, i.value);
+			return interpolation(x, Ref.putInt(i).value);
 		}
 		return 0.0;
 	}
@@ -225,20 +228,20 @@ class BSpline
 					}
 					else
 					{
-						var last_idx = Ref.int2.set(_lastIdx);
+						var last_idx = Ref.getInt().set(_lastIdx);
 						var pmx = { data: _x, offset:0 };
 						bsearch(_num, pmx, x, last_idx);
-						_lastIdx = last_idx.value;
+						_lastIdx = Ref.putInt(last_idx).value;
 					}
 				}
 				return interpolation(x, _lastIdx);
 			}
 			else
 			{
-				var last_idx = Ref.int2.set(_lastIdx);
+				var last_idx = Ref.getInt().set(_lastIdx);
 				var pmx = { data: _x, offset:0 };
 				bsearch(_num, pmx, x, last_idx);
-				_lastIdx = last_idx.value;
+				_lastIdx = Ref.putInt(last_idx).value;
 				return interpolation(x, _lastIdx);
 			}
 		}
