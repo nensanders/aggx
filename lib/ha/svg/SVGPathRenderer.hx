@@ -1,4 +1,7 @@
 package lib.ha.svg;
+import lib.ha.aggx.color.GradientXY;
+import lib.ha.aggx.color.GradientY;
+import lib.ha.core.math.Calc;
 import lib.ha.aggx.renderer.ScanlineRenderer;
 import lib.ha.aggx.color.SpanGradient;
 import lib.ha.aggxtest.AATest.ColorArray;
@@ -82,6 +85,7 @@ class PathAttributes
         result.line_cap = attr.line_cap;
         result.miter_limit = attr.miter_limit;
         result.stroke_width = attr.stroke_width;
+        result.bounds = attr.bounds;
         result.transform = AffineTransformer.of(attr.transform);
         return result;
     }
@@ -259,6 +263,8 @@ class SVGPathRenderer
 
                     var gradientFunction = new GradientX();
                     var gradientMatrix = new AffineTransformer();
+                    gradientMatrix.premultiply(_transform);
+                    gradientMatrix.invert();
                     var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
                     var spanAllocator = new SpanAllocator();
 
