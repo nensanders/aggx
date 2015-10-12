@@ -1,4 +1,6 @@
 package lib.ha.svg;
+import lib.ha.svg.SVGGradient.GradientType;
+import lib.ha.svg.SVGGradient.SVGStop;
 import Array;
 import types.AffineTransform;
 import lib.ha.core.math.Calc;
@@ -26,6 +28,7 @@ class SVGParser
 {
     private var _path: SVGPathRenderer;
     private var _tokenizer: SVGPathTokenizer;
+    private var currentGradient: SVGGradient;
 
     private var _buf: String;           // CHAR*
     private var _title: String;         // CHAR*
@@ -191,17 +194,17 @@ class SVGParser
 
     public function new(path: SVGPathRenderer)
     {
-        this._path = path;
-        this._tokenizer = new SVGPathTokenizer();
-        this._buf = "";
-        this._title = "";
-        this._title_len = 0;
-        this._title_flag = false;
-        this._path_flag = false;
-        this._attr_name = "";
-        this._attr_value = "";
-        this._attr_name_len = 127;
-        this._attr_value_len = 1023;
+        _path = path;
+        _tokenizer = new SVGPathTokenizer();
+        _buf = "";
+        _title = "";
+        _title_len = 0;
+        _title_flag = false;
+        _path_flag = false;
+        _attr_name = "";
+        _attr_value = "";
+        _attr_name_len = 127;
+        _attr_value_len = 1023;
     }
 
     public function parse(svgData: Data): Void
@@ -246,50 +249,49 @@ class SVGParser
         {
             case "title":
                 {
-                    this._title_flag = true;
+                    _title_flag = true;
                 }
             case "g":
                 {
-                    this._path.push_attr();
+                    _path.push_attr();
 
                     for (name in attr)
                     {
-                        this.parse_attr(name, element);
+                        parseShapeAtribute(name, element.get(name));
                     }
                 }
             case "path":
                 {
-                    if (this._path_flag)
+                    if (_path_flag)
                     {
                         throw "start_element: Nested path";
                     }
-                    this._path.beginPath();
-                    this.parse_path(attr, element);
-                    this._path.endPath();
-                    this._path_flag = true;
+                    _path.beginPath();
+                    parse_path(attr, element);
+                    _path.endPath();
+                    _path_flag = true;
                 }
             case "rect":
                 {
-                    this.parse_rect(attr, element);
+                    parse_rect(attr, element);
                 }
             case "line":
                 {
-                    this.parse_line(attr, element);
+                    parse_line(attr, element);
                 }
             case "polyline":
                 {
-                    this.parse_poly(attr, element, false);
+                    parse_poly(attr, element, false);
                 }
             case "polygon":
                 {
-                    this.parse_poly(attr, element, true);
+                    parse_poly(attr, element, true);
+                }
+            case "linearGradient":
+                {
+                    parseGradient(element);
                 }
             default:
-
-            //if(strcmp(el, "<OTHER_ELEMENTS>") == 0)
-            //{
-            //}
-            // . . .
         }
     }
 
@@ -299,48 +301,31 @@ class SVGParser
         {
             case "title":
                 {
-                    this._title_flag = false;
+                    _title_flag = false;
                 }
             case "g":
                 {
-                    this._path.pop_attr();
+                    _path.pop_attr();
                 }
             case "path":
                 {
-                    this._path_flag = false;
+                    _path_flag = false;
                 }
             default:
-
-//if(strcmp(el, "<OTHER_ELEMENTS>") == 0)
-//{
-//}
-// . . .
         }
     }
 
     private function content(s: String): Void
     {
-        if (this._title_flag)
+        if (_title_flag)
         {
-            this._title = s;
-            this._title_len = s.length;
+            _title = s;
+            _title_len = s.length;
         }
     }
 
     private inline function get_title():String { return _title; }
     public var title(get, null):String;
-
-    private function parse_attr(name: String, element: Xml): Void
-    {
-        if (name == "style")
-        {
-            parse_style(element.get(name)); // TODO Check refactoring to parse_attr2
-        }
-        else
-        {
-            parse_attr2(name, element.get(name));
-        }
-    }
 
     private function parse_path(attrNames: Iterator<String>, element: Xml): Void
     {
@@ -354,11 +339,108 @@ class SVGParser
             }
             else
             {
-                parse_attr(name, element);
+                parseShapeAtribute(name, element.get(name));
             }
         }
     }
 
+    private function parseGradient(element: Xml)
+    {
+        currentGradient = new SVGGradient();
+
+        if (element.nodeName == "linearGradient")
+        {
+            currentGradient.type = GradientType.Linear;
+        }
+        else if (element.nodeName == "radialGradient")
+        {
+            currentGradient.type = GradientType.Radial;
+            return;//TODO add support
+        }
+
+        trace(element);
+
+        for (name in element.attributes())
+        {
+            var value: String = element.get(name);
+
+            switch (name)
+            {
+                case "id": currentGradient.id = value;
+                case "xlink:href": currentGradient.link = value.substr(1, value.length - 1);
+                default:
+            }
+        }
+
+        var stops: Array<SVGStop> = [];
+        for (child in element.iterator())
+        {
+            if (child.nodeType != Xml.Element)
+            {
+                continue;
+            }
+
+            if (child.nodeName != "stop")
+            {
+                continue;
+            }
+
+            stops.push(parseGradientStop(child));
+        }
+
+        currentGradient.calculateColorArray(stops);
+        _path.addGradient(currentGradient);
+    }
+
+    private function parseGradientStop(element: Xml): SVGStop
+    {
+        var stop: SVGStop = new SVGStop();
+        var opacity: Float = 1;
+
+        eachAttribute(element,
+            function (name: String, value: String)
+            {
+                switch (name)
+                {
+                    case "stop-color": stop.color = parse_color(value);
+                    case "offset": stop.offset = parsePercent(value);
+                    case "stop-opacity": opacity = Std.parseFloat(value);
+                    default:
+                }
+            }
+        );
+
+        stop.color.a = Math.round(opacity * 255);
+        trace(stop);
+        return stop;
+    }
+
+    private function eachAttribute(element: Xml, callback: String -> String -> Void)
+    {
+        for (attr in element.attributes())
+        {
+            if (attr == "style")
+            {
+                var style: String = element.get("style");
+                for (nameValue in style.split(";"))
+                {
+                    if (nameValue == "")
+                    {
+                        continue;
+                    }
+
+                    var arguments: Array<String> = nameValue.split(":");
+                    var name: String = arguments[0].rtrim();
+                    var value: String = arguments[1].ltrim();
+                    callback(name, value);
+                }
+
+                continue;
+            }
+
+            callback(attr, element.get(attr));
+        }
+    }
     private function parse_poly(attrNames: Iterator<String>, element: Xml, close_flag: Bool): Void
     {
         var x: Float = 0.0;
@@ -376,7 +458,7 @@ class SVGParser
         {
             var value = element.get(name);
 
-            if (!parse_attr2(name, value))
+            if (!parseShapeAtribute(name, value))
             {
                 if (name == "points")
                 {
@@ -444,12 +526,12 @@ class SVGParser
         {
             var value = element.get(name);
 
-            if (!parse_attr2(name, value))
+            if (!parseShapeAtribute(name, value))
             {
-                if (name == "x") x = parse_double(value);
-                if (name == "y") y = parse_double(value);
-                if (name == "width") w = parse_double(value);
-                if (name == "height") h = parse_double(value);
+                if (name == "x") x = Std.parseFloat(value);
+                if (name == "y") y = Std.parseFloat(value);
+                if (name == "width") w = Std.parseFloat(value);
+                if (name == "height") h = Std.parseFloat(value);
                 // rx - TODO to be implemented
                 // ry - TODO to be implemented
             }
@@ -481,12 +563,12 @@ class SVGParser
         {
             var value = element.get(name);
 
-            if (!parse_attr2(name, value))
+            if (!parseShapeAtribute(name, value))
             {
-                if (name == "x1") x1 = parse_double(value);
-                if (name == "y1") y1 = parse_double(value);
-                if (name == "x2") x2 = parse_double(value);
-                if (name == "x2") y2 = parse_double(value);
+                if (name == "x1") x1 = Std.parseFloat(value);
+                if (name == "y1") y1 = Std.parseFloat(value);
+                if (name == "x2") x2 = Std.parseFloat(value);
+                if (name == "x2") y2 = Std.parseFloat(value);
             }
         }
 
@@ -500,7 +582,7 @@ class SVGParser
         var arguments: Array<String> = nameValue.split(":");
         var name: String = arguments[0].rtrim();
         var value: String = arguments[1].ltrim();
-        return parse_attr2(name, value);
+        return parseShapeAtribute(name, value);
     }
 
     private function parse_style(str: String): Void
@@ -512,7 +594,7 @@ class SVGParser
         }
     }
 
-    private function parse_transform(str: String): Void
+    private function parseTransform(str: String): AffineTransformer
     {
         for (elem in str.split(")"))
         {
@@ -520,7 +602,7 @@ class SVGParser
 
             var nameValue:Array<String> = elem.split("(");
 
-            if (nameValue[0].indexOf("matrix") != -1) parse_matrix(nameValue[1]) else
+            if (nameValue[0].indexOf("matrix") != -1) return parse_matrix(nameValue[1]);
             if (nameValue[0].indexOf("translate") != -1) parse_translate(nameValue[1]) else
             if (nameValue[0].indexOf("rotate") != -1) parse_rotate(nameValue[1]) else
             if (nameValue[0].indexOf("scale") != -1) parse_scale(nameValue[1]) else
@@ -529,7 +611,7 @@ class SVGParser
         }
     }
 
-    private function parse_matrix(str: String): Void
+    private function parse_matrix(str: String): AffineTransformer
     {
         var args: Vector<Float> = new Vector(6);
         var na = parse_transform_args(str, 6, args);
@@ -537,31 +619,33 @@ class SVGParser
         {
             throw "parse_matrix: Invalid number of arguments";
         }
-        _path.transform().premultiply(new AffineTransformer(args[0], args[1], args[2], args[3], args[4], args[5]));
+        //_path.transform().premultiply(new AffineTransformer(args[0], args[1], args[2], args[3], args[4], args[5]));
+        return new AffineTransformer(args[0], args[1], args[2], args[3], args[4], args[5]);
     }
 
-    private function parse_translate(str: String): Void
+    private function parse_translate(str: String): AffineTransformer
     {
         var args: Vector<Float> = new Vector(2);
         var na = parse_transform_args(str, 2, args);
         if (na == 1) args[1] = 0.0;
-        _path.transform().premultiply(AffineTransformer.translator(args[0], args[1]));
+
+        return AffineTransformer.translator(args[0], args[1]);
     }
 
-    private function parse_rotate(str: String): Void
+    private function parse_rotate(str: String): AffineTransformer
     {
         var args: Vector<Float> = new Vector(3);
         var na = parse_transform_args(str, 3, args);
         if (na == 1)
         {
-            _path.transform().premultiply(AffineTransformer.rotator(Calc.deg2rad(args[0])));
+            returnrun AffineTransformer.rotator(Calc.deg2rad(args[0]));
         }
         else if (na == 3)
         {
             var t: AffineTransformer = AffineTransformer.translator(-args[1], -args[2]);
             t.multiply(AffineTransformer.rotator(Calc.deg2rad(args[0])));
             t.multiply(AffineTransformer.translator(args[1], args[2]));
-            _path.transform().premultiply(t);
+            return t;
         }
         else
         {
@@ -569,26 +653,26 @@ class SVGParser
         }
     }
 
-    private function parse_scale(str: String): Void
+    private function parse_scale(str: String): AffineTransformer
     {
         var args: Vector<Float> = new Vector(2);
         var na = parse_transform_args(str, 2, args);
         if (na == 1) args[1] = args[0];
-        _path.transform().premultiply(AffineTransformer.scaler(args[0], args[1]));
+        return AffineTransformer.scaler(args[0], args[1]);
     }
 
-    private function parse_skew_x(str: String): Void
+    private function parse_skew_x(str: String): AffineTransformer
     {
         var args: Vector<Float> = new Vector(1);
         var na = parse_transform_args(str, 1, args);
-        _path.transform().premultiply(AffineTransformer.skewer(Calc.deg2rad(args[0]), 0.0));
+        return AffineTransformer.skewer(Calc.deg2rad(args[0]), 0.0);
     }
 
-    private function parse_skew_y(str: String): Void
+    private function parse_skew_y(str: String): AffineTransformer
     {
         var args: Vector<Float> = new Vector(1);
         var na = parse_transform_args(str, 1, args);
-        _path.transform().premultiply(AffineTransformer.skewer(0.0, Calc.deg2rad(args[0])));
+        return AffineTransformer.skewer(0.0, Calc.deg2rad(args[0]));
     }
 
     // Returns actual number of arguments
@@ -611,7 +695,7 @@ class SVGParser
         return count;
     }
 
-    private function parse_attr2(name: String, value: String): Bool
+    private function parseShapeAtribute(name: String, value: String): Bool
     {
         switch (name)
         {
@@ -625,6 +709,10 @@ class SVGParser
                     {
                         _path.fill_none();
                     }
+                    else if(value.indexOf("url(") == 0)
+                    {
+                        parseUrlFill(value);
+                    }
                     else
                     {
                         _path.fill(parse_color(value));
@@ -632,7 +720,7 @@ class SVGParser
                 }
             case "fill-opacity":
                 {
-                    _path.fill_opacity(parse_double(value));
+                    _path.fill_opacity(Std.parseFloat(value));
                 }
             case "stroke":
                 {
@@ -647,7 +735,7 @@ class SVGParser
                 }
             case "stroke-width":
                 {
-                    _path.stroke_width(parse_double(value));
+                    _path.stroke_width(Std.parseFloat(value));
                 }
             case "stroke-linecap":
                 {
@@ -681,15 +769,19 @@ class SVGParser
                 }
             case "stroke-miterlimit":
                 {
-                    _path.miter_limit(parse_double(value));
+                    _path.miter_limit(Std.parseFloat(value));
                 }
             case "stroke-opacity":
                 {
-                    _path.stroke_opacity(parse_double(value));
+                    _path.stroke_opacity(Std.parseFloat(value));
                 }
             case "transform":
                 {
                     parse_transform(value);
+                }
+            case "id":
+                {
+                    _path.id(value);
                 }
             //else
             //if(strcmp(el, "<OTHER_ATTRIBUTES>") == 0)
@@ -701,14 +793,12 @@ class SVGParser
         return true;
     }
 
-    private function copy_name(start: String, end: String): Void
+    private function parseUrlFill(value: String)
     {
+        var template: String = "url(#";
+        var id = value.substring(template.length, value.length - 1);
+        _path.fillGradient(id);
     }
-
-    private function copy_value(start: String, end: String): Void
-    {
-    }
-
 
     private function parse_color(str: String): RgbaColor
     {
@@ -761,9 +851,15 @@ class SVGParser
         }
     }
 
-    private inline function parse_double(str: String): Float
+    private function parsePercent(value: String): Float
     {
-        return Std.parseFloat(str);
+        if (value.lastIndexOf("%") != -1)
+        {
+            trace(value.substr(0, value.length - 1));
+            return Std.parseFloat(value.substr(0, value.length - 1)) / 100;
+        }
+        trace(value);
+        return Std.parseFloat(value);
     }
 
 }

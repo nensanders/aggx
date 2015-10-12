@@ -26,6 +26,13 @@
 
 package tests.meshTest;
 
+import lib.ha.aggx.vectorial.Ellipse;
+import lib.ha.aggx.color.RgbaColorF;
+import lib.ha.aggx.renderer.ScanlineRenderer;
+import lib.ha.aggx.color.SpanGradient;
+import lib.ha.aggx.color.SpanAllocator;
+import lib.ha.aggx.color.SpanInterpolatorLinear;
+import lib.ha.aggx.color.GradientX;
 import lib.ha.aggx.vectorial.converters.ConvSegmentator;
 import lib.ha.aggx.vectorial.converters.ConvAdaptorVcgen;
 import lib.ha.aggx.vectorial.converters.ConvBSpline;
@@ -72,7 +79,9 @@ class MeshTest extends OpenGLTest
     inline private static var FONT_PATH_ARIAL = "meshTest/fonts/arial.ttf";
     inline private static var FONT_PATH_COMIC = "meshTest/fonts/Pacifico.ttf";
     inline private static var FONT_PATH_JAPAN = "meshTest/fonts/font_1_ant-kaku.ttf";
-    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
+    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
     inline private static var VERTEXSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.vsh";
     inline private static var FRAGMENTSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.fsh";
 
@@ -227,6 +236,7 @@ class MeshTest extends OpenGLTest
         //t9();
         //t10();
         t11();
+        //t12();
     }
 
 //---------------------------------------------------------------------------------------------------
@@ -444,13 +454,35 @@ class MeshTest extends OpenGLTest
 
         rasterizer.addPath(curve);
 
+        var ellipse = new Ellipse(150, 50, 50, 50, 100);
+        rasterizer.addPath(ellipse);
+
         scanlineRenderer.color = new RgbaColor(160, 180, 80, 80);
         SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
 
-        rasterizer.addPath(stroke);
+        /*rasterizer.addPath(stroke);
         scanlineRenderer.color = new RgbaColor(120, 100, 0);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
+        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);*/
 
+        var gradientFunction = new GradientX();
+        var gradientMatrix = new AffineTransformer();
+        var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
+        var spanAllocator = new SpanAllocator();
+        var gradientColors = new ColorArray(256);
+        var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, gradientColors, 0, 1000);
+        var gradientRenderer = new ScanlineRenderer(clippingRenderer, spanAllocator, gradientSpan);
+
+        var begin = new RgbaColorF(1, 0, 0).toRgbaColor();
+        var end = new RgbaColorF(0, 1, 0).toRgbaColor();
+
+        var i = 0;
+        while (i < 256)
+        {
+            gradientColors.set(begin.gradient(end, i / 255.0), i);
+            ++i;
+        }
+
+        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, gradientRenderer);
     }
 
 //---------------------------------------------------------------------------------------------------

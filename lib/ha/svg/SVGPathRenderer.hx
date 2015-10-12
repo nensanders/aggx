@@ -1,4 +1,12 @@
 package lib.ha.svg;
+import lib.ha.aggx.renderer.ScanlineRenderer;
+import lib.ha.aggx.color.SpanGradient;
+import lib.ha.aggxtest.AATest.ColorArray;
+import lib.ha.aggx.color.SpanAllocator;
+import lib.ha.aggx.color.SpanInterpolatorLinear;
+import lib.ha.aggx.color.GradientX;
+import lib.ha.aggx.vectorial.PathUtils;
+import lib.ha.aggx.vectorial.PathCommands;
 import lib.ha.aggx.vectorial.CubicCurve;
 import lib.ha.aggx.vectorial.converters.ConvSegmentator;
 import lib.ha.aggx.vectorial.converters.ConvContour;
@@ -16,6 +24,7 @@ import lib.ha.aggx.vectorial.converters.ConvStroke;
 import lib.ha.aggx.vectorial.VectorPath;
 import lib.ha.aggx.vectorial.converters.ConvCurve;
 import lib.ha.core.memory.Ref.FloatRef;
+import lib.ha.core.memory.Ref.Ref;
 import lib.ha.aggx.vectorial.IVertexSource;
 import haxe.ds.Vector;
 import lib.ha.core.geometry.AffineTransformer;
@@ -36,6 +45,9 @@ class PathAttributes
     public var miter_limit: Float;
     public var stroke_width: Float;
     public var transform: AffineTransformer;
+    public var id: String;
+    public var gradientId: String;
+    public var bounds: SVGPathBounds = new SVGPathBounds();
 
     private function new ()
     {
@@ -124,6 +136,8 @@ class SVGPathRenderer
     private var _curved_trans: ConvTransform;
     private var _curved_trans_contour: ConvContour;
 
+    private var _gradients: Map<String, SVGGradient>;
+
     public function new()
     {
         _storage = new VectorPath();
@@ -140,6 +154,7 @@ class SVGPathRenderer
         _curved_trans_contour = new ConvContour(_curved_trans);
 
         _curved_trans_contour.autoDetect = false;
+        _gradients = new Map<String, SVGGradient>();
     }
 
     public function remove_all(): Void
@@ -162,17 +177,36 @@ class SVGPathRenderer
         _curved_trans_contour.width = value;
     }
 
-//    unsigned operator [](unsigned idx)
-//    {
-//    m_transform = m_attr_storage[idx].transform;
-//    return m_attr_storage[idx].index;
-//    }
+    private function eachGradiendAncestor(id: String, callback: SVGGradient -> Bool): Void
+    {
+        var cur: SVGGradient = _gradients.get(id);
+        while (cur != null)
+        {
+            if (!callback(cur))
+            {
+                break;
+            }
 
-//    void bounding_rect(double* x1, double* y1, double* x2, double* y2)
-//    {
-//    agg::conv_transform<agg::path_storage> trans(m_storage, m_transform);
-//    agg::bounding_rect(trans, *this, 0, m_attr_storage.size(), x1, y1, x2, y2);
-//    }
+            cur = _gradients.get(cur.link);
+        }
+    }
+
+    private function getGradientColors(id: String): ColorArray
+    {
+        var colors: ColorArray;
+        eachGradiendAncestor(id, function(grad: SVGGradient)
+        {
+            if (grad.gradientColors != null)
+            {
+                colors = grad.gradientColors;
+                return false;
+            }
+
+            return true;
+        });
+
+        return colors;
+    }
 
 
         public function render(ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
@@ -206,6 +240,32 @@ class SVGPathRenderer
                     color.set(attr.fill_color);
                     color.opacity = color.opacity * alpha;
                     SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
+                }
+
+                if (attr.gradientId != null && _gradients.exists(attr.gradientId))
+                {
+                    ras.reset();
+                    ras.fillingRule = attr.even_odd_flag ? FillingRule.FILL_EVEN_ODD : FillingRule.FILL_NON_ZERO;
+
+                    if (Math.abs(_curved_trans_contour.width) < 0.0001)
+                    {
+                        ras.addPath(_curved_trans, attr.index);
+                    }
+                    else
+                    {
+                        _curved_trans_contour.miterLimit = attr.miter_limit;
+                        ras.addPath(_curved_trans_contour, attr.index);
+                    }
+
+                    var gradientFunction = new GradientX();
+                    var gradientMatrix = new AffineTransformer();
+                    var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
+                    var spanAllocator = new SpanAllocator();
+
+                    var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, getGradientColors(attr.gradientId), attr.bounds.minX, attr.bounds.maxX);
+                    var gradientRenderer = new ScanlineRenderer(ren, spanAllocator, gradientSpan);
+
+                    SolidScanlineRenderer.renderScanlines(ras, sl, gradientRenderer);
                 }
 
                 if (attr.stroke_flag)
@@ -272,6 +332,16 @@ class SVGPathRenderer
         _attr_storage.push(PathAttributes.copy(cur_attr(), idx));
     }
 
+    public function addGradient(gradient: SVGGradient): Void
+    {
+        _gradients.set(gradient.id, gradient);
+    }
+
+    public function getGradient(id: String): SVGGradient
+    {
+        return _gradients.get(id);
+    }
+
     public function endPath(): Void
     {
         if (_attr_storage.length == 0)
@@ -283,17 +353,66 @@ class SVGPathRenderer
         var idx: UInt = _attr_storage[_attr_storage.length - 1].index;
         attr.index = idx;
         _attr_storage[_attr_storage.length - 1] = attr;
+
+        //_storage.getVertexByIndex()
+        _storage.rewind(attr.index);
+        var x: FloatRef = Ref.getFloat();
+        var y: FloatRef = Ref.getFloat();
+        var cmd: Int = 0;
+        while ((cmd = _storage.getVertex(x, y)) != PathCommands.STOP)
+        {
+            if (!PathUtils.isVertex(cmd))
+            {
+                continue;
+            }
+
+            attr.bounds.add(x.value, y.value);
+        }
+
+        Ref.putFloat(x);
+        Ref.putFloat(y);
+
+        _storage.rewind(0);
+
+        trace('${attr.id}: ${attr.bounds}');
+        pop_attr();
+
+        //debugBox(attr.bounds);
+    }
+
+    public function id(id: String)
+    {
+        cur_attr().id = id;
+    }
+
+    public function debugBox(bounds: SVGPathBounds)
+    {
+        push_attr();
+        var idx: Int = _storage.startNewPath();
+        _attr_storage.push(PathAttributes.copy(cur_attr(), idx));
+        fill_none();
+        this.stroke(new RgbaColor(255, 0, 0));
+        move_to(bounds.minX, bounds.minY);
+        line_to(bounds.maxX, bounds.minY);
+        line_to(bounds.maxX, bounds.maxY);
+        line_to(bounds.minX, bounds.maxY);
+        close_subpath();
+
+        var attr: PathAttributes = cur_attr();
+        var idx: UInt = _attr_storage[_attr_storage.length - 1].index;
+        attr.index = idx;
+        _attr_storage[_attr_storage.length - 1] = attr;
+
         pop_attr();
     }
 
     public function parse_path(tok: SVGPathTokenizer): Void
     {
-        var arg: Vector<Float> = new Vector(6);
+        var arg: Vector<Float> = new Vector(9);
 
         while (tok.hasNext())
         {
             var cmd = tok.last_command();
-
             switch (cmd)
             {
                 case "M", "m":
@@ -351,7 +470,13 @@ class SVGPathRenderer
                     }
                 case "A", "a":
                     {
-                        throw "parse_path: Command A: NOT IMPLEMENTED YET";
+                        //throw "parse_path: Command A: NOT IMPLEMENTED YET";
+                        trace("parse_path: Command A: NOT IMPLEMENTED YET");
+                        for (i in 0...6)
+                        {
+                            arg[i] = tok.next(cmd);
+                        }
+                        line_to(arg[5], arg[6], cmd == "a");
                     }
                 case "Z", "z":
                     {
@@ -492,6 +617,11 @@ class SVGPathRenderer
     public function fill_opacity(opacity: Float): Void
     {
         cur_attr().fill_color.opacity = opacity;
+    }
+
+    public function fillGradient(id: String)
+    {
+        cur_attr().gradientId = id;
     }
 
     public function stroke_none(): Void
