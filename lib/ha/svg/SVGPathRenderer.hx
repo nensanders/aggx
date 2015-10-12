@@ -182,37 +182,69 @@ class SVGPathRenderer
         _curved_trans_contour.width = value;
     }
 
-    private function eachGradiendAncestor(id: String, callback: SVGGradient -> Bool): Void
+    private function eachGradiendAncestor(id: String, callback: SVGGradient -> Bool): Int
     {
+        var iteration: Int = 0;
         var cur: SVGGradient = _gradients.get(id);
         while (cur != null)
         {
             if (!callback(cur))
             {
+                return iteration;
                 break;
             }
 
             cur = _gradients.get(cur.link);
+            iteration++;
         }
+
+        return iteration;
     }
 
-    private function getGradientColors(id: String): ColorArray
+    @:generic private function gradientProperty<T>(id: String, def: T, get: SVGGradient -> T, set: SVGGradient -> T -> Void): T
     {
-        var colors: ColorArray;
-        eachGradiendAncestor(id, function(grad: SVGGradient)
+        var value: T = null;
+
+        var depth: Int = eachGradiendAncestor(id, function(grad: SVGGradient)
         {
-            if (grad.gradientColors != null)
+            var current: T = get(grad);
+            if (current != null)
             {
-                colors = grad.gradientColors;
+                value = current;
                 return false;
             }
 
             return true;
         });
 
-        return colors;
+        if (value == null)
+        {
+            value = def;
+        }
+
+        if (depth != 0)
+        {
+            var gradient: SVGGradient = _gradients.get(id);
+            set(gradient, value);
+        }
+
+        return value;
     }
 
+    private function getGradientColors(id: String): ColorArray
+    {
+        var get = function (grad: SVGGradient){return grad.gradientColors;};
+        var set = function (grad: SVGGradient, colors: ColorArray){grad.gradientColors = colors;};
+        return gradientProperty(id, null, get, set);
+    }
+
+    private function getGradientTransformation(id: String): AffineTransformer
+    {
+        var get = function (grad: SVGGradient){return grad.transform;};
+        var set = function (grad: SVGGradient, transform: AffineTransformer){grad.transform = transform;};
+        return gradientProperty(id, defaultTransform, get, set);
+    }
+    private static var defaultTransform = new AffineTransformer();
 
         public function render(ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
         {
@@ -266,6 +298,8 @@ class SVGPathRenderer
                     var gradientMatrix = new AffineTransformer();
                     gradientMatrix.premultiply(_transform);
                     gradientMatrix.invert();
+                    gradientMatrix.multiply(getGradientTransformation(attr.gradientId));
+
                     var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
                     var spanAllocator = new SpanAllocator();
 
@@ -383,7 +417,7 @@ class SVGPathRenderer
         //trace('${attr.id}: ${attr.bounds}');
         pop_attr();
 
-        debugBox(attr.bounds);
+        //debugBox(attr.bounds);
     }
 
     public function id(id: String)

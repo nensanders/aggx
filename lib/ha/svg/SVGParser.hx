@@ -358,19 +358,22 @@ class SVGParser
             return;//TODO add support
         }
 
-        trace(element);
-
-        for (name in element.attributes())
+        eachAttribute(element,
+        function (name: String, value: String)
         {
-            var value: String = element.get(name);
-
             switch (name)
             {
                 case "id": currentGradient.id = value;
                 case "xlink:href": currentGradient.link = value.substr(1, value.length - 1);
+                case "gradientTransform":
+                    {
+                        currentGradient.transform = new AffineTransformer();
+                        parseTransform(value, currentGradient.transform);
+                    }
                 default:
             }
         }
+        );
 
         var stops: Array<SVGStop> = [];
         for (child in element.iterator())

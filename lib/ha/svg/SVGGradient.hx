@@ -1,5 +1,6 @@
 package lib.ha.svg;
 
+import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.aggxtest.AATest.ColorArray;
 import lib.ha.aggx.color.RgbaColor;
 
@@ -26,9 +27,10 @@ class SVGStop
 class SVGGradient
 {
     public var id: String = "";
-    public var gradientColors(default, null): ColorArray;
+    public var gradientColors: ColorArray;
     public var type: GradientType;
     public var link: String;
+    public var transform: AffineTransformer;
 
     public function new()
     {
@@ -88,7 +90,5 @@ class SVGGradient
         {
             trace(gradientColors.get(i));
         }*/
-
-        trace(gradientColors.get(255));
     }
 }
