@@ -594,20 +594,32 @@ class SVGParser
         }
     }
 
-    private function parseTransform(str: String): AffineTransformer
+    private function parseTransform(str: String, transform: AffineTransformer): Void
     {
         for (elem in str.split(")"))
         {
-            if (elem == "") continue;
+            if (elem == "")
+            {
+                continue;
+            }
 
             var nameValue:Array<String> = elem.split("(");
+            var name: String = nameValue[0].trim();
+            var value: String = nameValue[1];
+            var currentTransform: AffineTransformer;
 
-            if (nameValue[0].indexOf("matrix") != -1) return parse_matrix(nameValue[1]);
-            if (nameValue[0].indexOf("translate") != -1) parse_translate(nameValue[1]) else
-            if (nameValue[0].indexOf("rotate") != -1) parse_rotate(nameValue[1]) else
-            if (nameValue[0].indexOf("scale") != -1) parse_scale(nameValue[1]) else
-            if (nameValue[0].indexOf("skewX") != -1) parse_skew_x(nameValue[1]) else
-            if (nameValue[0].indexOf("skewY") != -1) parse_skew_y(nameValue[1]);
+            switch(name)
+            {
+                case "matrix":  currentTransform = parse_matrix(value);
+                case "translate": currentTransform = parse_translate(value);
+                case "rotate": currentTransform = parse_rotate(value);
+                case "scale": currentTransform = parse_scale(value);
+                case "skewX": currentTransform = parse_skew_x(value);
+                case "skewY": currentTransform = parse_skew_y(value);
+                default: throw 'unsupported transform type\'$name\'';
+            }
+
+            transform.premultiply(currentTransform);
         }
     }
 
@@ -638,7 +650,7 @@ class SVGParser
         var na = parse_transform_args(str, 3, args);
         if (na == 1)
         {
-            returnrun AffineTransformer.rotator(Calc.deg2rad(args[0]));
+            return AffineTransformer.rotator(Calc.deg2rad(args[0]));
         }
         else if (na == 3)
         {
@@ -777,7 +789,7 @@ class SVGParser
                 }
             case "transform":
                 {
-                    parse_transform(value);
+                    parseTransform(value, _path.transform());
                 }
             case "id":
                 {
