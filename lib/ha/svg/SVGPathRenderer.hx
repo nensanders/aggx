@@ -1,4 +1,5 @@
 package lib.ha.svg;
+import lib.ha.svg.SVGPathBounds;
 import lib.ha.aggx.color.GradientXY;
 import lib.ha.aggx.color.GradientY;
 import lib.ha.core.math.Calc;
@@ -85,7 +86,7 @@ class PathAttributes
         result.line_cap = attr.line_cap;
         result.miter_limit = attr.miter_limit;
         result.stroke_width = attr.stroke_width;
-        result.bounds = attr.bounds;
+        result.bounds = SVGPathBounds.clone(attr.bounds);
         result.transform = AffineTransformer.of(attr.transform);
         return result;
     }
@@ -360,7 +361,6 @@ class SVGPathRenderer
         attr.index = idx;
         _attr_storage[_attr_storage.length - 1] = attr;
 
-        //_storage.getVertexByIndex()
         _storage.rewind(attr.index);
         var x: FloatRef = Ref.getFloat();
         var y: FloatRef = Ref.getFloat();
@@ -380,10 +380,10 @@ class SVGPathRenderer
 
         _storage.rewind(0);
 
-        trace('${attr.id}: ${attr.bounds}');
+        //trace('${attr.id}: ${attr.bounds}');
         pop_attr();
 
-        //debugBox(attr.bounds);
+        debugBox(attr.bounds);
     }
 
     public function id(id: String)

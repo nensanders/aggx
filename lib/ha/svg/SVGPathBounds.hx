@@ -12,6 +12,16 @@ class SVGPathBounds
 
     }
 
+    public static function clone(source: SVGPathBounds): SVGPathBounds
+    {
+        var temp = new SVGPathBounds();
+        temp.minX = source.minX;
+        temp.maxX = source.maxX;
+        temp.minY = source.minY;
+        temp.maxY = source.maxY;
+        return temp;
+    }
+
     public function toString(): String
     {
         return '{[$minX, $minY] - [$maxX, $maxY]}';
