@@ -246,8 +246,44 @@ class SVGPathRenderer
     }
     private static var defaultTransform = new AffineTransformer();
 
+    private function calculateLinearGradientTransform(bounds: SVGPathBounds, transform: AffineTransformer, output: AffineTransformer): Void
+    {
+        var gradientD2: Float = 100;
+
+        var x1: FloatRef = Ref.getFloat();
+        var y1: FloatRef = Ref.getFloat();
+        var x2: FloatRef = Ref.getFloat();
+        var y2: FloatRef = Ref.getFloat();
+
+        x1.value = bounds.minX;
+        y1.value = 0;
+        x2.value = bounds.maxX;
+        y2.value = 0;
+
+        transform.transform(x1, y1);
+        transform.transform(x2, y2);
+
+        output.reset();
+        var dx = x2.value - x1.value;
+        var dy = y2.value - y1.value;
+
+        var scale: Float = Math.sqrt(dx * dx + dy * dy) / gradientD2;
+
+        output.multiply(AffineTransformer.scaler(scale));
+        output.multiply(AffineTransformer.rotator(Math.atan2(dy, dx)));
+        output.multiply(AffineTransformer.translator(x1.value, y1.value));
+
+        output.invert();
+    }
+
+    private static var oneTime: Bool = true;
         public function render(ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
         {
+            var gradientFunction = new GradientX();
+            var gradientMatrix = new AffineTransformer();
+            var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
+            var spanAllocator = new SpanAllocator();
+
             for (attr in _attr_storage)
             {
                 _transform.set(attr.transform.sx, attr.transform.shy, attr.transform.shx, attr.transform.sy, attr.transform.tx, attr.transform.ty);
@@ -294,16 +330,9 @@ class SVGPathRenderer
                         ras.addPath(_curved_trans_contour, attr.index);
                     }
 
-                    var gradientFunction = new GradientX();
-                    var gradientMatrix = new AffineTransformer();
-                    gradientMatrix.premultiply(_transform);
-                    gradientMatrix.invert();
-                    gradientMatrix.multiply(getGradientTransformation(attr.gradientId));
+                    calculateLinearGradientTransform(attr.bounds, _transform, gradientMatrix);
 
-                    var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
-                    var spanAllocator = new SpanAllocator();
-
-                    var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, getGradientColors(attr.gradientId), attr.bounds.minX, attr.bounds.maxX);
+                    var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, getGradientColors(attr.gradientId), 0, 100);
                     var gradientRenderer = new ScanlineRenderer(ren, spanAllocator, gradientSpan);
 
                     SolidScanlineRenderer.renderScanlines(ras, sl, gradientRenderer);
