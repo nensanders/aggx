@@ -414,7 +414,6 @@ class SVGParser
         );
 
         stop.color.a = Math.round(opacity * 255);
-        trace(stop);
         return stop;
     }
 
@@ -870,10 +869,9 @@ class SVGParser
     {
         if (value.lastIndexOf("%") != -1)
         {
-            trace(value.substr(0, value.length - 1));
             return Std.parseFloat(value.substr(0, value.length - 1)) / 100;
         }
-        trace(value);
+
         return Std.parseFloat(value);
     }
 
