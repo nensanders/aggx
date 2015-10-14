@@ -90,6 +90,14 @@ class GradientManager
         return gradientProperty(id, defaultTransform, get, set);
     }
 
+    private static var useUserSpaceDefault: Null<Bool> = false;
+    private function isUserspaceGradient(id: String): Bool
+    {
+        var get = function (grad: SVGGradient): Null<Bool> {return grad.userSpace;};
+        var set = function (grad: SVGGradient, userspace: Null<Bool>){grad.userSpace = userspace;};
+        var out: Null<Bool> = gradientProperty(id, useUserSpaceDefault, get, set);
+        return out;
+    }
 
     private function getGradientVectorElement(id: String, element: Int): FloatRef
     {
@@ -122,13 +130,16 @@ class GradientManager
 
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
-        var bboxWidth: Float = bounds.maxX - bounds.minX;
-        var bboxHeight: Float = bounds.maxY - bounds.minY;
+        if (!isUserspaceGradient(gradientId))
+        {
+            var bboxWidth: Float = bounds.maxX - bounds.minX;
+            var bboxHeight: Float = bounds.maxY - bounds.minY;
 
-        x1.value = bounds.minX + x1.value * bboxWidth;
-        x2.value = bounds.minX + x2.value * bboxWidth;
-        y1.value = bounds.minY + y1.value * bboxHeight;
-        y2.value = bounds.minY + y2.value * bboxHeight;
+            x1.value = bounds.minX + x1.value * bboxWidth;
+            x2.value = bounds.minX + x2.value * bboxWidth;
+            y1.value = bounds.minY + y1.value * bboxHeight;
+            y2.value = bounds.minY + y2.value * bboxHeight;
+        }
 
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 

@@ -372,6 +372,7 @@ class SVGParser
                 case "y1": currentGradient.gradientVector[1] = parseFloatRef(value);
                 case "x2": currentGradient.gradientVector[2] = parseFloatRef(value);
                 case "y2": currentGradient.gradientVector[3] = parseFloatRef(value);
+                case "gradientUnits": currentGradient.userSpace = value == "userSpaceOnUse";
                 case "gradientTransform":
                     {
                         currentGradient.transform = new AffineTransformer();

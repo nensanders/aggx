@@ -1,14 +1,14 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="8cm" height="4cm" viewBox="0 0 800 400" version="1.1"
+<svg width="8cm" height="8cm" viewBox="0 0 800 800" version="1.1"
      xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink">
   <g>
     <defs>
       <!--<linearGradient gradientUnits="userSpaceOnUse" x1="150" id="MyGradient">-->
       <linearGradient id="g3" xlink:href="#g2"/>
-      <linearGradient id="MyGradient" gradientTransform="rotate(90)" x1="0.25" x2="0.75">
+      <linearGradient id="MyGradient" gradientTransform="rotate(0)" gradientUnits="userSpaceOnUse" x1="100" x2="600">
         <stop offset="5%" stop-color="red" />
         <stop offset="95%" stop-color="green" />
       </linearGradient>
@@ -24,8 +24,8 @@
     <!--<rect id="guide" fill="none" stroke="black" stroke-width="1"
           x="150" y="140" width="600" height="200"/>-->
 
-    <rect id="filledTranslated" transform="translate(150,140)" fill="url(#g3)" stroke="black" stroke-width="5"
-        x="0" y="0" width="600" height="200"/>
+    <rect id="filledTranslated" transform="translate(150,140)" fill="url(#g3)" stroke="black" stroke-width="5" x="0" y="0" width="600" height="200"/>
 
+    <rect id="filledTranslated2" transform="translate(0,240)" fill="url(#g3)" stroke="black" stroke-width="5" x="0" y="0" width="600" height="200"/>
   </g>
 </svg>
