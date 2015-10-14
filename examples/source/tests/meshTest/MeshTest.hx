@@ -80,8 +80,10 @@ class MeshTest extends OpenGLTest
     inline private static var FONT_PATH_COMIC = "meshTest/fonts/Pacifico.ttf";
     inline private static var FONT_PATH_JAPAN = "meshTest/fonts/font_1_ant-kaku.ttf";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
-    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_transform.svg";
+    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";
     inline private static var VERTEXSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.vsh";
     inline private static var FRAGMENTSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.fsh";
 
@@ -232,7 +234,7 @@ class MeshTest extends OpenGLTest
         //t5();
         //t6();
         //t7();
-        //t8();
+        ///t8();
         //t9();
         //t10();
         t11();
@@ -452,9 +454,10 @@ class MeshTest extends OpenGLTest
         stroke.width = 1;
         stroke.lineCap = LineCap.ROUND;
 
-        rasterizer.addPath(curve);
+        //rasterizer.addPath(curve);
 
-        var ellipse = new Ellipse(150, 50, 50, 50, 100);
+        var storage = new VectorPath();
+        var ellipse = new Ellipse(50, 50, 50, 50);
         rasterizer.addPath(ellipse);
 
         scanlineRenderer.color = new RgbaColor(160, 180, 80, 80);
@@ -466,10 +469,12 @@ class MeshTest extends OpenGLTest
 
         var gradientFunction = new GradientX();
         var gradientMatrix = new AffineTransformer();
+        gradientMatrix.premultiply(AffineTransformer.translator(50, 0));
+        gradientMatrix.invert();
         var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
         var spanAllocator = new SpanAllocator();
         var gradientColors = new ColorArray(256);
-        var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, gradientColors, 0, 1000);
+        var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, gradientColors, 0, 100);
         var gradientRenderer = new ScanlineRenderer(clippingRenderer, spanAllocator, gradientSpan);
 
         var begin = new RgbaColorF(1, 0, 0).toRgbaColor();

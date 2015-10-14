@@ -246,7 +246,8 @@ class SVGPathRenderer
     }
     private static var defaultTransform = new AffineTransformer();
 
-    private function calculateLinearGradientTransform(bounds: SVGPathBounds, transform: AffineTransformer, output: AffineTransformer): Void
+    private function calculateLinearGradientTransform(bounds: SVGPathBounds, transform: AffineTransformer,
+                                                      gradientTransform: AffineTransformer, output: AffineTransformer): Void
     {
         var gradientD2: Float = 100;
 
@@ -255,19 +256,39 @@ class SVGPathRenderer
         var x2: FloatRef = Ref.getFloat();
         var y2: FloatRef = Ref.getFloat();
 
-        x1.value = bounds.minX;
+        x1.value = 0;
+        x2.value = 1;
         y1.value = 0;
-        x2.value = bounds.maxX;
         y2.value = 0;
+
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
+
+        gradientTransform.transform(x1, y1);
+        gradientTransform.transform(x2, y2);
+
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
+
+        var bboxWidth: Float = bounds.maxX - bounds.minX;
+        var bboxHeight: Float = bounds.maxY - bounds.minY;
+
+        x1.value = bounds.minX + x1.value * bboxWidth;
+        x2.value = bounds.minX + x2.value * bboxWidth;
+        y1.value = bounds.minY + y1.value * bboxHeight;
+        y2.value = bounds.minY + y2.value * bboxHeight;
+
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         transform.transform(x1, y1);
         transform.transform(x2, y2);
+
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         output.reset();
         var dx = x2.value - x1.value;
         var dy = y2.value - y1.value;
 
         var scale: Float = Math.sqrt(dx * dx + dy * dy) / gradientD2;
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}} scale:$scale');
 
         output.multiply(AffineTransformer.scaler(scale));
         output.multiply(AffineTransformer.rotator(Math.atan2(dy, dx)));
@@ -330,7 +351,7 @@ class SVGPathRenderer
                         ras.addPath(_curved_trans_contour, attr.index);
                     }
 
-                    calculateLinearGradientTransform(attr.bounds, _transform, gradientMatrix);
+                    calculateLinearGradientTransform(attr.bounds, _transform, getGradientTransformation(attr.gradientId), gradientMatrix);
 
                     var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, getGradientColors(attr.gradientId), 0, 100);
                     var gradientRenderer = new ScanlineRenderer(ren, spanAllocator, gradientSpan);

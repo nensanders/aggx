@@ -8,7 +8,7 @@
     <defs>
       <!--<linearGradient gradientUnits="userSpaceOnUse" x1="150" id="MyGradient">-->
       <linearGradient id="g3" xlink:href="#g2"/>
-      <linearGradient id="MyGradient" gradientTransform="rotate(0)">
+      <linearGradient id="MyGradient" gradientTransform="rotate(90)">
         <stop offset="5%" stop-color="red" />
         <stop offset="95%" stop-color="green" />
       </linearGradient>
