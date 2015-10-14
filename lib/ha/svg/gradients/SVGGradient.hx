@@ -1,4 +1,4 @@
-package lib.ha.svg;
+package lib.ha.svg.gradients;
 
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.aggxtest.AATest.ColorArray;

@@ -1,6 +1,7 @@
 package lib.ha.svg;
-import lib.ha.svg.SVGGradient.GradientType;
-import lib.ha.svg.SVGGradient.SVGStop;
+import lib.ha.svg.gradients.SVGGradient.GradientType;
+import lib.ha.svg.gradients.SVGGradient.SVGStop;
+import lib.ha.svg.gradients.SVGGradient;
 import Array;
 import types.AffineTransform;
 import lib.ha.core.math.Calc;
