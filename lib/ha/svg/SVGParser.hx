@@ -1,4 +1,6 @@
 package lib.ha.svg;
+import lib.ha.core.memory.Ref.FloatRef;
+import lib.ha.core.memory.Ref;
 import lib.ha.svg.gradients.SVGGradient.GradientType;
 import lib.ha.svg.gradients.SVGGradient.SVGStop;
 import lib.ha.svg.gradients.SVGGradient;
@@ -366,6 +368,10 @@ class SVGParser
             {
                 case "id": currentGradient.id = value;
                 case "xlink:href": currentGradient.link = value.substr(1, value.length - 1);
+                case "x1": currentGradient.gradientVector[0] = parseFloatRef(value);
+                case "y1": currentGradient.gradientVector[1] = parseFloatRef(value);
+                case "x2": currentGradient.gradientVector[2] = parseFloatRef(value);
+                case "y2": currentGradient.gradientVector[3] = parseFloatRef(value);
                 case "gradientTransform":
                     {
                         currentGradient.transform = new AffineTransformer();
@@ -874,6 +880,13 @@ class SVGParser
         }
 
         return Std.parseFloat(value);
+    }
+
+    private function parseFloatRef(value: String): FloatRef
+    {
+        var ref: FloatRef = Ref.getFloat();
+        ref.value = Std.parseFloat(value);
+        return ref;
     }
 
 }

@@ -8,10 +8,12 @@ import lib.ha.core.geometry.AffineTransformer;
 class GradientManager
 {
     private var _gradients: Map<String, SVGGradient> = new Map<String, SVGGradient>();
-
+    private var _zeroFloatRef: FloatRef = Ref.getFloat();
+    private var _oneFloatRef: FloatRef = Ref.getFloat();
     public function new()
     {
-
+        _zeroFloatRef.value = 0;
+        _oneFloatRef.value = 1;
     }
 
     public function getGradient(id: String): SVGGradient
@@ -80,38 +82,45 @@ class GradientManager
         return gradientProperty(id, null, get, set);
     }
 
-    public function getGradientTransformation(id: String): AffineTransformer
+    private static var defaultTransform = new AffineTransformer();
+    private function getGradientTransformation(id: String): AffineTransformer
     {
         var get = function (grad: SVGGradient){return grad.transform;};
         var set = function (grad: SVGGradient, transform: AffineTransformer){grad.transform = transform;};
         return gradientProperty(id, defaultTransform, get, set);
     }
-    private static var defaultTransform = new AffineTransformer();
 
-    public function calculateLinearGradientTransform(gradinetId: String,
+
+    private function getGradientVectorElement(id: String, element: Int): FloatRef
+    {
+        var output: FloatRef = Ref.getFloat();
+        var defaultValue: FloatRef = element == 2 ? _oneFloatRef : _zeroFloatRef;
+        var get = function (grad: SVGGradient){return grad.gradientVector[element];};
+        var set = function (grad: SVGGradient, value: FloatRef){grad.gradientVector[element] = value;};
+
+        output.value = gradientProperty(id, defaultValue, get, set).value;
+        return output;
+    }
+
+    public function calculateLinearGradientTransform(gradientId: String,
                                                       bounds: SVGPathBounds,
                                                       transform: AffineTransformer,
                                                       output: AffineTransformer): Void
     {
-        var gradientTransform: AffineTransformer = getGradientTransformation(gradinetId);
+        var gradientTransform: AffineTransformer = getGradientTransformation(gradientId);
         var gradientD2: Float = 100;
 
-        var x1: FloatRef = Ref.getFloat();
-        var y1: FloatRef = Ref.getFloat();
-        var x2: FloatRef = Ref.getFloat();
-        var y2: FloatRef = Ref.getFloat();
+        var x1: FloatRef = getGradientVectorElement(gradientId, 0);
+        var y1: FloatRef = getGradientVectorElement(gradientId, 1);
+        var x2: FloatRef = getGradientVectorElement(gradientId, 2);
+        var y2: FloatRef = getGradientVectorElement(gradientId, 3);
 
-        x1.value = 0;
-        x2.value = 1;
-        y1.value = 0;
-        y2.value = 0;
-
-//trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         gradientTransform.transform(x1, y1);
         gradientTransform.transform(x2, y2);
 
-//trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         var bboxWidth: Float = bounds.maxX - bounds.minX;
         var bboxHeight: Float = bounds.maxY - bounds.minY;
@@ -121,19 +130,19 @@ class GradientManager
         y1.value = bounds.minY + y1.value * bboxHeight;
         y2.value = bounds.minY + y2.value * bboxHeight;
 
-//trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         transform.transform(x1, y1);
         transform.transform(x2, y2);
 
-//trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         output.reset();
         var dx = x2.value - x1.value;
         var dy = y2.value - y1.value;
 
         var scale: Float = Math.sqrt(dx * dx + dy * dy) / gradientD2;
-//trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}} scale:$scale');
+        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}} scale:$scale');
 
         output.multiply(AffineTransformer.scaler(scale));
         output.multiply(AffineTransformer.rotator(Math.atan2(dy, dx)));
