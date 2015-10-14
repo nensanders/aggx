@@ -1,5 +1,6 @@
 package lib.ha.svg.gradients;
 
+import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Ref.FloatRef;
 import lib.ha.core.geometry.AffineTransformer;
@@ -35,6 +36,7 @@ class SVGGradient
     public var transform: AffineTransformer;
     public var gradientVector: Vector<FloatRef> = new Vector<FloatRef>(4);
     public var userSpace: Null<Bool>;
+    public var spreadMethod: Null<SpreadMethod>;
 
     public function new()
     {

@@ -17,10 +17,17 @@
 //----------------------------------------------------------------------------
 
 package lib.ha.aggx.color;
-//=======================================================================================================
+
 import lib.ha.core.memory.Ref;
 import lib.ha.core.math.Calc;
-//=======================================================================================================
+
+enum SpreadMethod
+{
+    Pad;
+    Reflect;
+    Repeat;
+}
+
 class SpanGradient implements ISpanGenerator
 {
 	public static var GRADIENT_SUBPIXEL_SHIFT = 4;
@@ -34,6 +41,8 @@ class SpanGradient implements ISpanGenerator
 	private var _colorFunction:IColorFunction;
 	private var _d1:Int;
 	private var _d2:Int;
+
+    public var spread: SpreadMethod = SpreadMethod.Pad;
 	//---------------------------------------------------------------------------------------------------
 	public function new(inter:ISpanInterpolator, gradientFunc:IGradientFunction, colorFunc:IColorFunction, d1_:Float, d2_:Float)	
 	{
@@ -82,9 +91,43 @@ class SpanGradient implements ISpanGenerator
 			var temp: Int = ((d - _d1) * _colorFunction.size);
 			d =  Calc.intDiv(temp, dd);
 
-			if(d < 0) d = 0;
-			if(d >= _colorFunction.size) d = _colorFunction.size - 1;
-			span.data[offset++] = _colorFunction.get(d);
+            switch(spread)
+            {
+                case SpreadMethod.Pad:
+                    {
+                        if(d < 0)
+                        {
+                            d = 0;
+                        }
+                        if(d >= _colorFunction.size)
+                        {
+                            d = _colorFunction.size - 1;
+                        }
+                    }
+                case SpreadMethod.Repeat:
+                    {
+                        d = d % _colorFunction.size;
+                        if (d < 0)
+                        {
+                            d = _colorFunction.size + d;
+                        }
+                    }
+
+                case SpreadMethod.Reflect:
+                    {
+                        d = Calc.abs(d);
+                        var even: Bool =  Calc.intDiv(d, _colorFunction.size) % 2 == 0;
+
+                        d = d % _colorFunction.size;
+
+                        if (!even)
+                        {
+                            d = _colorFunction.size - d;
+                        }
+                    }
+            }
+
+            span.data[offset++] = _colorFunction.get(d);
 			_interpolator.op_inc();
 		}
 		while (--len != 0);

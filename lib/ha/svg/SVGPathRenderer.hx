@@ -239,6 +239,8 @@ class SVGPathRenderer
                     _gradientManager.calculateLinearGradientTransform(attr.gradientId, attr.bounds, _transform, gradientMatrix);
 
                     var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, _gradientManager.getGradientColors(attr.gradientId), 0, 100);
+                    gradientSpan.spread = _gradientManager.getSpreadMethod(attr.gradientId);
+
                     var gradientRenderer = new ScanlineRenderer(ren, spanAllocator, gradientSpan);
 
                     SolidScanlineRenderer.renderScanlines(ras, sl, gradientRenderer);

@@ -1,5 +1,6 @@
 package lib.ha.svg.gradients;
 
+import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import lib.ha.aggxtest.AATest.ColorArray;
 import lib.ha.core.memory.Ref.FloatRef;
 import lib.ha.core.memory.Ref;
@@ -108,6 +109,16 @@ class GradientManager
 
         output.value = gradientProperty(id, defaultValue, get, set).value;
         return output;
+    }
+
+    private static var defaultSpread: Null<SpreadMethod> = SpreadMethod.Pad;
+    public function getSpreadMethod(id: String): SpreadMethod
+    {
+        var get = function (grad: SVGGradient){return grad.spreadMethod;};
+        var set = function (grad: SVGGradient, m: SpreadMethod){grad.spreadMethod = m;};
+
+        var out: Null<SpreadMethod> = gradientProperty(id, defaultSpread, get, set);
+        return out;
     }
 
     public function calculateLinearGradientTransform(gradientId: String,

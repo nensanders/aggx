@@ -1,4 +1,5 @@
 package lib.ha.svg;
+import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import lib.ha.core.memory.Ref.FloatRef;
 import lib.ha.core.memory.Ref;
 import lib.ha.svg.gradients.SVGGradient.GradientType;
@@ -373,6 +374,7 @@ class SVGParser
                 case "x2": currentGradient.gradientVector[2] = parseFloatRef(value);
                 case "y2": currentGradient.gradientVector[3] = parseFloatRef(value);
                 case "gradientUnits": currentGradient.userSpace = value == "userSpaceOnUse";
+                case "spreadMethod": currentGradient.spreadMethod = parseSpreadMethond(value);
                 case "gradientTransform":
                     {
                         currentGradient.transform = new AffineTransformer();
@@ -888,6 +890,17 @@ class SVGParser
         var ref: FloatRef = Ref.getFloat();
         ref.value = Std.parseFloat(value);
         return ref;
+    }
+
+    private function parseSpreadMethond(value: String): SpreadMethod
+    {
+        return switch (value)
+        {
+            case "pad": SpreadMethod.Pad;
+            case "reflect": SpreadMethod.Reflect;
+            case "repeat": SpreadMethod.Repeat;
+            default: throw "invalid spread method";
+        }
     }
 
 }
