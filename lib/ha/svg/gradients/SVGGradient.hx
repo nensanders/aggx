@@ -35,6 +35,7 @@ class SVGGradient
     public var link: String;
     public var transform: AffineTransformer;
     public var gradientVector: Vector<FloatRef> = new Vector<FloatRef>(4);
+    public var focalGradientParameters: Vector<FloatRef> = new Vector<FloatRef>(5);
     public var userSpace: Null<Bool>;
     public var spreadMethod: Null<SpreadMethod>;
 

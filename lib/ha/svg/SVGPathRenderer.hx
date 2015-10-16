@@ -1,4 +1,5 @@
 package lib.ha.svg;
+import lib.ha.aggx.color.GradientRadialFocus;
 import lib.ha.svg.gradients.GradientManager;
 import lib.ha.svg.gradients.SVGGradient;
 import lib.ha.svg.SVGPathBounds;
@@ -186,6 +187,7 @@ class SVGPathRenderer
         public function render(ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
         {
             var gradientFunction = new GradientX();
+            var gradientRadialFocus = new GradientRadialFocus();
             var gradientMatrix = new AffineTransformer();
             var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
             var spanAllocator = new SpanAllocator();
@@ -221,7 +223,7 @@ class SVGPathRenderer
                     SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
                 }
 
-                if (attr.gradientId != null)
+                if (attr.gradientId != null && _gradientManager.getGradient(attr.gradientId) != null)
                 {
                     ras.reset();
                     ras.fillingRule = attr.even_odd_flag ? FillingRule.FILL_EVEN_ODD : FillingRule.FILL_NON_ZERO;

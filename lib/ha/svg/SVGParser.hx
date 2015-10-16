@@ -359,7 +359,6 @@ class SVGParser
         else if (element.nodeName == "radialGradient")
         {
             currentGradient.type = GradientType.Radial;
-            return;//TODO add support
         }
 
         eachAttribute(element,
@@ -369,10 +368,18 @@ class SVGParser
             {
                 case "id": currentGradient.id = value;
                 case "xlink:href": currentGradient.link = value.substr(1, value.length - 1);
+
                 case "x1": currentGradient.gradientVector[0] = parseFloatRef(value);
                 case "y1": currentGradient.gradientVector[1] = parseFloatRef(value);
                 case "x2": currentGradient.gradientVector[2] = parseFloatRef(value);
                 case "y2": currentGradient.gradientVector[3] = parseFloatRef(value);
+
+                case "cx": currentGradient.focalGradientParameters[0] = parseFloatRef(value);
+                case "cy": currentGradient.focalGradientParameters[1] = parseFloatRef(value);
+                case "r": currentGradient.focalGradientParameters[2] = parseFloatRef(value);
+                case "fx": currentGradient.focalGradientParameters[3] = parseFloatRef(value);
+                case "fy": currentGradient.focalGradientParameters[4] = parseFloatRef(value);
+
                 case "gradientUnits": currentGradient.userSpace = value == "userSpaceOnUse";
                 case "spreadMethod": currentGradient.spreadMethod = parseSpreadMethond(value);
                 case "gradientTransform":
