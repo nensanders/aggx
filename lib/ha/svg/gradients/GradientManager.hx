@@ -1,5 +1,6 @@
 package lib.ha.svg.gradients;
 
+import lib.ha.aggx.color.GradientRadialFocus;
 import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import lib.ha.aggxtest.AATest.ColorArray;
 import lib.ha.core.memory.Ref.FloatRef;
@@ -11,10 +12,12 @@ class GradientManager
     private var _gradients: Map<String, SVGGradient> = new Map<String, SVGGradient>();
     private var _zeroFloatRef: FloatRef = Ref.getFloat();
     private var _oneFloatRef: FloatRef = Ref.getFloat();
+    private var _halfFloatRef: FloatRef = Ref.getFloat();
     public function new()
     {
         _zeroFloatRef.value = 0;
         _oneFloatRef.value = 1;
+        _halfFloatRef.value = 0.5;
     }
 
     public function getGradient(id: String): SVGGradient
@@ -111,6 +114,19 @@ class GradientManager
         return output;
     }
 
+    private function getGradientFocalParameter(id: String, element: Int): FloatRef
+    {
+        var output: FloatRef = Ref.getFloat();
+
+        var defaultValue: FloatRef = element == 2 ? _oneFloatRef : _zeroFloatRef;
+
+        var get = function (grad: SVGGradient){return grad.focalGradientParameters[element];};
+        var set = function (grad: SVGGradient, value: FloatRef){grad.focalGradientParameters[element] = value;};
+
+        output.value = gradientProperty(id, defaultValue, get, set).value;
+        return output;
+    }
+
     private static var defaultSpread: Null<SpreadMethod> = SpreadMethod.Pad;
     public function getSpreadMethod(id: String): SpreadMethod
     {
@@ -119,6 +135,47 @@ class GradientManager
 
         var out: Null<SpreadMethod> = gradientProperty(id, defaultSpread, get, set);
         return out;
+    }
+
+    public function calculateRadialGradientParameters(gradientId: String,
+                                                      bounds: SVGPathBounds,
+                                                      transform: AffineTransformer,
+                                                      output: AffineTransformer,
+                                                      outputFunction: GradientRadialFocus): Void
+    {
+        var gradientTransform: AffineTransformer = getGradientTransformation(gradientId);
+        var gradientD2: Float = 100;
+
+        var cx: FloatRef = getGradientFocalParameter(gradientId, 0);
+        var cy: FloatRef = getGradientFocalParameter(gradientId, 1);
+        var r: FloatRef = getGradientFocalParameter(gradientId, 2);
+        var fx: FloatRef = getGradientFocalParameter(gradientId, 3);
+        var fy: FloatRef = getGradientFocalParameter(gradientId, 4);
+
+        var bboxTransform: AffineTransformer = new AffineTransformer();
+        if (!isUserspaceGradient(gradientId))
+        {
+            calculateBBoxTransform(bounds, bboxTransform);
+        }
+
+        //transform.transform(cx, cy);
+        //transform.transform(fx, fy);
+
+        trace('cx: ${cx.value} cy: ${cy.value} r: ${r.value} fx: ${fx.value} fy: ${fy.value}');
+
+        outputFunction.init(r.value, fx.value, fy.value);
+
+        gradientTransform.reset();
+        gradientTransform.translate(cx, cy);
+        gradientTransform.invert();
+    }
+
+    private function calculateBBoxTransform(bounds: SVGPathBounds, transform: AffineTransformer)
+    {
+        var bboxWidth: Float = bounds.maxX - bounds.minX;
+        var bboxHeight: Float = bounds.maxY - bounds.minY;
+        transform.multiply(AffineTransformer.scaler(bboxWidth, bboxHeight));
+        transform.multiply(AffineTransformer.translator(bounds.minX, bounds.minY));
     }
 
     public function calculateLinearGradientTransform(gradientId: String,
@@ -141,16 +198,14 @@ class GradientManager
 
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
+        var bboxTransform: AffineTransformer = new AffineTransformer();
         if (!isUserspaceGradient(gradientId))
         {
-            var bboxWidth: Float = bounds.maxX - bounds.minX;
-            var bboxHeight: Float = bounds.maxY - bounds.minY;
-
-            x1.value = bounds.minX + x1.value * bboxWidth;
-            x2.value = bounds.minX + x2.value * bboxWidth;
-            y1.value = bounds.minY + y1.value * bboxHeight;
-            y2.value = bounds.minY + y2.value * bboxHeight;
+            calculateBBoxTransform(bounds, bboxTransform);
         }
+
+        bboxTransform.transform(x1, y1);
+        bboxTransform.transform(x2, y2);
 
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 

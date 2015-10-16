@@ -8,11 +8,17 @@
     <defs>
       <!--<linearGradient gradientUnits="userSpaceOnUse" x1="150" id="MyGradient">-->
       <linearGradient id="g3" xlink:href="#g2"/>
-      <linearGradient id="MyGradient" gradientTransform="rotate(0)" gradientUnits="userSpaceOnUse" x1="100" x2="160">
+      <linearGradient id="MyGradient" gradientTransform="rotate(90)">
         <stop offset="5%" stop-color="red" />
         <stop offset="95%" stop-color="green" />
       </linearGradient>
       <linearGradient id="g2" xlink:href="#MyGradient" spreadMethod="reflect"/>
+
+       <radialGradient id="MyRadialGradient" gradientUnits="userSpaceOnUse"
+                      cx="400" cy="200" r="300" fx="400" fy="200">
+        <stop offset="5%" stop-color="red" />
+        <stop offset="95%" stop-color="green" />
+      </radialGradient>
     </defs>
 
 
@@ -26,6 +32,9 @@
 
     <rect id="filledTranslated" transform="translate(150,140)" fill="url(#g3)" stroke="black" stroke-width="5" x="0" y="0" width="600" height="200"/>
 
-    <rect id="filledTranslated2" transform="translate(0,240)" fill="url(#g3)" stroke="black" stroke-width="5" x="0" y="0" width="600" height="200"/>
+    <rect id="filledTranslated2" transform="translate(0,240)" fill="url(#g3)" stroke="black" stroke-width="5" x="0" y="0" width="800" height="200"/>
+
+    <rect id="radial" fill="url(#MyRadialGradient)" stroke="black" stroke-width="5"
+          x="100" y="100" width="600" height="200"/>
   </g>
 </svg>

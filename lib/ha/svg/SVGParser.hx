@@ -295,6 +295,10 @@ class SVGParser
                 {
                     parseGradient(element);
                 }
+            case "radialGradient":
+                {
+                    parseGradient(element);
+                }
             default:
         }
     }
@@ -408,6 +412,7 @@ class SVGParser
             stops.push(parseGradientStop(child));
         }
 
+        //trace('${currentGradient.id} -> ${currentGradient.type}');
         currentGradient.calculateColorArray(stops);
         _path.addGradient(currentGradient);
     }

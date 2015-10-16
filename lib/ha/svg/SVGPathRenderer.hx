@@ -223,7 +223,8 @@ class SVGPathRenderer
                     SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
                 }
 
-                if (attr.gradientId != null && _gradientManager.getGradient(attr.gradientId) != null)
+                var gradient: SVGGradient;
+                if (attr.gradientId != null && (gradient = _gradientManager.getGradient(attr.gradientId)) != null)
                 {
                     ras.reset();
                     ras.fillingRule = attr.even_odd_flag ? FillingRule.FILL_EVEN_ODD : FillingRule.FILL_NON_ZERO;
@@ -238,9 +239,19 @@ class SVGPathRenderer
                         ras.addPath(_curved_trans_contour, attr.index);
                     }
 
-                    _gradientManager.calculateLinearGradientTransform(attr.gradientId, attr.bounds, _transform, gradientMatrix);
+                    var gradientSpan: SpanGradient;
+                    if (gradient.type == GradientType.Linear)
+                    {
+                        continue;
+                        _gradientManager.calculateLinearGradientTransform(attr.gradientId, attr.bounds, _transform, gradientMatrix);
+                        gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, _gradientManager.getGradientColors(attr.gradientId), 0, 100);
+                    }
+                    else
+                    {
+                        _gradientManager.calculateRadialGradientParameters(attr.gradientId, attr.bounds, _transform, gradientMatrix, gradientRadialFocus);
+                        gradientSpan = new SpanGradient(spanInterpolator, gradientRadialFocus, _gradientManager.getGradientColors(attr.gradientId), 0, 100);
+                    }
 
-                    var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, _gradientManager.getGradientColors(attr.gradientId), 0, 100);
                     gradientSpan.spread = _gradientManager.getSpreadMethod(attr.gradientId);
 
                     var gradientRenderer = new ScanlineRenderer(ren, spanAllocator, gradientSpan);
@@ -269,7 +280,7 @@ class SVGPathRenderer
                     ras.addPath(_curved_stroked_trans, attr.index);
                     color.set(attr.stroke_color);
                     color.opacity = color.opacity * alpha;
-                    SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
+                    //SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
                 }
             }
         }
