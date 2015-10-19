@@ -242,7 +242,6 @@ class SVGPathRenderer
                     var gradientSpan: SpanGradient;
                     if (gradient.type == GradientType.Linear)
                     {
-                        continue;
                         _gradientManager.calculateLinearGradientTransform(attr.gradientId, attr.bounds, _transform, gradientMatrix);
                         gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, _gradientManager.getGradientColors(attr.gradientId), 0, 100);
                     }
@@ -280,7 +279,7 @@ class SVGPathRenderer
                     ras.addPath(_curved_stroked_trans, attr.index);
                     color.set(attr.stroke_color);
                     color.opacity = color.opacity * alpha;
-                    //SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
+                    SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
                 }
             }
         }

@@ -158,16 +158,23 @@ class GradientManager
             calculateBBoxTransform(bounds, bboxTransform);
         }
 
-        //transform.transform(cx, cy);
-        //transform.transform(fx, fy);
+        transform.transform(cx, cy);
+        transform.transform(fx, fy);
 
         trace('cx: ${cx.value} cy: ${cy.value} r: ${r.value} fx: ${fx.value} fy: ${fy.value}');
 
-        outputFunction.init(r.value, fx.value, fy.value);
+        /*cx.value += bounds.minX;
+        cy.value += bounds.minY;
+        fx.value += bounds.minX;
+        fy.value += bounds.minY;*/
 
-        gradientTransform.reset();
-        gradientTransform.translate(cx, cy);
-        gradientTransform.invert();
+        //outputFunction.init(r.value, fx.value, fy.value);
+        outputFunction.init(r.value, fx.value - cx.value, fy.value - cy.value);
+
+        output.reset();
+        output.multiply(AffineTransformer.scaler(r.value / gradientD2));
+        output.multiply(AffineTransformer.translator(cx.value, cy.value));
+        output.invert();
     }
 
     private function calculateBBoxTransform(bounds: SVGPathBounds, transform: AffineTransformer)
