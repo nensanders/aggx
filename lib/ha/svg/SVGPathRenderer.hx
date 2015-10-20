@@ -461,6 +461,7 @@ class SVGPathRenderer
                             arg[i] = tok.next(cmd);
                         }
                         line_to(arg[5], arg[6], cmd == "a");
+                        arc(arg[0], arg[1], arg[2], arg[3] != 0, arg[4] != 0, arg[5], arg[6]);
                     }
                 case "Z", "z":
                     {
@@ -578,6 +579,19 @@ class SVGPathRenderer
         else
         {
             _storage.curve4To(x2,y2,x,y);
+        }
+    }
+
+    //A, a
+    public function arc(rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float, rel: Bool = false)
+    {
+        if (rel)
+        {
+            _storage.arcRel(rx, ry, angle, isLargeArc, isSweep, x, y);
+        }
+        else
+        {
+            _storage.arc(rx, ry, angle, isLargeArc, isSweep, x, y);
         }
     }
 

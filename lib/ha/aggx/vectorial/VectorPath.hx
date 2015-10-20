@@ -222,7 +222,64 @@ class VectorPath implements IVertexSource
 		relToAbs(rdx_ctrl2, rdy_ctrl2);
 		relToAbs(rdx_to, rdy_to);
 		curve4To(Ref.putFloat(rdx_ctrl2).value, Ref.putFloat(rdy_ctrl2).value, Ref.putFloat(rdx_to).value, Ref.putFloat(rdy_to).value);
-	}	
+	}
+
+    private static var _svgArc: BezierArcSvg = new BezierArcSvg();
+    private function arcImpl(x0: FloatRef, y0: FloatRef, rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float)
+    {
+        var epsilon: Float = 1e-30;
+
+        if(rx < epsilon || ry < epsilon)
+        {
+            lineTo(x, y);
+            return;
+        }
+
+        if(Calc.distance(x0.value, y0.value, x, y) < epsilon)
+        {
+            // If the endpoints (x, y) and (x0, y0) are identical, then this
+            // is equivalent to omitting the elliptical arc segment entirely.
+            return;
+        }
+
+        _svgArc.init(x0.value, y0.value, rx, ry, angle, isLargeArc, isSweep, x, y);
+        if(_svgArc._radiiOk)
+        {
+            joinPath(_svgArc);
+        }
+        else
+        {
+            lineTo(x, y);
+        }
+
+    }
+	public function arc(rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float)
+    {
+        var x0 = Ref.getFloat();
+        var y0 = Ref.getFloat();
+
+        if(PathUtils.isVertex(getLastVertex(x0, y0)))
+        {
+            arcImpl(x0, y0, rx, ry, angle, isLargeArc, isSweep, Ref.putFloat(x0).value, Ref.putFloat(y0).value);
+        }
+        else
+        {
+            moveTo(x, y);
+        }
+
+        Ref.putFloat(x0);
+        Ref.putFloat(y0);
+    }
+
+	public function arcRel(rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, dx: Float, dy: Float)
+    {
+        var rdx = Ref.getFloat().set(dx);
+        var rdy = Ref.getFloat().set(dy);
+
+        relToAbs(rdx, rdy);
+        arc(rx, ry, angle, isLargeArc, isSweep, Ref.putFloat(rdx).value, Ref.putFloat(rdy).value);
+    }
+
 	//---------------------------------------------------------------------------------------------------
 	public inline function endPoly(flags:Int):Void
 	{
