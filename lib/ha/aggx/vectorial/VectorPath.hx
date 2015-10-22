@@ -26,6 +26,7 @@ class VectorPath implements IVertexSource
 {
 	private var _vertices:VertexBlockStorage;
 	private var _vertextIterator:UInt;
+    private var _svgArc: BezierArcSvg = new BezierArcSvg();
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
@@ -224,18 +225,18 @@ class VectorPath implements IVertexSource
 		curve4To(Ref.putFloat(rdx_ctrl2).value, Ref.putFloat(rdy_ctrl2).value, Ref.putFloat(rdx_to).value, Ref.putFloat(rdy_to).value);
 	}
 
-    private static var _svgArc: BezierArcSvg = new BezierArcSvg();
     private function arcImpl(x0: FloatRef, y0: FloatRef, rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float)
     {
-        var epsilon: Float = 1e-30;
+        rx = Math.abs(rx);
+        ry = Math.abs(ry);
 
-        if(rx < epsilon || ry < epsilon)
+        if(rx < Calc.INTERSECTION_EPSILON || ry < Calc.INTERSECTION_EPSILON)
         {
             lineTo(x, y);
             return;
         }
 
-        if(Calc.distance(x0.value, y0.value, x, y) < epsilon)
+        if(Calc.distance(x0.value, y0.value, x, y) < Calc.VERTEX_DIST_EPSILON)
         {
             // If the endpoints (x, y) and (x0, y0) are identical, then this
             // is equivalent to omitting the elliptical arc segment entirely.
@@ -260,7 +261,7 @@ class VectorPath implements IVertexSource
 
         if(PathUtils.isVertex(getLastVertex(x0, y0)))
         {
-            arcImpl(x0, y0, rx, ry, angle, isLargeArc, isSweep, Ref.putFloat(x0).value, Ref.putFloat(y0).value);
+            arcImpl(x0, y0, rx, ry, angle, isLargeArc, isSweep, x, y);
         }
         else
         {
@@ -327,7 +328,10 @@ class VectorPath implements IVertexSource
 				{
 					if(Calc.distance(x.value, y.value, x0.value, y0.value) > Calc.VERTEX_DIST_EPSILON)
 					{
-						if(PathUtils.isMoveTo(cmd)) cmd = PathCommands.LINE_TO;
+						if(PathUtils.isMoveTo(cmd))
+                        {
+                            cmd = PathCommands.LINE_TO;
+                        }
 						_vertices.addVertex(x.value, y.value, cmd);
 					}
 				}

@@ -2,10 +2,11 @@ package lib.ha.aggx.vectorial;
 
 import haxe.ds.Vector;
 import lib.ha.core.memory.Ref.FloatRef;
+import lib.ha.core.memory.Ref;
 
 class BezierArc implements IVertexSource
 {
-    public var _vertices(default, null): Vector<FloatRef> = new Vector<FloatRef>(26);
+    public var _vertices(default, null): Vector<FloatRef>;
     var _vertex: UInt = 0;
     var _numVertices(default, null): UInt = 0;
     var _cmd: UInt = PathCommands.LINE_TO;
@@ -35,6 +36,11 @@ class BezierArc implements IVertexSource
 
     public function new ()
     {
+        _vertices = new Vector<FloatRef>(26);
+        for (i in 0 ... 26)
+        {
+            _vertices[i] = Ref.getFloat();
+        }
     }
 
     public function init(x: Float, y: Float, rx: Float, ry: Float, startAngle: Float, sweepAngle: Float)
@@ -107,8 +113,8 @@ class BezierArc implements IVertexSource
             return PathCommands.STOP;
         }
 
-        x = _vertices[_vertex];
-        y = _vertices[_vertex + 1];
+        x.value = _vertices[_vertex].value;
+        y.value = _vertices[_vertex + 1].value;
         _vertex += 2;
 
         return (_vertex == 2) ? PathCommands.MOVE_TO : _cmd;

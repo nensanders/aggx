@@ -392,7 +392,7 @@ class SVGPathRenderer
 
     public function parse_path(tok: SVGPathTokenizer): Void
     {
-        var arg: Vector<Float> = new Vector(9);
+        var arg: Vector<Float> = new Vector(7);
 
         while (tok.hasNext())
         {
@@ -454,14 +454,13 @@ class SVGPathRenderer
                     }
                 case "A", "a":
                     {
-                        //throw "parse_path: Command A: NOT IMPLEMENTED YET";
-                        trace("parse_path: Command A: NOT IMPLEMENTED YET");
-                        for (i in 0...6)
+                        for (i in 1...7)
                         {
                             arg[i] = tok.next(cmd);
                         }
                         line_to(arg[5], arg[6], cmd == "a");
-                        arc(arg[0], arg[1], arg[2], arg[3] != 0, arg[4] != 0, arg[5], arg[6]);
+                        trace(arg);
+                        arc(arg[0], arg[1], arg[2], arg[3] != 0, arg[4] != 0, arg[5], arg[6], cmd == 'a');
                     }
                 case "Z", "z":
                     {

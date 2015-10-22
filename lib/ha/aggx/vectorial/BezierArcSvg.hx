@@ -14,10 +14,11 @@ class BezierArcSvg implements IVertexSource
 
     public function init(x0: Float, y0: Float, rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweepArc: Bool, x2: Float, y2: Float)
     {
+        trace('x0: $x0 y0: $y0 rx: $rx ry: $ry angle: $angle isLargeArc: $isLargeArc isSweepArc: $isSweepArc x2: $x2 y2: $y2');
         _radiiOk = true;
 
-        if(rx < 0.0) rx = -rx;
-        if(ry < 0.0) ry = -rx;
+        rx = Math.abs(rx);
+        ry = Math.abs(ry);
 
         // Calculate the middle point between
         // the current and the final points
@@ -42,6 +43,7 @@ class BezierArcSvg implements IVertexSource
 
         // Check that radii are large enough
         //------------------------
+
         var radii_check: Float = px1/prx + py1/pry;
         if(radii_check > 1.0)
         {
@@ -51,6 +53,7 @@ class BezierArcSvg implements IVertexSource
             pry = ry * ry;
             if(radii_check > 10.0)
             {
+                trace('$radii_check not ok');
                 _radiiOk = false;
             }
         }
