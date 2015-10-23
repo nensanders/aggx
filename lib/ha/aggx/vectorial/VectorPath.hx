@@ -227,31 +227,8 @@ class VectorPath implements IVertexSource
 
     private function arcImpl(x0: FloatRef, y0: FloatRef, rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float)
     {
-        rx = Math.abs(rx);
-        ry = Math.abs(ry);
-
-        if(rx < Calc.INTERSECTION_EPSILON || ry < Calc.INTERSECTION_EPSILON)
-        {
-            lineTo(x, y);
-            return;
-        }
-
-        if(Calc.distance(x0.value, y0.value, x, y) < Calc.VERTEX_DIST_EPSILON)
-        {
-            // If the endpoints (x, y) and (x0, y0) are identical, then this
-            // is equivalent to omitting the elliptical arc segment entirely.
-            return;
-        }
-
         _svgArc.init(x0.value, y0.value, rx, ry, angle, isLargeArc, isSweep, x, y);
-        if(_svgArc._radiiOk)
-        {
-            joinPath(_svgArc);
-        }
-        else
-        {
-            lineTo(x, y);
-        }
+        _svgArc.addToPath(this);
 
     }
 	public function arc(rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float)
