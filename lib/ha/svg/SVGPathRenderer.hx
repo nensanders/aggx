@@ -454,11 +454,11 @@ class SVGPathRenderer
                     }
                 case "A", "a":
                     {
+                        arg[0] = tok.last_number();
                         for (i in 1...7)
                         {
                             arg[i] = tok.next(cmd);
                         }
-                        line_to(arg[5], arg[6], cmd == "a");
                         trace(arg);
                         arc(arg[0], arg[1], arg[2], arg[3] != 0, arg[4] != 0, arg[5], arg[6], cmd == 'a');
                     }
