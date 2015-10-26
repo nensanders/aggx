@@ -373,16 +373,16 @@ class SVGParser
                 case "id": currentGradient.id = value;
                 case "xlink:href": currentGradient.link = value.substr(1, value.length - 1);
 
-                case "x1": currentGradient.gradientVector[0] = parseFloatRef(value);
-                case "y1": currentGradient.gradientVector[1] = parseFloatRef(value);
-                case "x2": currentGradient.gradientVector[2] = parseFloatRef(value);
-                case "y2": currentGradient.gradientVector[3] = parseFloatRef(value);
+                case "x1": currentGradient.gradientVector[0] = parseFloatRefPercent(value);
+                case "y1": currentGradient.gradientVector[1] = parseFloatRefPercent(value);
+                case "x2": currentGradient.gradientVector[2] = parseFloatRefPercent(value);
+                case "y2": currentGradient.gradientVector[3] = parseFloatRefPercent(value);
 
-                case "cx": currentGradient.focalGradientParameters[0] = parseFloatRef(value);
-                case "cy": currentGradient.focalGradientParameters[1] = parseFloatRef(value);
-                case "r": currentGradient.focalGradientParameters[2] = parseFloatRef(value);
-                case "fx": currentGradient.focalGradientParameters[3] = parseFloatRef(value);
-                case "fy": currentGradient.focalGradientParameters[4] = parseFloatRef(value);
+                case "cx": currentGradient.focalGradientParameters[0] = parseFloatRefPercent(value);
+                case "cy": currentGradient.focalGradientParameters[1] = parseFloatRefPercent(value);
+                case "r": currentGradient.focalGradientParameters[2] = parseFloatRefPercent(value);
+                case "fx": currentGradient.focalGradientParameters[3] = parseFloatRefPercent(value);
+                case "fy": currentGradient.focalGradientParameters[4] = parseFloatRefPercent(value);
 
                 case "gradientUnits": currentGradient.userSpace = value == "userSpaceOnUse";
                 case "spreadMethod": currentGradient.spreadMethod = parseSpreadMethond(value);
@@ -901,6 +901,13 @@ class SVGParser
     {
         var ref: FloatRef = Ref.getFloat();
         ref.value = Std.parseFloat(value);
+        return ref;
+    }
+
+    private function parseFloatRefPercent(value: String): FloatRef
+    {
+        var ref: FloatRef = Ref.getFloat();
+        ref.value = parsePercent(value);
         return ref;
     }
 

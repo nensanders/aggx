@@ -152,14 +152,24 @@ class GradientManager
         var fx: FloatRef = getGradientFocalParameter(gradientId, 3);
         var fy: FloatRef = getGradientFocalParameter(gradientId, 4);
 
+        //trace('{$cx, $cy} -> {$fx, $fy}');
+
         var bboxTransform: AffineTransformer = new AffineTransformer();
         if (!isUserspaceGradient(gradientId))
         {
             calculateBBoxTransform(bounds, bboxTransform);
+            r.value *= bounds.maxY - bounds.minY;
         }
+
+        bboxTransform.transform(cx, cy);
+        bboxTransform.transform(fx, fy);
+
+        //trace('{$cx, $cy} -> {$fx, $fy}');
 
         transform.transform(cx, cy);
         transform.transform(fx, fy);
+
+        //trace('{$cx, $cy} -> {$fx, $fy}');
 
         outputFunction.init(r.value, fx.value - cx.value, fy.value - cy.value);
 

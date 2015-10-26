@@ -183,7 +183,6 @@ class SVGPathRenderer
         _curved_trans_contour.width = value;
     }
 
-    private static var oneTime: Bool = true;
         public function render(ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
         {
             var gradientFunction = new GradientX();
