@@ -30,6 +30,11 @@ class AffineTransformer implements ITransformer
 	public var sy:Float;
 	public var tx:Float;
 	public var ty:Float;
+
+    public function toString(): String
+    {
+        return '{$sx, $shy, $shx, $sy, $tx, $ty}';
+    }
 	//---------------------------------------------------------------------------------------------------
 	public function new(v0:Float = 1.0, v1:Float = 0.0, v2:Float = 0.0, v3:Float = 1.0, v4:Float = 0.0, v5:Float = 0.0) 
 	{

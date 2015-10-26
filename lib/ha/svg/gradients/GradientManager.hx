@@ -142,7 +142,7 @@ class GradientManager
     {
         var bboxWidth: Float = bounds.maxX - bounds.minX;
         var bboxHeight: Float = bounds.maxY - bounds.minY;
-        transform.reset();
+        
         transform.multiply(AffineTransformer.scaler(bboxWidth, bboxHeight));
         transform.multiply(AffineTransformer.translator(bounds.minX, bounds.minY));
     }
@@ -162,6 +162,7 @@ class GradientManager
         var fx: FloatRef = getGradientFocalParameter(gradientId, 3);
         var fy: FloatRef = getGradientFocalParameter(gradientId, 4);
 
+        _bboxTransform.reset();
         if (!isUserspaceGradient(gradientId))
         {
             calculateBBoxTransform(bounds, _bboxTransform);
@@ -198,6 +199,7 @@ class GradientManager
 
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
+        _bboxTransform.reset();
         if (!isUserspaceGradient(gradientId))
         {
             calculateBBoxTransform(bounds, _bboxTransform);

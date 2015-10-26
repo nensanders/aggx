@@ -1,4 +1,5 @@
 package lib.ha.svg;
+import lib.ha.svg.SVGElement;
 import lib.ha.aggx.color.GradientRadialFocus;
 import lib.ha.svg.gradients.GradientManager;
 import lib.ha.svg.gradients.SVGGradient;
@@ -39,62 +40,6 @@ import lib.ha.aggx.vectorial.LineJoin;
 import lib.ha.aggx.vectorial.LineCap;
 import lib.ha.aggx.color.RgbaColor;
 
-class PathAttributes
-{
-    public var index: UInt;
-    public var fill_color: RgbaColor;
-    public var stroke_color: RgbaColor;
-    public var fill_flag: Bool;
-    public var stroke_flag: Bool;
-    public var even_odd_flag: Bool;
-    public var line_join: Int; // ENUM CLASS
-    public var line_cap: Int; // ENUM CLASS
-    public var miter_limit: Float;
-    public var stroke_width: Float;
-    public var transform: AffineTransformer;
-    public var id: String;
-    public var gradientId: String;
-    public var bounds: SVGPathBounds = new SVGPathBounds();
-
-    private function new ()
-    {
-        index = 0;
-        fill_color = new RgbaColor();
-        stroke_color = new RgbaColor();
-        fill_flag = true;
-        stroke_flag = false;
-        even_odd_flag = false;
-        line_join = LineJoin.MITER;
-        line_cap = LineCap.BUTT;
-        miter_limit = 1.0;
-        stroke_width = 1.0;
-        transform = new AffineTransformer();
-    }
-
-    static public function create(): PathAttributes
-    {
-        return new PathAttributes();
-    }
-
-    static public function copy(attr: PathAttributes, ?idx: UInt): PathAttributes
-    {
-        var result: PathAttributes = new PathAttributes();
-        result.index = idx != null ? idx : attr.index;
-        result.fill_color.set(attr.fill_color);
-        result.stroke_color.set(attr.stroke_color);
-        result.fill_flag = attr.fill_flag;
-        result.stroke_flag = attr.stroke_flag;
-        result.even_odd_flag = attr.even_odd_flag;
-        result.line_join = attr.line_join;
-        result.line_cap = attr.line_cap;
-        result.miter_limit = attr.miter_limit;
-        result.stroke_width = attr.stroke_width;
-        result.bounds = SVGPathBounds.clone(attr.bounds);
-        result.transform = AffineTransformer.of(attr.transform);
-        return result;
-    }
-}
-
 class ConvCount implements IVertexSource
 {
     private var _source:IVertexSource;
@@ -132,8 +77,8 @@ class ConvCount implements IVertexSource
 class SVGPathRenderer
 {
     private var _storage: VectorPath;
-    private var _attr_storage: Array<PathAttributes>;
-    private var _attr_stack: Array<PathAttributes>;
+    private var _elementStorage: Array<SVGElement>;
+    private var _elementStack: Array<SVGElement>;
     private var _transform: AffineTransformer;
 
     private var _curved: ConvCurve;
@@ -145,11 +90,17 @@ class SVGPathRenderer
     private var _curved_trans_contour: ConvContour;
     private var _gradientManager: GradientManager = new GradientManager();
 
+    private var _gradientFunction: GradientX = new GradientX();
+    private var _gradientRadialFocus: GradientRadialFocus = new GradientRadialFocus();
+    private var _gradientMatrix: AffineTransformer = new AffineTransformer();
+    private var _spanInterpolator: SpanInterpolatorLinear;
+    private var _spanAllocator: SpanAllocator = new SpanAllocator();
+
     public function new()
     {
         _storage = new VectorPath();
-        _attr_storage = new Array();
-        _attr_stack = new Array();
+        _elementStorage = new Array();
+        _elementStack = new Array();
         _transform = new AffineTransformer();
 
         _curved = new ConvCurve(_storage);
@@ -161,13 +112,14 @@ class SVGPathRenderer
         _curved_trans_contour = new ConvContour(_curved_trans);
 
         _curved_trans_contour.autoDetect = false;
+        _spanInterpolator = new SpanInterpolatorLinear(_gradientMatrix);
     }
 
     public function remove_all(): Void
     {
         _storage.removeAll();
-        _attr_storage = new Array();
-        _attr_stack = new Array();
+        _elementStorage = new Array();
+        _elementStack = new Array();
         _transform.reset();
     }
 
@@ -183,142 +135,140 @@ class SVGPathRenderer
         _curved_trans_contour.width = value;
     }
 
-        public function render(ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
-        {
-            var gradientFunction = new GradientX();
-            var gradientRadialFocus = new GradientRadialFocus();
-            var gradientMatrix = new AffineTransformer();
-            var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
-            var spanAllocator = new SpanAllocator();
-
-            for (attr in _attr_storage)
-            {
-                _transform.set(attr.transform.sx, attr.transform.shy, attr.transform.shx, attr.transform.sy, attr.transform.tx, attr.transform.ty);
-                _transform.multiply(mtx);
-                var scl: Float = _transform.scaling;
-                _curved.approximationMethod = CubicCurve.CURVE_INC;
-                _curved.approximationScale = scl;
-                _curved.angleTolerance = 0.0;
-
-                var color: RgbaColor = new RgbaColor();
-
-                if (attr.fill_flag)
-                {
-                    ras.reset();
-                    ras.fillingRule = attr.even_odd_flag ? FillingRule.FILL_EVEN_ODD : FillingRule.FILL_NON_ZERO;
-
-                    if (Math.abs(_curved_trans_contour.width) < 0.0001)
-                    {
-                        ras.addPath(_curved_trans, attr.index);
-                    }
-                    else
-                    {
-                        _curved_trans_contour.miterLimit = attr.miter_limit;
-                        ras.addPath(_curved_trans_contour, attr.index);
-                    }
-
-                    color.set(attr.fill_color);
-                    color.opacity = color.opacity * alpha;
-                    SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
-                }
-
-                var gradient: SVGGradient;
-                if (attr.gradientId != null && (gradient = _gradientManager.getGradient(attr.gradientId)) != null)
-                {
-                    ras.reset();
-                    ras.fillingRule = attr.even_odd_flag ? FillingRule.FILL_EVEN_ODD : FillingRule.FILL_NON_ZERO;
-
-                    if (Math.abs(_curved_trans_contour.width) < 0.0001)
-                    {
-                        ras.addPath(_curved_trans, attr.index);
-                    }
-                    else
-                    {
-                        _curved_trans_contour.miterLimit = attr.miter_limit;
-                        ras.addPath(_curved_trans_contour, attr.index);
-                    }
-
-                    var gradientSpan: SpanGradient;
-                    if (gradient.type == GradientType.Linear)
-                    {
-                        _gradientManager.calculateLinearGradientTransform(attr.gradientId, attr.bounds, _transform, gradientMatrix);
-                        gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, _gradientManager.getGradientColors(attr.gradientId), 0, 100);
-                    }
-                    else
-                    {
-                        _gradientManager.calculateRadialGradientParameters(attr.gradientId, attr.bounds, _transform, gradientMatrix, gradientRadialFocus);
-                        gradientSpan = new SpanGradient(spanInterpolator, gradientRadialFocus, _gradientManager.getGradientColors(attr.gradientId), 0, 100);
-                    }
-
-                    gradientSpan.spread = _gradientManager.getSpreadMethod(attr.gradientId);
-
-                    var gradientRenderer = new ScanlineRenderer(ren, spanAllocator, gradientSpan);
-
-                    SolidScanlineRenderer.renderScanlines(ras, sl, gradientRenderer);
-                }
-
-                if (attr.stroke_flag)
-                {
-                    _curved_stroked.width = attr.stroke_width;
-                    _curved_stroked.lineJoin = attr.line_join;
-                    _curved_stroked.lineCap = attr.line_cap;
-                    _curved_stroked.miterLimit = attr.miter_limit;
-                    _curved_stroked.innerJoin = InnerJoin.ROUND;
-                    _curved_stroked.approximationScale = scl;
-
-                    // If the *visual* line width is considerable we
-                    // turn on processing of curve cusps.
-                    //---------------------
-                    if(attr.stroke_width * scl > 1.0)
-                    {
-                        _curved.angleTolerance = 0.2;
-                    }
-                    ras.reset();
-                    ras.fillingRule = FillingRule.FILL_NON_ZERO;
-                    ras.addPath(_curved_stroked_trans, attr.index);
-                    color.set(attr.stroke_color);
-                    color.opacity = color.opacity * alpha;
-                    SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
-                }
-            }
-        }
-
-    private function cur_attr(): PathAttributes
+    private function renderElement(element: SVGElement, ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float)
     {
-        if (_attr_stack.length == 0)
+        _transform.set(element.transform.sx, element.transform.shy, element.transform.shx, element.transform.sy, element.transform.tx, element.transform.ty);
+        _transform.multiply(mtx);
+        var scl: Float = _transform.scaling;
+        _curved.approximationMethod = CubicCurve.CURVE_INC;
+        _curved.approximationScale = scl;
+        _curved.angleTolerance = 0.0;
+
+        var color: RgbaColor = new RgbaColor();
+
+        if (element.fill_flag)
         {
-            throw "cur_attr : Attribute stack is empty";
+            ras.reset();
+            ras.fillingRule = element.even_odd_flag ? FillingRule.FILL_EVEN_ODD : FillingRule.FILL_NON_ZERO;
+
+            if (Math.abs(_curved_trans_contour.width) < 0.0001)
+            {
+                ras.addPath(_curved_trans, element.index);
+            }
+            else
+            {
+                _curved_trans_contour.miterLimit = element.miter_limit;
+                ras.addPath(_curved_trans_contour, element.index);
+            }
+
+            color.set(element.fill_color);
+            color.opacity = color.opacity * alpha;
+            SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
         }
-        return _attr_stack[_attr_stack.length - 1];
+
+        var gradient: SVGGradient;
+        if (element.gradientId != null && (gradient = _gradientManager.getGradient(element.gradientId)) != null)
+        {
+            ras.reset();
+            ras.fillingRule = element.even_odd_flag ? FillingRule.FILL_EVEN_ODD : FillingRule.FILL_NON_ZERO;
+
+            if (Math.abs(_curved_trans_contour.width) < 0.0001)
+            {
+                ras.addPath(_curved_trans, element.index);
+            }
+            else
+            {
+                _curved_trans_contour.miterLimit = element.miter_limit;
+                ras.addPath(_curved_trans_contour, element.index);
+            }
+
+            var gradientSpan: SpanGradient;
+            if (gradient.type == GradientType.Linear)
+            {
+                _gradientManager.calculateLinearGradientTransform(element.gradientId, element.bounds, _transform, _gradientMatrix);
+                gradientSpan = new SpanGradient(_spanInterpolator, _gradientFunction, _gradientManager.getGradientColors(element.gradientId), 0, 100);
+            }
+            else
+            {
+                _gradientManager.calculateRadialGradientParameters(element.gradientId, element.bounds, _transform, _gradientMatrix, _gradientRadialFocus);
+                gradientSpan = new SpanGradient(_spanInterpolator, _gradientRadialFocus, _gradientManager.getGradientColors(element.gradientId), 0, 100);
+            }
+
+            gradientSpan.spread = _gradientManager.getSpreadMethod(element.gradientId);
+
+            var gradientRenderer = new ScanlineRenderer(ren, _spanAllocator, gradientSpan);
+
+            SolidScanlineRenderer.renderScanlines(ras, sl, gradientRenderer);
+        }
+
+        if (element.stroke_flag)
+        {
+            _curved_stroked.width = element.stroke_width;
+            _curved_stroked.lineJoin = element.line_join;
+            _curved_stroked.lineCap = element.line_cap;
+            _curved_stroked.miterLimit = element.miter_limit;
+            _curved_stroked.innerJoin = InnerJoin.ROUND;
+            _curved_stroked.approximationScale = scl;
+
+            // If the *visual* line width is considerable we
+            // turn on processing of curve cusps.
+            if(element.stroke_width * scl > 1.0)
+            {
+                _curved.angleTolerance = 0.2;
+            }
+            ras.reset();
+            ras.fillingRule = FillingRule.FILL_NON_ZERO;
+            ras.addPath(_curved_stroked_trans, element.index);
+            color.set(element.stroke_color);
+            color.opacity = color.opacity * alpha;
+            SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
+        }
     }
 
-    public function push_attr(): Void
+    public function render(ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
     {
-        if (_attr_stack.length == 0)
+        for (elem in _elementStorage)
         {
-            _attr_stack.push(PathAttributes.create());
+            renderElement(elem, ras, sl, ren, mtx, alpha);
+        }
+    }
+
+    private function curElement(): SVGElement
+    {
+        if (_elementStack.length == 0)
+        {
+            throw "curElement : elementibute stack is empty";
+        }
+        return _elementStack[_elementStack.length - 1];
+    }
+
+    public function pushElement(): Void
+    {
+        if (_elementStack.length == 0)
+        {
+            _elementStack.push(SVGElement.create());
         }
         else
         {
-            var lastElement = _attr_stack[_attr_stack.length - 1];
-            _attr_stack.push(PathAttributes.copy(lastElement));
+            var lastElement = _elementStack[_elementStack.length - 1];
+            _elementStack.push(SVGElement.copy(lastElement));
         }
     }
 
-    public function pop_attr(): Void
+    public function popElement(): Void
     {
-        if (_attr_stack.length == 0)
+        if (_elementStack.length == 0)
         {
-            throw "pop_attr : Attribute stack is empty";
+            throw "pop_element : elementibute stack is empty";
         }
-        _attr_stack.pop();
+        _elementStack.pop();
     }
 
     public function beginPath(): Void
     {
-        push_attr();
+        pushElement();
         var idx: Int = _storage.startNewPath();
-        _attr_storage.push(PathAttributes.copy(cur_attr(), idx));
+        _elementStorage.push(SVGElement.copy(curElement(), idx));
     }
 
     public function addGradient(gradient: SVGGradient): Void
@@ -328,17 +278,17 @@ class SVGPathRenderer
 
     public function endPath(): Void
     {
-        if (_attr_storage.length == 0)
+        if (_elementStorage.length == 0)
         {
             throw "end_path : The path was not begun";
         }
 
-        var attr: PathAttributes = cur_attr();
-        var idx: UInt = _attr_storage[_attr_storage.length - 1].index;
-        attr.index = idx;
-        _attr_storage[_attr_storage.length - 1] = attr;
+        var element: SVGElement = curElement();
+        var idx: UInt = _elementStorage[_elementStorage.length - 1].index;
+        element.index = idx;
+        _elementStorage[_elementStorage.length - 1] = element;
 
-        _storage.rewind(attr.index);
+        _storage.rewind(element.index);
         var x: FloatRef = Ref.getFloat();
         var y: FloatRef = Ref.getFloat();
         var cmd: Int = 0;
@@ -349,7 +299,7 @@ class SVGPathRenderer
                 continue;
             }
 
-            attr.bounds.add(x.value, y.value);
+            element.bounds.add(x.value, y.value);
         }
 
         Ref.putFloat(x);
@@ -357,22 +307,22 @@ class SVGPathRenderer
 
         _storage.rewind(0);
 
-        //trace('${attr.id}: ${attr.bounds}');
-        pop_attr();
+        //trace('${element.id}: ${element.bounds}');
+        popElement();
 
-        //debugBox(attr.bounds);
+        //debugBox(element.bounds);
     }
 
     public function id(id: String)
     {
-        cur_attr().id = id;
+        curElement().id = id;
     }
 
     public function debugBox(bounds: SVGPathBounds)
     {
-        push_attr();
+        pushElement();
         var idx: Int = _storage.startNewPath();
-        _attr_storage.push(PathAttributes.copy(cur_attr(), idx));
+        _elementStorage.push(SVGElement.copy(curElement(), idx));
         fill_none();
         this.stroke(new RgbaColor(255, 0, 0));
         move_to(bounds.minX, bounds.minY);
@@ -381,12 +331,12 @@ class SVGPathRenderer
         line_to(bounds.minX, bounds.maxY);
         close_subpath();
 
-        var attr: PathAttributes = cur_attr();
-        var idx: UInt = _attr_storage[_attr_storage.length - 1].index;
-        attr.index = idx;
-        _attr_storage[_attr_storage.length - 1] = attr;
+        var element: SVGElement = curElement();
+        var idx: UInt = _elementStorage[_elementStorage.length - 1].index;
+        element.index = idx;
+        _elementStorage[_elementStorage.length - 1] = element;
 
-        pop_attr();
+        popElement();
     }
 
     public function parse_path(tok: SVGPathTokenizer): Void
@@ -601,63 +551,63 @@ class SVGPathRenderer
 
     public function fill_none(): Void
     {
-        cur_attr().fill_flag = false;
+        curElement().fill_flag = false;
     }
 
     public function fill(color: RgbaColor): Void
     {
-        cur_attr().fill_color.set(color);
-        cur_attr().fill_flag = true;
+        curElement().fill_color.set(color);
+        curElement().fill_flag = true;
     }
 
     public function fill_opacity(opacity: Float): Void
     {
-        cur_attr().fill_color.opacity = opacity;
+        curElement().fill_color.opacity = opacity;
     }
 
     public function fillGradient(id: String)
     {
-        cur_attr().gradientId = id;
+        curElement().gradientId = id;
     }
 
     public function stroke_none(): Void
     {
-        cur_attr().stroke_flag = false;
+        curElement().stroke_flag = false;
     }
 
     public function stroke(color: RgbaColor): Void
     {
-        cur_attr().stroke_color.set(color);
-        cur_attr().stroke_flag = true;
+        curElement().stroke_color.set(color);
+        curElement().stroke_flag = true;
     }
 
     public function stroke_width(width: Float): Void
     {
-        cur_attr().stroke_width = width;
+        curElement().stroke_width = width;
     }
 
     public function line_cap(lineCap: Int): Void
     {
-        cur_attr().line_cap = lineCap;
+        curElement().line_cap = lineCap;
     }
 
     public function line_join(lineJoin: Int): Void
     {
-        cur_attr().line_join = lineJoin;
+        curElement().line_join = lineJoin;
     }
 
     public function miter_limit(miterLimit: Float): Void
     {
-        cur_attr().miter_limit = miterLimit;
+        curElement().miter_limit = miterLimit;
     }
 
     public function stroke_opacity(strokeOpacity: Float): Void
     {
-        cur_attr().stroke_color.opacity = strokeOpacity;
+        curElement().stroke_color.opacity = strokeOpacity;
     }
 
     public function transform(): AffineTransformer
     {
-        return cur_attr().transform;
+        return curElement().transform;
     }
 }

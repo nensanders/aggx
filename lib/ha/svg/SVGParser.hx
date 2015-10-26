@@ -257,7 +257,7 @@ class SVGParser
                 }
             case "g":
                 {
-                    _path.push_attr();
+                    _path.pushElement();
 
                     for (name in attr)
                     {
@@ -313,7 +313,7 @@ class SVGParser
                 }
             case "g":
                 {
-                    _path.pop_attr();
+                    _path.popElement();
                 }
             case "path":
                 {
