@@ -10,6 +10,7 @@ import lib.ha.core.geometry.AffineTransformer;
 class GradientManager
 {
     private var _gradients: Map<String, SVGGradient> = new Map<String, SVGGradient>();
+    private var _bboxTransform: AffineTransformer = new AffineTransformer();
     private var _zeroFloatRef: FloatRef = Ref.getFloat();
     private var _oneFloatRef: FloatRef = Ref.getFloat();
     private var _halfFloatRef: FloatRef = Ref.getFloat();
@@ -137,6 +138,15 @@ class GradientManager
         return out;
     }
 
+    private function calculateBBoxTransform(bounds: SVGPathBounds, transform: AffineTransformer)
+    {
+        var bboxWidth: Float = bounds.maxX - bounds.minX;
+        var bboxHeight: Float = bounds.maxY - bounds.minY;
+        transform.reset();
+        transform.multiply(AffineTransformer.scaler(bboxWidth, bboxHeight));
+        transform.multiply(AffineTransformer.translator(bounds.minX, bounds.minY));
+    }
+
     public function calculateRadialGradientParameters(gradientId: String,
                                                       bounds: SVGPathBounds,
                                                       transform: AffineTransformer,
@@ -152,41 +162,20 @@ class GradientManager
         var fx: FloatRef = getGradientFocalParameter(gradientId, 3);
         var fy: FloatRef = getGradientFocalParameter(gradientId, 4);
 
-        //trace('{$cx, $cy} -> {$fx, $fy}');
-
-        var bboxTransform: AffineTransformer = new AffineTransformer();
         if (!isUserspaceGradient(gradientId))
         {
-            calculateBBoxTransform(bounds, bboxTransform);
-            r.value *= bounds.maxY - bounds.minY;
+            calculateBBoxTransform(bounds, _bboxTransform);
         }
-
-        bboxTransform.transform(cx, cy);
-        bboxTransform.transform(fx, fy);
-
-        //trace('{$cx, $cy} -> {$fx, $fy}');
-
-        transform.transform(cx, cy);
-        transform.transform(fx, fy);
-
-        //trace('{$cx, $cy} -> {$fx, $fy}');
 
         outputFunction.init(r.value, fx.value - cx.value, fy.value - cy.value);
 
         output.reset();
-
         output.multiply(AffineTransformer.scaler(r.value / gradientD2));
         output.multiply(AffineTransformer.translator(cx.value, cy.value));
+        output.multiply(_bboxTransform);
+        output.multiply(transform);
         output.multiply(gradientTransform);
         output.invert();
-    }
-
-    private function calculateBBoxTransform(bounds: SVGPathBounds, transform: AffineTransformer)
-    {
-        var bboxWidth: Float = bounds.maxX - bounds.minX;
-        var bboxHeight: Float = bounds.maxY - bounds.minY;
-        transform.multiply(AffineTransformer.scaler(bboxWidth, bboxHeight));
-        transform.multiply(AffineTransformer.translator(bounds.minX, bounds.minY));
     }
 
     public function calculateLinearGradientTransform(gradientId: String,
@@ -209,14 +198,13 @@ class GradientManager
 
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
-        var bboxTransform: AffineTransformer = new AffineTransformer();
         if (!isUserspaceGradient(gradientId))
         {
-            calculateBBoxTransform(bounds, bboxTransform);
+            calculateBBoxTransform(bounds, _bboxTransform);
         }
 
-        bboxTransform.transform(x1, y1);
-        bboxTransform.transform(x2, y2);
+        _bboxTransform.transform(x1, y1);
+        _bboxTransform.transform(x2, y2);
 
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
