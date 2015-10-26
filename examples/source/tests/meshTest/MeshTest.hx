@@ -81,6 +81,7 @@ class MeshTest extends OpenGLTest
     inline private static var FONT_PATH_JAPAN = "meshTest/fonts/font_1_ant-kaku.ttf";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/paths.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_transform.svg";
     inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";

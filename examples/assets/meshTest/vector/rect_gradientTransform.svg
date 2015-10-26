@@ -12,7 +12,7 @@
         <stop offset="5%" stop-color="red" />
         <stop offset="95%" stop-color="green" />
       </linearGradient>
-      <radialGradient id="g1" cx="50%" cy="50%" r="50%" fx="25%" fy="25%">
+      <radialGradient id="g1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
             <stop stop-color="black" offset="0%"/>
             <!--<stop stop-color="teal" offset="50%"/>-->
             <stop stop-color="white" offset="100%"/>
@@ -46,8 +46,7 @@
     <rect id="radial" fill="url(#MyRadialGradient)" transform="translate(100,100)" stroke="black" stroke-width="5"
           x="0" y="0" width="600" height="200"/>
 
-    <rect id="r3" x="580" y="125" cx="100" cy="100" r="100" stroke="black" stroke-width="1"  fill="url(#g1)"/>
-    <rect id="r1" x="100" y="200" width="100" height="100" stroke="black" stroke-width="1" fill="url(#g1)"/>
+    <rect id="r1" x="100" y="200" width="100" height="200" stroke="black" stroke-width="1" fill="url(#g1)"/>
 
   </g>
 </svg>
