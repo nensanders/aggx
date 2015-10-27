@@ -38,7 +38,6 @@ class SVGParser
     private var _title: String;         // CHAR*
     private var _title_len: UInt;       // UNSIGNED
     private var _title_flag: Bool;      // BOOL
-    private var _path_flag: Bool;       // BOOL
     private var _attr_name: String;     // CHAR*
     private var _attr_value: String;    // CHAR*
     private var _attr_name_len: UInt;   // UNSIGNED
@@ -204,7 +203,6 @@ class SVGParser
         _title = "";
         _title_len = 0;
         _title_flag = false;
-        _path_flag = false;
         _attr_name = "";
         _attr_value = "";
         _attr_name_len = 127;
@@ -266,14 +264,7 @@ class SVGParser
                 }
             case "path":
                 {
-                    if (_path_flag)
-                    {
-                        throw "start_element: Nested path";
-                    }
-                    _path.beginPath();
                     parse_path(attr, element);
-                    _path.endPath();
-                    _path_flag = true;
                 }
             case "rect":
                 {
@@ -317,7 +308,7 @@ class SVGParser
                 }
             case "path":
                 {
-                    _path_flag = false;
+
                 }
             default:
         }
@@ -337,19 +328,21 @@ class SVGParser
 
     private function parse_path(attrNames: Iterator<String>, element: Xml): Void
     {
+        _path.beginPath();
         for (name in attrNames)
         {
             if (name == "d")
             {
                 var value = element.get(name);
                 _tokenizer.set_path_str(value);
-                _path.parse_path(_tokenizer);
+                _path.path(_tokenizer);
             }
             else
             {
                 parseShapeAtribute(name, element.get(name));
             }
         }
+        _path.endPath();
     }
 
     private function parseGradient(element: Xml)
@@ -467,15 +460,6 @@ class SVGParser
     }
     private function parse_poly(attrNames: Iterator<String>, element: Xml, close_flag: Bool): Void
     {
-        var x: Float = 0.0;
-        var y: Float = 0.0;
-
-        var isFirst: Bool = true;
-        var x1: Float = 0.0;
-        var y1: Float = 0.0;
-        var xm1: Float = 0.0;
-        var ym1: Float = 0.0;
-
         _path.beginPath();
 
         for (name in attrNames)
@@ -487,53 +471,11 @@ class SVGParser
                 if (name == "points")
                 {
                     _tokenizer.set_path_str(value);
-
-                    if (!_tokenizer.hasNext())
-                    {
-                        throw "parse_poly: Too few coordinates";
-                    }
-
-                    x = _tokenizer.last_number();
-
-                    if (!_tokenizer.hasNext())
-                    {
-                        throw "parse_poly: Too few coordinates";
-                    }
-
-                    y = _tokenizer.last_number();
-
-                    _path.move_to(x, y);
-
-                    while (_tokenizer.hasNext())
-                    {
-                        x = _tokenizer.last_number();
-
-                        if(!_tokenizer.hasNext())
-                        {
-                            throw "parse_poly: Odd number of coordinates";
-                        }
-                        y = _tokenizer.last_number();
-
-                        if (isFirst)
-                        {
-                            isFirst = false;
-                            x1 = x;
-                            y1 = y;
-                        }
-
-                        xm1 = x;
-                        ym1 = y;
-
-                        _path.line_to(x, y);
-                    }
+                    _path.poly(_tokenizer, close_flag);
                 }
             }
         }
 
-        if(close_flag && x1 != xm1 && y1 != ym1)
-        {
-            _path.close_subpath();
-        }
         _path.endPath();
     }
 
@@ -565,12 +507,10 @@ class SVGParser
         {
             if(w < 0.0) throw 'parse_rect: Invalid width: $w';
             if(h < 0.0) throw 'parse_rect: Invalid height: $h';
-            _path.move_to(x,     y);
-            _path.line_to(x + w, y);
-            _path.line_to(x + w, y + h);
-            _path.line_to(x,     y + h);
-            _path.close_subpath();
+
         }
+
+        _path.rect(x, y, w, h);
         _path.endPath();
     }
 
@@ -582,7 +522,6 @@ class SVGParser
         var y2: Float = 0.0;
 
         _path.beginPath();
-
         for (name in attrNames)
         {
             var value = element.get(name);
@@ -596,8 +535,7 @@ class SVGParser
             }
         }
 
-        _path.move_to(x1, y1);
-        _path.line_to(x2, y2);
+        _path.line(x1, y1, x2, y2);
         _path.endPath();
     }
 

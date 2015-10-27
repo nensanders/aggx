@@ -82,6 +82,7 @@ class SVGPathRenderer
     private var _transform: AffineTransformer;
 
     private var _curved: ConvCurve;
+    private var _pathParser: SVGPathParser;
 
     private var _curved_stroked: ConvStroke;
     private var _curved_stroked_trans: ConvTransform;
@@ -113,6 +114,8 @@ class SVGPathRenderer
 
         _curved_trans_contour.autoDetect = false;
         _spanInterpolator = new SpanInterpolatorLinear(_gradientMatrix);
+
+        _pathParser = new SVGPathParser(_storage);
     }
 
     public function remove_all(): Void
@@ -264,16 +267,16 @@ class SVGPathRenderer
         _elementStack.pop();
     }
 
+    public function addGradient(gradient: SVGGradient): Void
+    {
+        _gradientManager.addGradient(gradient);
+    }
+
     public function beginPath(): Void
     {
         pushElement();
         var idx: Int = _storage.startNewPath();
         _elementStorage.push(SVGElement.copy(curElement(), idx));
-    }
-
-    public function addGradient(gradient: SVGGradient): Void
-    {
-        _gradientManager.addGradient(gradient);
     }
 
     public function endPath(): Void
@@ -325,11 +328,11 @@ class SVGPathRenderer
         _elementStorage.push(SVGElement.copy(curElement(), idx));
         fill_none();
         this.stroke(new RgbaColor(255, 0, 0));
-        move_to(bounds.minX, bounds.minY);
-        line_to(bounds.maxX, bounds.minY);
-        line_to(bounds.maxX, bounds.maxY);
-        line_to(bounds.minX, bounds.maxY);
-        close_subpath();
+        _pathParser.move_to(bounds.minX, bounds.minY);
+        _pathParser.line_to(bounds.maxX, bounds.minY);
+        _pathParser.line_to(bounds.maxX, bounds.maxY);
+        _pathParser.line_to(bounds.minX, bounds.maxY);
+        _pathParser.close_subpath();
 
         var element: SVGElement = curElement();
         var idx: UInt = _elementStorage[_elementStorage.length - 1].index;
@@ -339,214 +342,29 @@ class SVGPathRenderer
         popElement();
     }
 
-    public function parse_path(tok: SVGPathTokenizer): Void
+    public function path(tok: SVGPathTokenizer): Void
     {
-        var arg: Vector<Float> = new Vector(7);
-
-        while (tok.hasNext())
-        {
-            var cmd = tok.last_command();
-            switch (cmd)
-            {
-                case "M", "m":
-                    {
-                        arg[0] = tok.last_number();
-                        arg[1] = tok.next(cmd);
-                        move_to(arg[0], arg[1], cmd == "m");
-                    }
-                case "L", "l":
-                    {
-                        arg[0] = tok.last_number();
-                        arg[1] = tok.next(cmd);
-                        line_to(arg[0], arg[1], cmd == "l");
-                    }
-                case "V", "v":
-                    {
-                        vline_to(tok.last_number(), cmd == "v");
-                    }
-                case "H", "h":
-                    {
-                        hline_to(tok.last_number(), cmd == "h");
-                    }
-                case "Q", "q":
-                    {
-                        arg[0] = tok.last_number();
-                        for (i in 1...4)
-                        {
-                            arg[i] = tok.next(cmd);
-                        }
-                        curve3Q(arg[0], arg[1], arg[2], arg[3], cmd == "q");
-                    }
-                case "T", "t":
-                    {
-                        arg[0] = tok.last_number();
-                        arg[1] = tok.next(cmd);
-                        curve3(arg[0], arg[1], cmd == "t");
-                    }
-                case "C", "c":
-                    {
-                        arg[0] = tok.last_number();
-                        for (i in 1...6)
-                        {
-                            arg[i] = tok.next(cmd);
-                        }
-                        curve4C(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5], cmd == "c");
-                    }
-                case "S", "s":
-                    {
-                        arg[0] = tok.last_number();
-                        for (i in 1...4)
-                        {
-                            arg[i] = tok.next(cmd);
-                        }
-                        curve4(arg[0], arg[1], arg[2], arg[3], cmd == "s");
-                    }
-                case "A", "a":
-                    {
-                        arg[0] = tok.last_number();
-                        for (i in 1...7)
-                        {
-                            arg[i] = tok.next(cmd);
-                        }
-                        trace(arg);
-                        arc(arg[0], arg[1], arg[2], arg[3] != 0, arg[4] != 0, arg[5], arg[6], cmd == 'a');
-                    }
-                case "Z", "z":
-                    {
-                        if (cmd == "Z") close_subpath();
-                    }
-                default:
-                    {
-                        throw 'parse_path: Invalid Command $cmd';
-                    }
-            }
-        }
+        _pathParser.parsePath(tok);
     }
 
-    // The following functions are essentially a "reflection" of
-    // the respective SVG path commands.
-
-    // M, m
-    public function move_to(x: Float, y: Float, rel: Bool = false): Void
+    public function rect(x: Float, y: Float, width: Float, height: Float)
     {
-        if (rel)
-        {
-            _storage.moveRel(x, y);
-        }
-        else
-        {
-            _storage.moveTo(x, y);
-        }
+        _pathParser.move_to(x,y);
+        _pathParser.line_to(x + width, y);
+        _pathParser.line_to(x + width, y + height);
+        _pathParser.line_to(x,y + height);
+        _pathParser.close_subpath();
     }
 
-    // L, l
-    public function line_to(x: Float, y: Float, rel: Bool = false): Void
+    public function line(x1: Float, y1: Float, x2: Float, y2: Float)
     {
-        if (rel)
-        {
-            _storage.lineRel(x, y);
-        }
-        else
-        {
-            _storage.lineTo(x, y);
-        }
+        _pathParser.move_to(x1, y1);
+        _pathParser.line_to(x2, y2);
     }
 
-    // H, h
-    public function hline_to(x: Float, rel: Bool = false): Void
+    public function poly(tok: SVGPathTokenizer, close: Bool)
     {
-        if (rel)
-        {
-            _storage.hlineRel(x);
-        }
-        else
-        {
-            _storage.hlineTo(x);
-        }
-    }
-
-    // V, v
-    public function vline_to(y: Float, rel: Bool = false): Void
-    {
-        if (rel)
-        {
-            _storage.vlineRel(y);
-        }
-        else
-        {
-            _storage.vlineTo(y);
-        }
-    }
-
-    // Q, q
-    public function curve3Q(x1: Float, y1: Float, x: Float, y: Float, rel: Bool = false): Void
-    {
-        if (rel)
-        {
-            _storage.curve3Rel(x1, y1, x, y);
-        }
-        else
-        {
-            _storage.curve3(x1, y1, x, y);
-        }
-    }
-
-    // T, t
-    public function curve3(x: Float, y: Float, rel: Bool = false): Void
-    {
-        if (rel)
-        {
-            _storage.curve3RelTo(x,y);
-        }
-        else
-        {
-            _storage.curve3To(x,y);
-        }
-    }
-
-    // C, c
-    public function curve4C(x1: Float, y1: Float, x2: Float, y2: Float, x: Float, y: Float, rel: Bool = false): Void
-    {
-        if (rel)
-        {
-            _storage.curve4Rel(x1,y1,x2,y2,x,y);
-        }
-        else
-        {
-            _storage.curve4(x1,y1,x2,y2,x,y);
-        }
-    }
-
-    // S, s
-    public function curve4(x2: Float, y2: Float, x: Float, y: Float, rel: Bool = false): Void
-    {
-        if (rel)
-        {
-            _storage.curve4RelTo(x2,y2,x,y);
-        }
-        else
-        {
-            _storage.curve4To(x2,y2,x,y);
-        }
-    }
-
-    //A, a
-    public function arc(rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float, rel: Bool = false)
-    {
-        if (rel)
-        {
-            _storage.arcRel(rx, ry, angle, isLargeArc, isSweep, x, y);
-        }
-        else
-        {
-            _storage.arc(rx, ry, angle, isLargeArc, isSweep, x, y);
-        }
-    }
-
-    // Z, z
-    public function close_subpath(): Void
-    {
-        _storage.endPoly(PathFlags.CLOSE);
+        _pathParser.parsePoly(tok, close);
     }
 
     public function fill_none(): Void
