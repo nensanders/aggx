@@ -22,6 +22,7 @@ import StringTools;
 
 using types.DataStringTools;
 using StringTools;
+using lib.ha.svg.XmlExtender;
 
 class SVGParser
 {
@@ -38,10 +39,7 @@ class SVGParser
     private var _attr_value: String;    // CHAR*
     private var _attr_name_len: UInt;   // UNSIGNED
     private var _attr_value_len: UInt;  // UNSIGNED
-
-
-
-
+    
     public function new(path: SVGPathRenderer)
     {
         _path = path;
@@ -68,20 +66,6 @@ class SVGParser
         processXML(svg);
     }
 
-    private function eachChildElement(xml: Xml, callback: Xml -> String -> Void)
-    {
-        for (element in xml.elements())
-        {
-            if (element.nodeType != Xml.Element)
-            {
-                continue;
-            }
-
-            var name = element.nodeName;
-            callback(element, name);
-        }
-    }
-
     private function parseDef(element: Xml)
     {
         var id: String = element.get("id");
@@ -95,39 +79,12 @@ class SVGParser
 
     private function parseDefs(element: Xml)
     {
-        eachChildElement(element, function (element: Xml, name: String)
+        element.eachChildElement(function (element: Xml, name: String)
         {
             switch (name)
             {
                 case "linearGradient" | "radialGradient" : parseGradient(element);
                 default: parseDef(element);
-            }
-        });
-    }
-
-    private function findFirstElement(xml: Xml, name: String): Xml
-    {
-        var it = xml.elementsNamed(name);
-        if (!it.hasNext())
-        {
-            return null;
-        }
-
-        return it.next();
-    }
-
-    private function eachXmlElement(xml: Xml, begin: Xml -> Bool, ?end: Xml -> Void)
-    {
-        eachChildElement(xml, function(element: Xml, name: String)
-        {
-            if (begin(element))
-            {
-                eachXmlElement(element, begin, end);
-            }
-
-            if (end != null)
-            {
-                end(element);
             }
         });
     }
@@ -145,9 +102,9 @@ class SVGParser
             parseDefs(element);
             return true;
         }
-        eachXmlElement(xml, defsCbk);
+        xml.eachXmlElement(defsCbk);
 
-        eachXmlElement(xml, beginElement, endElement);
+        xml.eachXmlElement(beginElement, endElement);
     }
 
     private function beginElement(element: Xml): Bool
@@ -190,14 +147,6 @@ class SVGParser
             case "polygon":
                 {
                     parse_poly(attr, element, true);
-                }
-            case "linearGradient":
-                {
-                    parseGradient(element);
-                }
-            case "radialGradient":
-                {
-                    parseGradient(element);
                 }
             default:
         }
