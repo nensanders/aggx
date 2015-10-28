@@ -1,4 +1,5 @@
 package lib.ha.svg;
+import haxe.ds.StringMap;
 import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import lib.ha.core.memory.Ref.FloatRef;
 import lib.ha.core.memory.Ref;
@@ -22,17 +23,12 @@ import StringTools;
 using types.DataStringTools;
 using StringTools;
 
-private typedef NamedColor =
-{
-    private var name:String;
-    private var color:RgbaColor;
-}
-
 class SVGParser
 {
     private var _path: SVGPathRenderer;
     private var _tokenizer: SVGPathTokenizer;
     private var currentGradient: SVGGradient;
+    private var _defMap: StringMap<Xml> = new StringMap<Xml>();
 
     private var _buf: String;           // CHAR*
     private var _title: String;         // CHAR*
@@ -43,156 +39,7 @@ class SVGParser
     private var _attr_name_len: UInt;   // UNSIGNED
     private var _attr_value_len: UInt;  // UNSIGNED
 
-    private static var colors: Vector<NamedColor> = Vector.fromArrayCopy([
-        {name: "aliceblue", color: new RgbaColor(240,248,255)},
-        {name: "antiquewhite", color: new RgbaColor(250,235,215)},
-        {name: "aqua", color: new RgbaColor(0,255,255)},
-        {name: "aquamarine", color: new RgbaColor(127,255,212)},
-        {name: "azure", color: new RgbaColor(240,255,255)},
-        {name: "beige", color: new RgbaColor(245,245,220)},
-        {name: "bisque", color: new RgbaColor(255,228,196)},
-        {name: "black", color: new RgbaColor(0,0,0)},
-        {name: "blanchedalmond", color: new RgbaColor(255,235,205)},
-        {name: "blue", color: new RgbaColor(0,0,255)},
-        {name: "blueviolet", color: new RgbaColor(138,43,226)},
-        {name: "brown", color: new RgbaColor(165,42,42)},
-        {name: "burlywood", color: new RgbaColor(222,184,135)},
-        {name: "cadetblue", color: new RgbaColor(95,158,160)},
-        {name: "chartreuse", color: new RgbaColor(127,255,0)},
-        {name: "chocolate", color: new RgbaColor(210,105,30)},
-        {name: "coral", color: new RgbaColor(255,127,80)},
-        {name: "cornflowerblue", color: new RgbaColor(100,149,237)},
-        {name: "cornsilk", color: new RgbaColor(255,248,220)},
-        {name: "crimson", color: new RgbaColor(220,20,60)},
-        {name: "cyan", color: new RgbaColor(0,255,255)},
-        {name: "darkblue", color: new RgbaColor(0,0,139)},
-        {name: "darkcyan", color: new RgbaColor(0,139,139)},
-        {name: "darkgoldenrod", color: new RgbaColor(184,134,11)},
-        {name: "darkgray", color: new RgbaColor(169,169,169)},
-        {name: "darkgreen", color: new RgbaColor(0,100,0)},
-        {name: "darkgrey", color: new RgbaColor(169,169,169)},
-        {name: "darkkhaki", color: new RgbaColor(189,183,107)},
-        {name: "darkmagenta", color: new RgbaColor(139,0,139)},
-        {name: "darkolivegreen", color: new RgbaColor(85,107,47)},
-        {name: "darkorange", color: new RgbaColor(255,140,0)},
-        {name: "darkorchid", color: new RgbaColor(153,50,204)},
-        {name: "darkred", color: new RgbaColor(139,0,0)},
-        {name: "darksalmon", color: new RgbaColor(233,150,122)},
-        {name: "darkseagreen", color: new RgbaColor(143,188,143)},
-        {name: "darkslateblue", color: new RgbaColor(72,61,139)},
-        {name: "darkslategray", color: new RgbaColor(47,79,79)},
-        {name: "darkslategrey", color: new RgbaColor(47,79,79)},
-        {name: "darkturquoise", color: new RgbaColor(0,206,209)},
-        {name: "darkviolet", color: new RgbaColor(148,0,211)},
-        {name: "deeppink", color: new RgbaColor(255,20,147)},
-        {name: "deepskyblue", color: new RgbaColor(0,191,255)},
-        {name: "dimgray", color: new RgbaColor(105,105,105)},
-        {name: "dimgrey", color: new RgbaColor(105,105,105)},
-        {name: "dodgerblue", color: new RgbaColor(30,144,255)},
-        {name: "firebrick", color: new RgbaColor(178,34,34)},
-        {name: "floralwhite", color: new RgbaColor(255,250,240)},
-        {name: "forestgreen", color: new RgbaColor(34,139,34)},
-        {name: "fuchsia", color: new RgbaColor(255,0,255)},
-        {name: "gainsboro", color: new RgbaColor(220,220,220)},
-        {name: "ghostwhite", color: new RgbaColor(248,248,255)},
-        {name: "gold", color: new RgbaColor(255,215,0)},
-        {name: "goldenrod", color: new RgbaColor(218,165,32)},
-        {name: "gray", color: new RgbaColor(128,128,128)},
-        {name: "green", color: new RgbaColor(0,128,0)},
-        {name: "greenyellow", color: new RgbaColor(173,255,47)},
-        {name: "grey", color: new RgbaColor(128,128,128)},
-        {name: "honeydew", color: new RgbaColor(240,255,240)},
-        {name: "hotpink", color: new RgbaColor(255,105,180)},
-        {name: "indianred", color: new RgbaColor(205,92,92)},
-        {name: "indigo", color: new RgbaColor(75,0,130)},
-        {name: "ivory", color: new RgbaColor(255,255,240)},
-        {name: "khaki", color: new RgbaColor(240,230,140)},
-        {name: "lavender", color: new RgbaColor(230,230,250)},
-        {name: "lavenderblush", color: new RgbaColor(255,240,245)},
-        {name: "lawngreen", color: new RgbaColor(124,252,0)},
-        {name: "lemonchiffon", color: new RgbaColor(255,250,205)},
-        {name: "lightblue", color: new RgbaColor(173,216,230)},
-        {name: "lightcoral", color: new RgbaColor(240,128,128)},
-        {name: "lightcyan", color: new RgbaColor(224,255,255)},
-        {name: "lightgoldenrodyellow", color: new RgbaColor(250,250,210)},
-        {name: "lightgray", color: new RgbaColor(211,211,211)},
-        {name: "lightgreen", color: new RgbaColor(144,238,144)},
-        {name: "lightgrey", color: new RgbaColor(211,211,211)},
-        {name: "lightpink", color: new RgbaColor(255,182,193)},
-        {name: "lightsalmon", color: new RgbaColor(255,160,122)},
-        {name: "lightseagreen", color: new RgbaColor(32,178,170)},
-        {name: "lightskyblue", color: new RgbaColor(135,206,250)},
-        {name: "lightslategray", color: new RgbaColor(119,136,153)},
-        {name: "lightslategrey", color: new RgbaColor(119,136,153)},
-        {name: "lightsteelblue", color: new RgbaColor(176,196,222)},
-        {name: "lightyellow", color: new RgbaColor(255,255,224)},
-        {name: "lime", color: new RgbaColor(0,255,0)},
-        {name: "limegreen", color: new RgbaColor(50,205,50)},
-        {name: "linen", color: new RgbaColor(250,240,230)},
-        {name: "magenta", color: new RgbaColor(255,0,255)},
-        {name: "maroon", color: new RgbaColor(128,0,0)},
-        {name: "mediumaquamarine", color: new RgbaColor(102,205,170)},
-        {name: "mediumblue", color: new RgbaColor(0,0,205)},
-        {name: "mediumorchid", color: new RgbaColor(186,85,211)},
-        {name: "mediumpurple", color: new RgbaColor(147,112,219)},
-        {name: "mediumseagreen", color: new RgbaColor(60,179,113)},
-        {name: "mediumslateblue", color: new RgbaColor(123,104,238)},
-        {name: "mediumspringgreen", color: new RgbaColor(0,250,154)},
-        {name: "mediumturquoise", color: new RgbaColor(72,209,204)},
-        {name: "mediumvioletred", color: new RgbaColor(199,21,133)},
-        {name: "midnightblue", color: new RgbaColor(25,25,112)},
-        {name: "mintcream", color: new RgbaColor(245,255,250)},
-        {name: "mistyrose", color: new RgbaColor(255,228,225)},
-        {name: "moccasin", color: new RgbaColor(255,228,181)},
-        {name: "navajowhite", color: new RgbaColor(255,222,173)},
-        {name: "navy", color: new RgbaColor(0,0,128)},
-        {name: "oldlace", color: new RgbaColor(253,245,230)},
-        {name: "olive", color: new RgbaColor(128,128,0)},
-        {name: "olivedrab", color: new RgbaColor(107,142,35)},
-        {name: "orange", color: new RgbaColor(255,165,0)},
-        {name: "orangered", color: new RgbaColor(255,69,0)},
-        {name: "orchid", color: new RgbaColor(218,112,214)},
-        {name: "palegoldenrod", color: new RgbaColor(238,232,170)},
-        {name: "palegreen", color: new RgbaColor(152,251,152)},
-        {name: "paleturquoise", color: new RgbaColor(175,238,238)},
-        {name: "palevioletred", color: new RgbaColor(219,112,147)},
-        {name: "papayawhip", color: new RgbaColor(255,239,213)},
-        {name: "peachpuff", color: new RgbaColor(255,218,185)},
-        {name: "peru", color: new RgbaColor(205,133,63)},
-        {name: "pink", color: new RgbaColor(255,192,203)},
-        {name: "plum", color: new RgbaColor(221,160,221)},
-        {name: "powderblue", color: new RgbaColor(176,224,230)},
-        {name: "purple", color: new RgbaColor(128,0,128)},
-        {name: "red", color: new RgbaColor(255,0,0)},
-        {name: "rosybrown", color: new RgbaColor(188,143,143)},
-        {name: "royalblue", color: new RgbaColor(65,105,225)},
-        {name: "saddlebrown", color: new RgbaColor(139,69,19)},
-        {name: "salmon", color: new RgbaColor(250,128,114)},
-        {name: "sandybrown", color: new RgbaColor(244,164,96)},
-        {name: "seagreen", color: new RgbaColor(46,139,87)},
-        {name: "seashell", color: new RgbaColor(255,245,238)},
-        {name: "sienna", color: new RgbaColor(160,82,45)},
-        {name: "silver", color: new RgbaColor(192,192,192)},
-        {name: "skyblue", color: new RgbaColor(135,206,235)},
-        {name: "slateblue", color: new RgbaColor(106,90,205)},
-        {name: "slategray", color: new RgbaColor(112,128,144)},
-        {name: "slategrey", color: new RgbaColor(112,128,144)},
-        {name: "snow", color: new RgbaColor(255,250,250)},
-        {name: "springgreen", color: new RgbaColor(0,255,127)},
-        {name: "steelblue", color: new RgbaColor(70,130,180)},
-        {name: "tan", color: new RgbaColor(210,180,140)},
-        {name: "teal", color: new RgbaColor(0,128,128)},
-        {name: "thistle", color: new RgbaColor(216,191,216)},
-        {name: "tomato", color: new RgbaColor(255,99,71)},
-        {name: "turquoise", color: new RgbaColor(64,224,208)},
-        {name: "violet", color: new RgbaColor(238,130,238)},
-        {name: "wheat", color: new RgbaColor(245,222,179)},
-        {name: "white", color: new RgbaColor(255,255,255)},
-        {name: "whitesmoke", color: new RgbaColor(245,245,245)},
-        {name: "yellow", color: new RgbaColor(255,255,0)},
-        {name: "yellowgreen", color: new RgbaColor(154,205,50)},
-        {name: "zzzzzzzzzzz", color: new RgbaColor(0,0,0,0)}
-    ]);
+
 
 
     public function new(path: SVGPathRenderer)
@@ -813,15 +660,16 @@ class SVGParser
         }
         else
         {
-            for (namedColor in colors)
+            var color = SVGColors.get(str);
+
+            if (color != null)
             {
-                if (namedColor.name == str)
-                {
-                    return RgbaColor.fromRgbaColor(namedColor.color);
-                }
+                return RgbaColor.fromRgbaColor(color);
             }
-            throw 'parse_color: Invalid color name $str';
-            return null;
+            else
+            {
+                throw 'parse_color: Invalid color name $str';
+            }
         }
     }
 
