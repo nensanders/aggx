@@ -68,38 +68,100 @@ class SVGParser
         processXML(svg);
     }
 
-    private function processXML(xml: Xml): Void
+    private function eachChildElement(xml: Xml, callback: Xml -> String -> Void)
     {
         for (element in xml.elements())
         {
-            var name = element.nodeName;
-            startElement(element);
-
-            for (child in element.iterator())
+            if (element.nodeType != Xml.Element)
             {
-                if (child.nodeType != XmlType.Element && child.nodeType != XmlType.Document)
-                {
-                    content(child.nodeValue);
-                }
+                continue;
             }
 
-            processXML(element);
-
-            endElement(name);
+            var name = element.nodeName;
+            callback(element, name);
         }
     }
 
-    private function startElement(element: Xml): Void
+    private function parseDef(element: Xml)
+    {
+        var id: String = element.get("id");
+        if (id == null || id.length == 0)
+        {
+            return;
+        }
+
+        _defMap.set(id, element);
+    }
+
+    private function parseDefs(element: Xml)
+    {
+        eachChildElement(element, function (element: Xml, name: String)
+        {
+            switch (name)
+            {
+                case "linearGradient" | "radialGradient" : parseGradient(element);
+                default: parseDef(element);
+            }
+        });
+    }
+
+    private function findFirstElement(xml: Xml, name: String): Xml
+    {
+        var it = xml.elementsNamed(name);
+        if (!it.hasNext())
+        {
+            return null;
+        }
+
+        return it.next();
+    }
+
+    private function eachXmlElement(xml: Xml, begin: Xml -> Bool, ?end: Xml -> Void)
+    {
+        eachChildElement(xml, function(element: Xml, name: String)
+        {
+            if (begin(element))
+            {
+                eachXmlElement(element, begin, end);
+            }
+
+            if (end != null)
+            {
+                end(element);
+            }
+        });
+    }
+
+    private function processXML(xml: Xml): Void
+    {
+        //begin with parsing all defs elements witch may scattered across all the document
+        var defsCbk = function(element: Xml): Bool
+        {
+            if (element.nodeName != "defs")
+            {
+                return true;
+            }
+
+            parseDefs(element);
+            return true;
+        }
+        eachXmlElement(xml, defsCbk);
+
+        eachXmlElement(xml, beginElement, endElement);
+    }
+
+    private function beginElement(element: Xml): Bool
     {
         var el: String = element.nodeName;
+        if (el == "defs")
+        {
+            return false;
+        }
+
         var attr: Iterator<String> = element.attributes();
 
         switch (el)
         {
-            case "title":
-                {
-                    _title_flag = true;
-                }
             case "g":
                 {
                     _path.pushElement();
@@ -139,16 +201,14 @@ class SVGParser
                 }
             default:
         }
+
+        return true;
     }
 
-    private function endElement(el: String): Void
+    private function endElement(element: Xml): Void
     {
-        switch (el)
+        switch (element.nodeName)
         {
-            case "title":
-                {
-                    _title_flag = false;
-                }
             case "g":
                 {
                     _path.popElement();
@@ -163,11 +223,7 @@ class SVGParser
 
     private function content(s: String): Void
     {
-        if (_title_flag)
-        {
-            _title = s;
-            _title_len = s.length;
-        }
+
     }
 
     private inline function get_title():String { return _title; }
@@ -278,6 +334,7 @@ class SVGParser
         stop.color.a = Math.round(opacity * 255);
         return stop;
     }
+
 
     private function eachAttribute(element: Xml, callback: String -> String -> Void)
     {
@@ -532,7 +589,7 @@ class SVGParser
                     }
                     else if(value.indexOf("url(") == 0)
                     {
-                        parseUrlFill(value);
+                        _path.fillGradient(parseUrlFill(value));
                     }
                     else
                     {
@@ -614,11 +671,11 @@ class SVGParser
         return true;
     }
 
-    private function parseUrlFill(value: String)
+    private function parseUrlFill(value: String): String
     {
         var template: String = "url(#";
         var id = value.substring(template.length, value.length - 1);
-        _path.fillGradient(id);
+        return id;
     }
 
     private function parse_color(str: String): RgbaColor
