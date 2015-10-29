@@ -1,4 +1,5 @@
 package lib.ha.svg;
+import haxe.ds.GenericStack;
 import haxe.ds.StringMap;
 import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import lib.ha.core.memory.Ref.FloatRef;
@@ -30,6 +31,8 @@ class SVGParser
     private var _path: SVGPathRenderer;
     private var _tokenizer: SVGPathTokenizer;
     private var currentGradient: SVGGradient;
+    private var _useStack: GenericStack<SVGUseElement> = new GenericStack<SVGUseElement>();
+
     private var _defMap: StringMap<Xml> = new StringMap<Xml>();
 
     private var _buf: String;           // CHAR*
@@ -103,9 +106,47 @@ class SVGParser
             parseDefs(element);
             return true;
         }
+
         xml.eachXmlElement(defsCbk);
 
-        xml.eachXmlElement(beginElement, endElement);
+       processXmlRecursive(xml);
+    }
+
+    private function processXmlRecursive(xml: Xml)
+    {
+        var onBeginCbk = function(element: Xml): Bool
+        {
+            if (element.nodeName == 'defs')
+            {
+                return false;
+            }
+
+            if (element.nodeName == 'use')
+            {
+                _useStack.add(SVGUseElement.fromXml(element));
+                var linked = _defMap.get(_useStack.first().link);
+                if (linked == null)
+                {
+                    throw '<use>: linked element ${_useStack.first().link} not found in document}';
+                }
+
+                if (beginElement(linked))
+                {
+                    processXmlRecursive(linked);
+                }
+                endElement(linked);
+
+                _useStack.pop();
+
+                //no children in use element
+                return false;
+            }
+
+            beginElement(element);
+            return true;
+        }
+
+        xml.eachXmlElement(onBeginCbk, endElement);
     }
 
     private function beginElement(element: Xml): Bool
@@ -179,19 +220,23 @@ class SVGParser
     private function parse_path(attrNames: Iterator<String>, element: Xml): Void
     {
         _path.beginPath();
-        for (name in attrNames)
+
+        eachAttribute(element,
+        function (name: String, value: String)
         {
-            if (name == "d")
+            switch (name)
             {
-                var value = element.get(name);
-                _tokenizer.set_path_str(value);
-                _path.path(_tokenizer);
+                case "d":
+                    {
+                        var value = element.get(name);
+                        _tokenizer.set_path_str(value);
+                        _path.path(_tokenizer);
+                    }
+                default:
+                    parseShapeAtribute(name, value);
             }
-            else
-            {
-                parseShapeAtribute(name, element.get(name));
-            }
-        }
+        });
+
         _path.endPath();
     }
 
@@ -254,8 +299,7 @@ class SVGParser
 
             stops.push(parseGradientStop(child));
         }
-
-        //trace('${currentGradient.id} -> ${currentGradient.type}');
+        
         currentGradient.calculateColorArray(stops);
         _path.addGradient(currentGradient);
     }
@@ -284,28 +328,73 @@ class SVGParser
 
     private function eachAttribute(element: Xml, callback: String -> String -> Void)
     {
+        var seenX: Bool = false;
+        var seenY: Bool = false;
+
         for (attr in element.attributes())
         {
-            if (attr == "style")
+            switch(attr)
             {
-                var style: String = element.get("style");
-                for (nameValue in style.split(";"))
-                {
-                    if (nameValue == "")
+                case "style":
                     {
+                        var style: String = element.get("style");
+                        if (_useStack.first() != null && _useStack.first().style != null)
+                        {
+                            style = '$style:${_useStack.first().style}';
+                        }
+
+                        for (nameValue in style.split(";"))
+                        {
+                            if (nameValue == "")
+                            {
+                                continue;
+                            }
+
+                            var arguments: Array<String> = nameValue.split(":");
+                            var name: String = arguments[0].rtrim();
+                            var value: String = arguments[1].ltrim();
+                            callback(name, value);
+                        }
+
+
                         continue;
                     }
 
-                    var arguments: Array<String> = nameValue.split(":");
-                    var name: String = arguments[0].rtrim();
-                    var value: String = arguments[1].ltrim();
-                    callback(name, value);
-                }
+                case "x":
+                    {
+                        if (_useStack.first() != null && _useStack.first().x != null)
+                        {
+                            callback("x", _useStack.first().x);
+                            seenX = true;
+                            continue;
+                        }
+                    }
 
-                continue;
+                case "y":
+                    {
+                        if (_useStack.first() != null && _useStack.first().y != null)
+                        {
+                            callback("y", _useStack.first().x);
+                            seenY = true;
+                            continue;
+                        }
+                    }
             }
 
             callback(attr, element.get(attr));
+        }
+
+        if (_useStack.first() != null)
+        {
+            if (!seenX && _useStack.first().x != null)
+            {
+                callback("x", _useStack.first().x);
+            }
+
+            if (!seenY && _useStack.first().y != null)
+            {
+                callback("y", _useStack.first().y);
+            }
         }
     }
 
@@ -313,19 +402,20 @@ class SVGParser
     {
         _path.beginPath();
 
-        for (name in attrNames)
+        eachAttribute(element,
+        function (name: String, value: String)
         {
-            var value = element.get(name);
-
-            if (!parseShapeAtribute(name, value))
+            switch (name)
             {
-                if (name == "points")
-                {
-                    _tokenizer.set_path_str(value);
-                    _path.poly(_tokenizer, close_flag);
-                }
+                case "points":
+                    {
+                        _tokenizer.set_path_str(value);
+                        _path.poly(_tokenizer, close_flag);
+                    }
+                default:
+                    parseShapeAtribute(name, value);
             }
-        }
+        });
 
         _path.endPath();
     }
@@ -339,26 +429,24 @@ class SVGParser
 
         _path.beginPath();
 
-        for (name in attrNames)
+        eachAttribute(element,
+        function (name: String, value: String)
         {
-            var value = element.get(name);
-
-            if (!parseShapeAtribute(name, value))
+            switch (name)
             {
-                if (name == "x") x = Std.parseFloat(value);
-                if (name == "y") y = Std.parseFloat(value);
-                if (name == "width") w = Std.parseFloat(value);
-                if (name == "height") h = Std.parseFloat(value);
-                // rx - TODO to be implemented
-                // ry - TODO to be implemented
+                case "x": x = Std.parseFloat(value);
+                case "y": y = Std.parseFloat(value);
+                case "width": w = Std.parseFloat(value);
+                case "height": h = Std.parseFloat(value);
+                default:
+                    parseShapeAtribute(name, value);
             }
-        }
+        });
 
         if(w != 0.0 && h != 0.0)
         {
             if(w < 0.0) throw 'parse_rect: Invalid width: $w';
             if(h < 0.0) throw 'parse_rect: Invalid height: $h';
-
         }
 
         _path.rect(x, y, w, h);
@@ -373,48 +461,29 @@ class SVGParser
         var y2: Float = 0.0;
 
         _path.beginPath();
-        for (name in attrNames)
-        {
-            var value = element.get(name);
 
-            if (!parseShapeAtribute(name, value))
+        eachAttribute(element,
+        function (name: String, value: String)
+        {
+            switch (name)
             {
-                if (name == "x1") x1 = Std.parseFloat(value);
-                if (name == "y1") y1 = Std.parseFloat(value);
-                if (name == "x2") x2 = Std.parseFloat(value);
-                if (name == "x2") y2 = Std.parseFloat(value);
+                case "x1": x1 = Std.parseFloat(value);
+                case "y1": y1 = Std.parseFloat(value);
+                case "x2": x2 = Std.parseFloat(value);
+                case "y2": y2 = Std.parseFloat(value);
+                default:
+                    parseShapeAtribute(name, value);
             }
-        }
+        });
 
         _path.line(x1, y1, x2, y2);
         _path.endPath();
-    }
-
-    private function parse_name_value(nameValue: String): Bool
-    {
-        var arguments: Array<String> = nameValue.split(":");
-        var name: String = arguments[0].rtrim();
-        var value: String = arguments[1].ltrim();
-        return parseShapeAtribute(name, value);
-    }
-
-    private function parse_style(str: String): Void
-    {
-        for (nameValue in str.split(";"))
-        {
-            if (nameValue == "") continue;
-            parse_name_value(nameValue.trim());
-        }
     }
 
     private function parseShapeAtribute(name: String, value: String): Bool
     {
         switch (name)
         {
-            case "style":
-                {
-                    parse_style(value);
-                }
             case "fill":
                 {
                     if (value == "none")
@@ -495,11 +564,7 @@ class SVGParser
                 {
                     _path.id(value);
                 }
-            //else
-            //if(strcmp(el, "<OTHER_ATTRIBUTES>") == 0)
-            //{
-            //}
-            // . . .
+
             default: return false;
         }
         return true;
