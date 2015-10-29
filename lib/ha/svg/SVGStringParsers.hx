@@ -7,6 +7,7 @@ import lib.ha.core.memory.Ref;
 import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import lib.ha.aggx.color.RgbaColor;
 import haxe.ds.Vector;
+import StringTools;
 
 using StringTools;
 
@@ -53,7 +54,6 @@ class SVGStringParsers
             var right: Array<String> = str.split("(");
             var left: String = right[right.length - 1].split(")")[0];
             var values = left.split(","); // TODO Maybe check if there is no comma as separator
-            trace(values);
             return new RgbaColor(Std.parseInt(values[0]), Std.parseInt(values[1]), Std.parseInt(values[2]));
         }
         else
@@ -108,7 +108,7 @@ class SVGStringParsers
 
     public static function parseTransform(str: String, transform: AffineTransformer): Void
     {
-        for (elem in str.split(")"))
+        for (elem in str.trim().split(")"))
         {
             if (elem == "")
             {
