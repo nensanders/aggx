@@ -23,6 +23,7 @@ import StringTools;
 using types.DataStringTools;
 using StringTools;
 using lib.ha.svg.XmlExtender;
+using lib.ha.svg.SVGStringParsers;
 
 class SVGParser
 {
@@ -39,7 +40,7 @@ class SVGParser
     private var _attr_value: String;    // CHAR*
     private var _attr_name_len: UInt;   // UNSIGNED
     private var _attr_value_len: UInt;  // UNSIGNED
-    
+
     public function new(path: SVGPathRenderer)
     {
         _path = path;
@@ -175,9 +176,6 @@ class SVGParser
 
     }
 
-    private inline function get_title():String { return _title; }
-    public var title(get, null):String;
-
     private function parse_path(attrNames: Iterator<String>, element: Xml): Void
     {
         _path.beginPath();
@@ -218,23 +216,23 @@ class SVGParser
                 case "id": currentGradient.id = value;
                 case "xlink:href": currentGradient.link = value.substr(1, value.length - 1);
 
-                case "x1": currentGradient.gradientVector[0] = parseFloatRefPercent(value);
-                case "y1": currentGradient.gradientVector[1] = parseFloatRefPercent(value);
-                case "x2": currentGradient.gradientVector[2] = parseFloatRefPercent(value);
-                case "y2": currentGradient.gradientVector[3] = parseFloatRefPercent(value);
+                case "x1": currentGradient.gradientVector[0] = value.parseFloatRefPercent();
+                case "y1": currentGradient.gradientVector[1] = value.parseFloatRefPercent();
+                case "x2": currentGradient.gradientVector[2] = value.parseFloatRefPercent();
+                case "y2": currentGradient.gradientVector[3] = value.parseFloatRefPercent();
 
-                case "cx": currentGradient.focalGradientParameters[0] = parseFloatRefPercent(value);
-                case "cy": currentGradient.focalGradientParameters[1] = parseFloatRefPercent(value);
-                case "r": currentGradient.focalGradientParameters[2] = parseFloatRefPercent(value);
-                case "fx": currentGradient.focalGradientParameters[3] = parseFloatRefPercent(value);
-                case "fy": currentGradient.focalGradientParameters[4] = parseFloatRefPercent(value);
+                case "cx": currentGradient.focalGradientParameters[0] = value.parseFloatRefPercent();
+                case "cy": currentGradient.focalGradientParameters[1] = value.parseFloatRefPercent();
+                case "r": currentGradient.focalGradientParameters[2] = value.parseFloatRefPercent();
+                case "fx": currentGradient.focalGradientParameters[3] = value.parseFloatRefPercent();
+                case "fy": currentGradient.focalGradientParameters[4] = value.parseFloatRefPercent();
 
                 case "gradientUnits": currentGradient.userSpace = value == "userSpaceOnUse";
-                case "spreadMethod": currentGradient.spreadMethod = parseSpreadMethond(value);
+                case "spreadMethod": currentGradient.spreadMethod = value.parseSpreadMethond();
                 case "gradientTransform":
                     {
                         currentGradient.transform = new AffineTransformer();
-                        parseTransform(value, currentGradient.transform);
+                        value.parseTransform(currentGradient.transform);
                     }
                 default:
             }
@@ -272,8 +270,8 @@ class SVGParser
             {
                 switch (name)
                 {
-                    case "stop-color": stop.color = parse_color(value);
-                    case "offset": stop.offset = parsePercent(value);
+                    case "stop-color": stop.color = value.parseColor();
+                    case "offset": stop.offset = value.parsePercent();
                     case "stop-opacity": opacity = Std.parseFloat(value);
                     default:
                 }
@@ -283,7 +281,6 @@ class SVGParser
         stop.color.a = Math.round(opacity * 255);
         return stop;
     }
-
 
     private function eachAttribute(element: Xml, callback: String -> String -> Void)
     {
@@ -311,6 +308,7 @@ class SVGParser
             callback(attr, element.get(attr));
         }
     }
+
     private function parse_poly(attrNames: Iterator<String>, element: Xml, close_flag: Bool): Void
     {
         _path.beginPath();
@@ -409,119 +407,6 @@ class SVGParser
         }
     }
 
-    private function parseTransform(str: String, transform: AffineTransformer): Void
-    {
-        for (elem in str.split(")"))
-        {
-            if (elem == "")
-            {
-                continue;
-            }
-
-            var nameValue:Array<String> = elem.split("(");
-            var name: String = nameValue[0].trim();
-            var value: String = nameValue[1];
-            var currentTransform: AffineTransformer;
-
-            switch(name)
-            {
-                case "matrix":  currentTransform = parse_matrix(value);
-                case "translate": currentTransform = parse_translate(value);
-                case "rotate": currentTransform = parse_rotate(value);
-                case "scale": currentTransform = parse_scale(value);
-                case "skewX": currentTransform = parse_skew_x(value);
-                case "skewY": currentTransform = parse_skew_y(value);
-                default: throw 'unsupported transform type\'$name\'';
-            }
-
-            transform.premultiply(currentTransform);
-        }
-    }
-
-    private function parse_matrix(str: String): AffineTransformer
-    {
-        var args: Vector<Float> = new Vector(6);
-        var na = parse_transform_args(str, 6, args);
-        if (na != 6)
-        {
-            throw "parse_matrix: Invalid number of arguments";
-        }
-        //_path.transform().premultiply(new AffineTransformer(args[0], args[1], args[2], args[3], args[4], args[5]));
-        return new AffineTransformer(args[0], args[1], args[2], args[3], args[4], args[5]);
-    }
-
-    private function parse_translate(str: String): AffineTransformer
-    {
-        var args: Vector<Float> = new Vector(2);
-        var na = parse_transform_args(str, 2, args);
-        if (na == 1) args[1] = 0.0;
-
-        return AffineTransformer.translator(args[0], args[1]);
-    }
-
-    private function parse_rotate(str: String): AffineTransformer
-    {
-        var args: Vector<Float> = new Vector(3);
-        var na = parse_transform_args(str, 3, args);
-        if (na == 1)
-        {
-            return AffineTransformer.rotator(Calc.deg2rad(args[0]));
-        }
-        else if (na == 3)
-        {
-            var t: AffineTransformer = AffineTransformer.translator(-args[1], -args[2]);
-            t.multiply(AffineTransformer.rotator(Calc.deg2rad(args[0])));
-            t.multiply(AffineTransformer.translator(args[1], args[2]));
-            return t;
-        }
-        else
-        {
-            throw "parse_rotate: Invalid number of arguments";
-        }
-    }
-
-    private function parse_scale(str: String): AffineTransformer
-    {
-        var args: Vector<Float> = new Vector(2);
-        var na = parse_transform_args(str, 2, args);
-        if (na == 1) args[1] = args[0];
-        return AffineTransformer.scaler(args[0], args[1]);
-    }
-
-    private function parse_skew_x(str: String): AffineTransformer
-    {
-        var args: Vector<Float> = new Vector(1);
-        var na = parse_transform_args(str, 1, args);
-        return AffineTransformer.skewer(Calc.deg2rad(args[0]), 0.0);
-    }
-
-    private function parse_skew_y(str: String): AffineTransformer
-    {
-        var args: Vector<Float> = new Vector(1);
-        var na = parse_transform_args(str, 1, args);
-        return AffineTransformer.skewer(0.0, Calc.deg2rad(args[0]));
-    }
-
-    // Returns actual number of arguments
-    private function parse_transform_args(str: String, maxArgs: UInt, argsOut:Vector<Float>): UInt
-    {
-        //  -10 -20
-        //   5,10
-        str = str.split(",").join(" "); // Sanitize space and comma
-
-        var count: UInt = 0;
-
-        for (arg in str.split(" "))
-        {
-            if (arg == "") continue;
-            if (count >= maxArgs) throw "parse_transform_args: Too many arguments";
-
-            argsOut[count] = Std.parseFloat(arg);
-            ++count;
-        }
-        return count;
-    }
-
     private function parseShapeAtribute(name: String, value: String): Bool
     {
         switch (name)
@@ -538,11 +423,11 @@ class SVGParser
                     }
                     else if(value.indexOf("url(") == 0)
                     {
-                        _path.fillGradient(parseUrlFill(value));
+                        _path.fillGradient(value.parseFillUrl());
                     }
                     else
                     {
-                        _path.fill(parse_color(value));
+                        _path.fill(value.parseColor());
                     }
                 }
             case "fill-opacity":
@@ -557,7 +442,7 @@ class SVGParser
                     }
                     else
                     {
-                        _path.stroke(parse_color(value));
+                        _path.stroke(value.parseColor());
                     }
                 }
             case "stroke-width":
@@ -604,7 +489,7 @@ class SVGParser
                 }
             case "transform":
                 {
-                    parseTransform(value, _path.transform());
+                    value.parseTransform(_path.transform());
                 }
             case "id":
                 {
@@ -619,99 +504,4 @@ class SVGParser
         }
         return true;
     }
-
-    private function parseUrlFill(value: String): String
-    {
-        var template: String = "url(#";
-        var id = value.substring(template.length, value.length - 1);
-        return id;
-    }
-
-    private function parse_color(str: String): RgbaColor
-    {
-        if (str.indexOf("#") != -1)
-        {
-            var comp: Array<String> = str.split("#");
-            var hexStr = comp[comp.length - 1];
-            var isShortHex: Bool = hexStr.length == 3;
-
-            var r: String = "0x";
-            var g: String = "0x";
-            var b: String = "0x";
-
-            if (isShortHex)
-            {
-                var rs = hexStr.substr(0,1);
-                var gs = hexStr.substr(1,1);
-                var bs = hexStr.substr(2,1);
-                r = r + rs + rs;
-                g = g + gs + gs;
-                b = b + bs + bs;
-            }
-            else
-            {
-                r += hexStr.substr(0,2);
-                g += hexStr.substr(2,2);
-                b += hexStr.substr(4,2);
-            }
-            return new RgbaColor(Std.parseInt(r), Std.parseInt(g), Std.parseInt(b));
-        }
-        else if (str.indexOf("rgb") != -1)
-        {
-            var right: Array<String> = str.split("(");
-            var left: String = right[right.length - 1].split(")")[0];
-            var values = left.split(","); // TODO Maybe check if there is no comma as separator
-            trace(values);
-            return new RgbaColor(Std.parseInt(values[0]), Std.parseInt(values[1]), Std.parseInt(values[2]));
-        }
-        else
-        {
-            var color = SVGColors.get(str);
-
-            if (color != null)
-            {
-                return RgbaColor.fromRgbaColor(color);
-            }
-            else
-            {
-                throw 'parse_color: Invalid color name $str';
-            }
-        }
-    }
-
-    private function parsePercent(value: String): Float
-    {
-        if (value.lastIndexOf("%") != -1)
-        {
-            return Std.parseFloat(value.substr(0, value.length - 1)) / 100;
-        }
-
-        return Std.parseFloat(value);
-    }
-
-    private function parseFloatRef(value: String): FloatRef
-    {
-        var ref: FloatRef = Ref.getFloat();
-        ref.value = Std.parseFloat(value);
-        return ref;
-    }
-
-    private function parseFloatRefPercent(value: String): FloatRef
-    {
-        var ref: FloatRef = Ref.getFloat();
-        ref.value = parsePercent(value);
-        return ref;
-    }
-
-    private function parseSpreadMethond(value: String): SpreadMethod
-    {
-        return switch (value)
-        {
-            case "pad": SpreadMethod.Pad;
-            case "reflect": SpreadMethod.Reflect;
-            case "repeat": SpreadMethod.Repeat;
-            default: throw "invalid spread method";
-        }
-    }
-
 }
