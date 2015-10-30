@@ -390,6 +390,7 @@ class SVGPathRenderer
 
     public function fillGradient(id: String)
     {
+        fill_none();
         curElement().gradientId = id;
     }
 
