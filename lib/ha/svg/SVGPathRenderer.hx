@@ -165,6 +165,11 @@ class SVGPathRenderer
             }
 
             color.set(element.fill_color);
+            if (element.fill_opacity != null)
+            {
+                color.opacity = element.fill_opacity;
+            }
+
             color.opacity = color.opacity * alpha;
             SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
         }
@@ -380,7 +385,7 @@ class SVGPathRenderer
 
     public function fill_opacity(opacity: Float): Void
     {
-        curElement().fill_color.opacity = opacity;
+        curElement().fill_opacity = opacity;
     }
 
     public function fillGradient(id: String)

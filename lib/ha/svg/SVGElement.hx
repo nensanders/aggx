@@ -9,6 +9,7 @@ class SVGElement
 {
     public var index: UInt;
     public var fill_color: RgbaColor;
+    public var fill_opacity: Null<Float>;
     public var stroke_color: RgbaColor;
     public var fill_flag: Bool;
     public var stroke_flag: Bool;
