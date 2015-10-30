@@ -123,21 +123,7 @@ class SVGParser
 
             if (element.nodeName == 'use')
             {
-                _useStack.add(SVGUseElement.fromXml(element));
-                var linked = _defMap.get(_useStack.first().link);
-                if (linked == null)
-                {
-                    throw '<use>: linked element ${_useStack.first().link} not found in document}';
-                }
-
-                if (beginElement(linked))
-                {
-                    processXmlRecursive(linked);
-                }
-                endElement(linked);
-
-                _useStack.pop();
-
+                processUseElement(element);
                 //no children in use element
                 return false;
             }
@@ -147,6 +133,35 @@ class SVGParser
         }
 
         xml.eachXmlElement(onBeginCbk, endElement);
+    }
+
+    private function processUseElement(element: Xml)
+    {
+        _useStack.add(SVGUseElement.fromXml(element));
+        var linked = _defMap.get(_useStack.first().link);
+        if (linked == null)
+        {
+            throw '<use>: linked element ${_useStack.first().link} not found in document}';
+        }
+        var transform: String = _useStack.first().transform;
+        if (transform != null)
+        {
+            _path.pushElement();
+            transform.parseTransform(_path.transform());
+        }
+
+        if (beginElement(linked))
+        {
+            processXmlRecursive(linked);
+        }
+        endElement(linked);
+
+        if (transform != null)
+        {
+            _path.popElement();
+        }
+
+        _useStack.pop();
     }
 
     private function beginElement(element: Xml): Bool
@@ -299,7 +314,7 @@ class SVGParser
 
             stops.push(parseGradientStop(child));
         }
-        
+
         currentGradient.calculateColorArray(stops);
         _path.addGradient(currentGradient);
     }

@@ -4,6 +4,9 @@ class SVGUseElement
 {
     public var x: String;
     public var y: String;
+    public var width: String;
+    public var height: String;
+    public var transform: String;
     public var link: String;
     public var style: String;
 
@@ -29,6 +32,9 @@ class SVGUseElement
             {
                 case "x": output.x = value;
                 case "y": output.y = value;
+                case "width": output.width = value;
+                case "height": output.height = value;
+                case "transform": output.transform = value;
                 case "xlink:href": output.link = value.substr(1, value.length - 1);
                 case "style": output.style = value;
                 default:
