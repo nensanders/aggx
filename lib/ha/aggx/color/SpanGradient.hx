@@ -116,13 +116,13 @@ class SpanGradient implements ISpanGenerator
                 case SpreadMethod.Reflect:
                     {
                         d = Calc.abs(d);
-                        var even: Bool =  Calc.intDiv(d, _colorFunction.size) % 2 == 0;
 
+                        var even: Bool =  Calc.intDiv(d, _colorFunction.size) % 2 == 0;
                         d = d % _colorFunction.size;
 
                         if (!even)
                         {
-                            d = _colorFunction.size - d;
+                            d = _colorFunction.size - d - 1;
                         }
                     }
             }
