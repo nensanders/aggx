@@ -180,10 +180,12 @@ class SVGParser
                 {
                     _path.pushElement();
 
-                    for (name in attr)
+                    eachAttribute(element,
+                    function (name: String, value: String)
                     {
-                        parseShapeAtribute(name, element.get(name));
-                    }
+                        parseShapeAtribute(name, value);
+                    });
+
                 }
             case "path":
                 {
