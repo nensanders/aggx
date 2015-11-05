@@ -368,8 +368,8 @@ class SVGParser
                             }
 
                             var arguments: Array<String> = nameValue.split(":");
-                            var name: String = arguments[0].rtrim();
-                            var value: String = arguments[1].ltrim();
+                            var name: String = arguments[0].trim();
+                            var value: String = arguments[1].trim();
                             callback(name, value);
                         }
 
