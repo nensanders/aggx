@@ -53,7 +53,16 @@ class SVGGradient
 
         gradientColors = new ColorArray(256);
 
-        stops.sort(function (a, b) {return a.offset - b.offset < 0 ? 1 : 0;});
+        stops.sort(function (a, b)
+        {
+            if (a.offset == b.offset)
+            {
+                return 0;
+            }
+
+            return a.offset - b.offset > 0 ? 1 : -1;
+        });
+
         var currentStop: Int = -1;
         var lastStop: Int = stops.length - 1;
 
