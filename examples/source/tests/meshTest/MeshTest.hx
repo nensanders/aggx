@@ -282,58 +282,56 @@ class MeshTest extends OpenGLTest
         var y = 0 * fontSize / 20;
 
         fontEngine.renderString(string1, fontSize, x, y, scanlineRenderer);
-        //throw "dasda";
 
-
-        /*scanlineRenderer.color = new RgbaColor(27, 106, 240);
+        scanlineRenderer.color = new RgbaColor(27, 106, 240);
 
         var x = 10;
         var y = 20 * fontSize / 20;
 
-        //fontEngine.renderString(string2, fontSize, x, y, scanlineRenderer);
+        fontEngine.renderString(string2, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(227, 200, 26);
 
         var x = 10;
         var y = 40 * fontSize / 20;
 
-        //fontEngine.renderString(string3, fontSize, x, y, scanlineRenderer);
+        fontEngine.renderString(string3, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(106, 27, 240);
 
         var x = 10;
         var y = 60 * fontSize / 20;
 
-        //fontEngine.renderString(string4, fontSize, x, y, scanlineRenderer);
+        fontEngine.renderString(string4, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(136, 207, 100);
 
         var x = 10;
         var y = 80 * fontSize / 20;
 
-        //fontEngine.renderString(string5, fontSize, x, y, scanlineRenderer);
+        fontEngine.renderString(string5, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(136, 20, 50);
 
         var x = 10;
         var y = 100 * fontSize / 20;
 
-        //fontEngine.renderString(string6, fontSize, x, y, scanlineRenderer);
+        fontEngine.renderString(string6, fontSize, x, y, scanlineRenderer);
 
         var x = 10;
         var y = 120 * fontSize / 20;
 
-        //fontEngine.renderString(japanString1, fontSize, x, y, scanlineRenderer);
+        fontEngine.renderString(japanString1, fontSize, x, y, scanlineRenderer);
 
         var x = 10;
         var y = 140 * fontSize / 20;
 
-        //fontEngine.renderString(japanString2, fontSize, x, y, scanlineRenderer);
+        fontEngine.renderString(japanString2, fontSize, x, y, scanlineRenderer);
 
         var x = 10;
         var y = 160 * fontSize / 20;
 
-        //fontEngine.renderString(japanString3, fontSize, x, y, scanlineRenderer);*/
+        fontEngine.renderString(japanString3, fontSize, x, y, scanlineRenderer);
     }
 
 //---------------------------------------------------------------------------------------------------

@@ -118,7 +118,7 @@ class FontEngine
 		var scale = fontSize / _currentFont.unitsPerEm;
 		var y = _currentFont.ascender * scale;
 
-		while (i < 20)
+		while (i < string.length)
 		{
 			var face = _typefaceCache.getFace(string.charCodeAt(i));
 			var transform = AffineTransformer.scaler(scale, scale);
@@ -128,7 +128,6 @@ class FontEngine
 			_path.transformAllPaths(transform);
 			x += face.glyph.advanceWidth * scale;
 			_rasterizerizer.addPath(_curve);
-            //_rasterizerizer.addPath(_path);
 
 			++i;
 		}
