@@ -15,7 +15,7 @@ class Debug
         }
     }
 
-    public inline static function caller(): String
+    public inline static function calledFrom(): String
     {
         var stack = CallStack.callStack();
         if (stack.length < 3)

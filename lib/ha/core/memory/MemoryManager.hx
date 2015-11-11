@@ -44,7 +44,7 @@ class MemoryManager
 		var block = new MemoryBlock();
 		mallocImpl(size, block);
 		_lastBlock = block;
-		var caller = Debug.caller();
+		var caller = Debug.calledFrom();
         trace('malloc:($size): ${block.ptr}[${block.size}] caler: ${caller}');
 		return block;
 	}
@@ -58,7 +58,7 @@ class MemoryManager
 		var block = new MemoryBlock();
 		mallocExImpl(bytes, block);
 		_lastBlock = block;
-		var caller = Debug.caller();
+		var caller = Debug.calledFrom();
 		trace('mallocEx:(${bytes.allocedLength}): ${block.ptr}[${block.size}]  caler: ${caller}');
 		return block;
 	}	
