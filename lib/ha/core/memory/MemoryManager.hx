@@ -18,6 +18,7 @@
 
 package lib.ha.core.memory;
 //=======================================================================================================
+import lib.ha.core.utils.Debug;
 import types.Data;
 //=======================================================================================================
 private typedef MemoryBlockFriend =
@@ -43,6 +44,8 @@ class MemoryManager
 		var block = new MemoryBlock();
 		mallocImpl(size, block);
 		_lastBlock = block;
+		var caller = Debug.caller();
+        trace('malloc:($size): ${block.ptr}[${block.size}] caler: ${caller}');
 		return block;
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -55,10 +58,12 @@ class MemoryManager
 		var block = new MemoryBlock();
 		mallocExImpl(bytes, block);
 		_lastBlock = block;
+		var caller = Debug.caller();
+		trace('mallocEx:(${bytes.allocedLength}): ${block.ptr}[${block.size}]  caler: ${caller}');
 		return block;
 	}	
 	//---------------------------------------------------------------------------------------------------
-	public static function realloc(block:MemoryBlockFriend, size:UInt):Void
+	private static function realloc(block:MemoryBlockFriend, size:UInt):Void
 	{
 		size = roundToNext1024(size);
 		if (size != block._size)
@@ -76,7 +81,7 @@ class MemoryManager
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public static function expand(block:MemoryBlockFriend, size:UInt):Void
+	private static function expand(block:MemoryBlockFriend, size:UInt):Void
 	{
 		size = roundToNext1024(size);
 		if (size > 0)
@@ -94,7 +99,7 @@ class MemoryManager
 		}
 	}	
 	//---------------------------------------------------------------------------------------------------
-	public static function free(block:MemoryBlockFriend):Void
+	private static function free(block:MemoryBlockFriend):Void
 	{
 		var prev:MemoryBlockFriend = block._prev;
 		var next:MemoryBlockFriend = block._next;

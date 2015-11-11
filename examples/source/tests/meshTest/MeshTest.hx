@@ -83,8 +83,9 @@ class MeshTest extends OpenGLTest
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/paths.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
+    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/chars/Bendy2.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_transform.svg";
-    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";
     inline private static var VERTEXSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.vsh";
     inline private static var FRAGMENTSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.fsh";
 
@@ -98,13 +99,14 @@ class MeshTest extends OpenGLTest
     static var pixelBufferHeight:UInt = 768;
     static var pixelBufferSize:UInt = pixelBufferWidth * pixelBufferHeight * 4;
     //---------------------------------------------------------------------------------------------------
-    static var pixelBuffer:MemoryBlock = MemoryManager.malloc(pixelBufferSize);
-    static var renderingBuffer = new RenderingBuffer(pixelBuffer, pixelBufferWidth, pixelBufferHeight, pixelBufferWidth * 4);
-    static var pixelFormatRenderer = new PixelFormatRenderer(renderingBuffer);
-    static var clippingRenderer = new ClippingRenderer(pixelFormatRenderer);
-    static var scanline = new Scanline();
-    static var rasterizer = new ScanlineRasterizer();
-    static var scanlineRenderer = new SolidScanlineRenderer(clippingRenderer);
+    static var data: Data;
+    static var pixelBuffer: MemoryBlock;
+    static var renderingBuffer: RenderingBuffer;
+    static var pixelFormatRenderer: PixelFormatRenderer;
+    static var clippingRenderer: ClippingRenderer;
+    static var scanline: Scanline;
+    static var rasterizer: ScanlineRasterizer;
+    static var scanlineRenderer: SolidScanlineRenderer;
 
     static var enterFrame: Void -> Void = null;
 
@@ -112,6 +114,15 @@ class MeshTest extends OpenGLTest
     override private function onCreate(): Void
     {
         super.onCreate();
+
+        data = new Data(pixelBufferSize);
+        pixelBuffer = MemoryManager.mallocEx(data);
+        renderingBuffer = new RenderingBuffer(pixelBuffer, pixelBufferWidth, pixelBufferHeight, pixelBufferWidth * 4);
+        pixelFormatRenderer = new PixelFormatRenderer(renderingBuffer);
+        clippingRenderer = new ClippingRenderer(pixelFormatRenderer);
+        scanline = new Scanline();
+        rasterizer = new ScanlineRasterizer();
+        scanlineRenderer = new SolidScanlineRenderer(clippingRenderer);
 
         configureOpenGLState();
         createShader();
@@ -265,63 +276,64 @@ class MeshTest extends OpenGLTest
         var fontEngine = new FontEngine(ttc);
         var fontSize = 80;
 
-        scanlineRenderer.color = new RgbaColor(240, 27, 106);
+        scanlineRenderer.color = new RgbaColor(255, 0, 0);
 
         var x = 10;
         var y = 0 * fontSize / 20;
 
         fontEngine.renderString(string1, fontSize, x, y, scanlineRenderer);
+        //throw "dasda";
 
 
-        scanlineRenderer.color = new RgbaColor(27, 106, 240);
+        /*scanlineRenderer.color = new RgbaColor(27, 106, 240);
 
         var x = 10;
         var y = 20 * fontSize / 20;
 
-        fontEngine.renderString(string2, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(string2, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(227, 200, 26);
 
         var x = 10;
         var y = 40 * fontSize / 20;
 
-        fontEngine.renderString(string3, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(string3, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(106, 27, 240);
 
         var x = 10;
         var y = 60 * fontSize / 20;
 
-        fontEngine.renderString(string4, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(string4, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(136, 207, 100);
 
         var x = 10;
         var y = 80 * fontSize / 20;
 
-        fontEngine.renderString(string5, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(string5, fontSize, x, y, scanlineRenderer);
 
         scanlineRenderer.color = new RgbaColor(136, 20, 50);
 
         var x = 10;
         var y = 100 * fontSize / 20;
 
-        fontEngine.renderString(string6, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(string6, fontSize, x, y, scanlineRenderer);
 
         var x = 10;
         var y = 120 * fontSize / 20;
 
-        fontEngine.renderString(japanString1, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(japanString1, fontSize, x, y, scanlineRenderer);
 
         var x = 10;
         var y = 140 * fontSize / 20;
 
-        fontEngine.renderString(japanString2, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(japanString2, fontSize, x, y, scanlineRenderer);
 
         var x = 10;
         var y = 160 * fontSize / 20;
 
-        fontEngine.renderString(japanString3, fontSize, x, y, scanlineRenderer);
+        //fontEngine.renderString(japanString3, fontSize, x, y, scanlineRenderer);*/
     }
 
 //---------------------------------------------------------------------------------------------------

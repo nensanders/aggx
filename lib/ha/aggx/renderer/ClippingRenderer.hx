@@ -18,6 +18,7 @@
 
 package lib.ha.aggx.renderer;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.color.RgbaColorStorage;
@@ -236,16 +237,18 @@ class ClippingRenderer
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendSolidHSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Pointer):Void
+	public function blendSolidHSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Data):Void
 	{
 		if(y > maxY) return;
 		if(y < minY) return;
-		
+
+        var offset = covers.offset;
+
 		if(x < minX)
 		{
 			len -= (minX - x);
 			if(len <= 0) return;
-			covers += (minX - x);
+			covers.offset += (minX - x);
 			x = minX;
 		}
 		if((x + len) > maxX)
@@ -254,18 +257,21 @@ class ClippingRenderer
 			if (len <= 0) return;
 		}
 		_pixelFormatRenderer.blendSolidHSpan(x, y, len, color, covers);
+        covers.offset = offset;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendSolidVSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Pointer):Void
+	public function blendSolidVSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Data):Void
 	{
 		if(x > maxX) return;
 		if(x < minX) return;
+
+        var offset = covers.offset;
 
 		if(y < minY)
 		{
 			len -= (minY - y);
 			if(len <= 0) return;
-			covers += (minY - y);
+			covers.offset += (minY - y);
 			y = minY;
 		}
 		if((y + len) > maxY)
@@ -274,6 +280,8 @@ class ClippingRenderer
 			if(len <= 0) return;
 		}
 		_pixelFormatRenderer.blendSolidVSpan(x, y, len, color, covers);
+
+        covers.offset = offset;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function copyColorHSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage):Void
@@ -318,7 +326,7 @@ class ClippingRenderer
 		_pixelFormatRenderer.copyColorVSpan(x, y, len, colors);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendColorHSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Pointer, cover:Byte = 255):Void	
+	public function blendColorHSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Data, cover:Byte = 255):Void
 	{
 		if(y > maxY) return;
 		if(y < minY) return;
@@ -328,7 +336,10 @@ class ClippingRenderer
 			var d = minX - x;
 			len -= d;
 			if(len <= 0) return;
-			if (covers != 0) covers += d;
+			if (covers != null)
+			{
+				covers.offset += d;
+			}
 			colors.offset += d;
 			x = minX;
 		}
@@ -340,7 +351,7 @@ class ClippingRenderer
 		_pixelFormatRenderer.blendColorHSpan(x, y, len, colors, covers, cover);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendColorVSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Pointer, cover:Byte = 255):Void
+	public function blendColorVSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Data, cover:Byte = 255):Void
 	{
 		if(x > maxX) return;
 		if(x < minX) return;
@@ -350,7 +361,11 @@ class ClippingRenderer
 			var d = minY - y;
 			len -= d;
 			if(len <= 0) return;
-			if (covers != 0) covers += d;
+            trace('minX: $minY x: $y');
+			if (covers != null)
+			{
+				covers.offset += d;
+			}
 			colors.offset += d;
 			y = minY;
 		}

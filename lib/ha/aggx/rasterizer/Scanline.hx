@@ -18,6 +18,9 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
+import lib.ha.core.utils.Debug;
+import de.polygonal.ds.mem.MemoryAccess;
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.MemoryBlock;
@@ -32,7 +35,7 @@ class Scanline implements IScanline
 	private var _minX:Int;
 	private var _lastX:Int;
 	private var _y:Int = 0;
-	private var _covers:MemoryBlock;
+	private var _covers:Data;
 	private var _spans:Vector<Span>;
 	private var _currentSpan:Span;
 	private var _curSpanIndex:Int;
@@ -42,17 +45,32 @@ class Scanline implements IScanline
 		_minX = 0;
 		_lastX = 0x7FFFFFF0;
 		_curSpanIndex = 0;
-		_covers = MemoryManager.malloc();
+		_covers = new Data(2048);
+        cleanCovers();
 		_spans = new Vector(1);
 	}
-	//---------------------------------------------------------------------------------------------------
+
+    private function cleanCovers()
+    {
+        for (i in 1 ... _covers.allocedLength)
+        {
+            _covers.writeInt8(0);
+        }
+    }
+
+
 	public function reset(minX:Int, maxX:Int):Void
 	{
+        //trace('reset');
 		var maxLen:UInt = maxX - minX + 2;
 		if(maxLen > cast _spans.length)
 		{
 			_spans = new Vector(maxLen);
-			MemoryManager.realloc(_covers, maxLen);
+            if (maxLen > _covers.allocedLength)
+            {
+                _covers = new Data(maxLen);
+                cleanCovers();
+            }
 		}
 		_lastX = 0x7FFFFFF0;
 		_minX = minX;
@@ -61,8 +79,10 @@ class Scanline implements IScanline
 	//---------------------------------------------------------------------------------------------------
 	public function addCell(x:Int, cover:Byte):Void
 	{
+        //trace('addCell x: $x cover: $cover');
 		x -= _minX;
-		(_covers.ptr + x).setByte(cover);
+        _covers.offset = x;
+        _covers.writeUInt8(cover);
 		if(x == _lastX+1)
 		{
 			_currentSpan.len++;
@@ -70,17 +90,17 @@ class Scanline implements IScanline
 		else
 		{			
 			_curSpanIndex++;
-			_spans[_curSpanIndex] = _currentSpan = new Span();
+			_spans[_curSpanIndex] = _currentSpan = new Span(_covers, x);
 			_currentSpan.x = x + _minX;
 			_currentSpan.len = 1;
-			_currentSpan.covers = _covers.ptr + x;
 		}
 		_lastX = x;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function addCells(x:Int, len:UInt, covers:Pointer):Void
+	private function addCells(x:Int, len:UInt, covers:Pointer):Void
 	{
-		x -= _minX;
+        throw "not implemented";
+		/*x -= _minX;
 		MemoryUtils.copy(_covers.ptr + x, covers, len);
 
 		if (x == _lastX + 1)
@@ -90,18 +110,18 @@ class Scanline implements IScanline
 		else
 		{
 			_curSpanIndex++;
-			_spans[_curSpanIndex] = _currentSpan = new Span();
+			_spans[_curSpanIndex] = _currentSpan = new Span(_covers, x);
 			_currentSpan.x = x + _minX;
 			_currentSpan.len = len;
-			_currentSpan.covers = _covers.ptr + x;
 		}
-		_lastX = x + len - 1;
+		_lastX = x + len - 1;*/
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function addSpan(x:Int, len:UInt, cover:Byte):Void
 	{
+        //trace('addSpan x: $x len: $len cover: $cover');
 		x -= _minX;
-		MemoryUtils.set(_covers.ptr + x, cover, len);
+		MemoryUtils.dataSet(_covers, x, cover, len);
 		
 		if (x == _lastX + 1)
 		{
@@ -110,10 +130,9 @@ class Scanline implements IScanline
 		else
 		{
 			_curSpanIndex++;
-			_spans[_curSpanIndex] = _currentSpan = new Span();
+			_spans[_curSpanIndex] = _currentSpan = new Span(_covers, x);
 			_currentSpan.x = x + _minX;
 			_currentSpan.len = len;
-			_currentSpan.covers= _covers.ptr + x;
 		}
 		_lastX = x + len - 1;
 	}
@@ -135,6 +154,9 @@ class Scanline implements IScanline
 	private inline function get_y():Int { return _y; }
 	public var y(get_y, null):Int;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_spanIterator():ISpanIterator { return new SpanIterator(_spans); }
+	private inline function get_spanIterator():ISpanIterator
+    {
+        return new SpanIterator(_spans);
+    }
 	public var spanIterator(get_spanIterator, null):ISpanIterator;
 }

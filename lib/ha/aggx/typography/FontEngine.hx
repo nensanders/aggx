@@ -18,6 +18,7 @@
 
 package lib.ha.aggx.typography;
 //=======================================================================================================
+import lib.ha.core.utils.Debug;
 import lib.ha.aggx.rasterizer.GammaPower;
 import lib.ha.aggx.rasterizer.Scanline;
 import lib.ha.aggx.rasterizer.ScanlineRasterizer;
@@ -116,7 +117,8 @@ class FontEngine
 		var x = 0.;
 		var scale = fontSize / _currentFont.unitsPerEm;
 		var y = _currentFont.ascender * scale;
-		while (i < c)
+
+		while (i < 20)
 		{
 			var face = _typefaceCache.getFace(string.charCodeAt(i));
 			var transform = AffineTransformer.scaler(scale, scale);
@@ -126,8 +128,11 @@ class FontEngine
 			_path.transformAllPaths(transform);
 			x += face.glyph.advanceWidth * scale;
 			_rasterizerizer.addPath(_curve);
+            //_rasterizerizer.addPath(_path);
+
 			++i;
 		}
+
 		SolidScanlineRenderer.renderScanlines(_rasterizerizer, _scanline, renderer);
 	}
 	//---------------------------------------------------------------------------------------------------
