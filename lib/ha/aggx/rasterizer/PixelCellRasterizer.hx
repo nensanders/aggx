@@ -35,6 +35,11 @@ class SortedY
         start = 0;
         num = 0;
     }
+
+    public function toString(): String
+    {
+        return '{start: $start, num $num}';
+    }
 }
 //=======================================================================================================
 class PixelCellRasterizer

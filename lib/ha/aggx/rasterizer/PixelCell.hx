@@ -47,7 +47,13 @@ class PixelCell
 			cover = cell.cover;
 			area = cell.area;
 		}
-	}	
+	}
+
+	public function toString(): String
+	{
+		return '{x: $x, y: $y, cover: $cover, area: $area}';
+	}
+
 	//---------------------------------------------------------------------------------------------------
 	public function initial():Void
 	{
