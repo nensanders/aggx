@@ -83,9 +83,9 @@ class MeshTest extends OpenGLTest
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/paths.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
-    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/chars/Bendy2.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/chars/Bendy2.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_transform.svg";
-    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";
+    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";
     inline private static var VERTEXSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.vsh";
     inline private static var FRAGMENTSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.fsh";
 
