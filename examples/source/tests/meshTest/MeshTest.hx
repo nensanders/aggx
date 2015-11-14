@@ -240,7 +240,7 @@ class MeshTest extends OpenGLTest
         //clippingRenderer.setClippingBounds(0, 0, 512, 512);
         clippingRenderer.clear(new RgbaColor(255, Std.int(255.0 * 1.0), Std.int(255.0 * 1.0), 255));
 
-        //t0();
+        t0();
         //t3();
         //t4();
         //t5();
@@ -249,7 +249,7 @@ class MeshTest extends OpenGLTest
         ///t8();
         //t9();
         //t10();
-        t11();
+        //t11();
         //t12();
     }
 

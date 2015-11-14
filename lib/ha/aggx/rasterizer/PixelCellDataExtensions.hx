@@ -1,5 +1,6 @@
 package lib.ha.aggx.rasterizer;
 
+import lib.ha.core.utils.Debug;
 import types.Data;
 import lib.ha.core.utils.DataPointer;
 class PixelCellDataExtensions
@@ -7,6 +8,7 @@ class PixelCellDataExtensions
     public static inline function dataGetX(data: Data, pointer: Int):Int
     {
         data.offset = pointer + PixelCell.PIXEL_CELL_X;
+        //trace('offset: $pointer value: ${data.readInt32()}}');
         return data.readInt32();
     }
 
@@ -79,11 +81,10 @@ class PixelCellDataExtensions
         var cover: Int = readInt32Offset(data, a + PixelCell.PIXEL_CELL_COVER);
         var area: Int = readInt32Offset(data, a + PixelCell.PIXEL_CELL_AREA);
 
-        var indices = [PixelCell.PIXEL_CELL_X, PixelCell.PIXEL_CELL_Y, PixelCell.PIXEL_CELL_COVER, PixelCell.PIXEL_CELL_AREA];
-        for (i in indices)
-        {
-            writeInt32Offset(data, a + i, readInt32Offset(data, b + i));
-        }
+        writeInt32Offset(data, a + PixelCell.PIXEL_CELL_X, readInt32Offset(data, b + PixelCell.PIXEL_CELL_X));
+        writeInt32Offset(data, a + PixelCell.PIXEL_CELL_Y, readInt32Offset(data, b + PixelCell.PIXEL_CELL_Y));
+        writeInt32Offset(data, a + PixelCell.PIXEL_CELL_COVER, readInt32Offset(data, b + PixelCell.PIXEL_CELL_COVER));
+        writeInt32Offset(data, a + PixelCell.PIXEL_CELL_AREA, readInt32Offset(data, b + PixelCell.PIXEL_CELL_AREA));
 
         writeInt32Offset(data, b + PixelCell.PIXEL_CELL_X, x);
         writeInt32Offset(data, b + PixelCell.PIXEL_CELL_Y, y);
@@ -101,10 +102,9 @@ class PixelCellDataExtensions
 
     public static inline function setAllEx(to: DataPointer, from: DataPointer):Void
     {
-        var indices = [PixelCell.PIXEL_CELL_X, PixelCell.PIXEL_CELL_Y, PixelCell.PIXEL_CELL_COVER, PixelCell.PIXEL_CELL_AREA];
-        for (i in indices)
-        {
-            to.get(i).writeInt32(from.get(i).readInt32());
-        }
+        to.get(PixelCell.PIXEL_CELL_X).writeInt32(from.get(PixelCell.PIXEL_CELL_X).readInt32());
+        to.get(PixelCell.PIXEL_CELL_Y).writeInt32(from.get(PixelCell.PIXEL_CELL_Y).readInt32());
+        to.get(PixelCell.PIXEL_CELL_COVER).writeInt32(from.get(PixelCell.PIXEL_CELL_COVER).readInt32());
+        to.get(PixelCell.PIXEL_CELL_AREA).writeInt32(from.get(PixelCell.PIXEL_CELL_AREA).readInt32());
     }
 }

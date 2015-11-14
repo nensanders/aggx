@@ -18,12 +18,18 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
+import lib.ha.core.utils.Debug;
+import lib.ha.core.utils.DataPointer;
+import haxe.CallStack;
+import de.polygonal.ds.Stack;
 import haxe.ds.Vector;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
 import lib.ha.core.memory.Pointer;
 import lib.ha.aggx.rasterizer.PixelCell;
-using lib.ha.aggx.rasterizer.PixelCell;
+import lib.ha.aggx.rasterizer.PixelCellDataExtensions;
+import types.Data;
+using lib.ha.aggx.rasterizer.PixelCellDataExtensions;
 //=======================================================================================================
 class SortedY
 {
@@ -47,14 +53,16 @@ class PixelCellRasterizer
 	private static inline var POLY_SUBPIXEL_SHIFT = 8;
 	private static inline var POLY_SUBPIXEL_SCALE = 1 << POLY_SUBPIXEL_SHIFT;
 	private static inline var POLY_SUBPIXEL_MASK = POLY_SUBPIXEL_SCALE-1;
+    private static inline var PIXEL_SIZE = 16;
 	//---------------------------------------------------------------------------------------------------
 	private var _cellsCount:UInt;
+	private var _cellsCapacity:UInt;
+
+	private var _cells: Data;
+	private var _cellsPtr:DataPointer;
 	
-	private var _cells:MemoryBlock;
-	private var _cellsPtr:Pointer;
-	
-	private var _sortedCells:MemoryBlock;
-	private var _sortedCellsPtr:Pointer;
+	private var _sortedCells: Data;
+	private var _sortedCellsPtr: DataPointer;
 	
 	private var _sortedY:Vector<SortedY>;
 	private var _currentCell:PixelCell;
@@ -70,12 +78,14 @@ class PixelCellRasterizer
 	public function new() 
 	{
 		_cellsCount = 0;
+
+        _cellsCapacity = 32768;
 		
-		_cells = MemoryManager.malloc(32768 << 4);
-		_cellsPtr = _cells.ptr;
+		_cells = new Data(_cellsCapacity * PIXEL_SIZE);
+		_cellsPtr = new DataPointer(_cells);
 		
-		_sortedCells = MemoryManager.malloc(32768 << 4);
-		_sortedCellsPtr = _sortedCells.ptr;
+		_sortedCells = new Data(_cellsCapacity * PIXEL_SIZE);
+		_sortedCellsPtr = new DataPointer(_sortedCells);
 
 		_currentCell = new PixelCell();
 		_sortedY = null;
@@ -119,9 +129,11 @@ class PixelCellRasterizer
 	public var isSorted(get, null):Bool;
 	//---------------------------------------------------------------------------------------------------
 
-	public inline function getScanlineCells(y:Int):Pointer
+	public inline function getScanlineCells(y:Int):DataPointer
 	{
-		return _sortedCellsPtr + (_sortedY[y - _minY].start << 4);
+        //trace('getScanlineCells: $y offset: ${_sortedY[y - _minY].start * PIXEL_SIZE}');
+        _sortedCellsPtr.offset = _sortedY[y - _minY].start * PIXEL_SIZE;
+		return _sortedCellsPtr;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function getScanlineCellsCount(y:Int):UInt
@@ -134,8 +146,17 @@ class PixelCellRasterizer
 	{
 		if ((_currentCell.area | _currentCell.cover) != 0)
 		{
-			(_cellsPtr + (_cellsCount << 4)).setAll(_currentCell);
+            _cellsPtr.offset = _cellsCount * PIXEL_SIZE;
+            _cellsPtr.setAll(_currentCell);
+
 			++_cellsCount;
+
+            if (_cellsCount + 1 > _cellsCapacity)
+            {
+                _cellsCapacity = Math.floor(_cellsCapacity * 1.8);
+                _cells.resize(_cellsCapacity * PIXEL_SIZE);
+                _sortedCells.resize(_cellsCapacity * PIXEL_SIZE);
+            }
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -380,65 +401,62 @@ class PixelCellRasterizer
 		renderHLine(ey1, x_from, POLY_SUBPIXEL_SCALE - first, x2, fy2);
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function qsort(beg:Pointer, end:Pointer):Void
+	private function qsort(data: Data, beg: Int, end:Int):Void
 	{
+        //trace('beg: $beg end: $end');
 		if (end == beg)
 		{
 			return;
 		}
 		
-		var pivot = getPivotPoint(beg, end);
+		var pivot = getPivotPoint(data, beg, end);
 		
 		if (pivot > beg)
 		{
-			qsort(beg, pivot - (1 << 4));
+			qsort(data, beg, pivot - PIXEL_SIZE);
 		}
 		
 		if (pivot < end)
 		{
-			qsort(pivot + (1 << 4), end);
+			qsort(data, pivot + PIXEL_SIZE, end);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	private function getPivotPoint(beg:Pointer, end:Pointer):Pointer
+	private function getPivotPoint(data: Data, beg:Int, end:Int):Pointer
 	{
-		var size = 1 << 4;
 		var pivot:Pointer = beg;
-		var m:Pointer = beg + size;
+		var m:Pointer = beg + PIXEL_SIZE;
 		var n:Pointer = end;
 		
-		while ((m < end) && (pivot.getX() >= m.getX()))
+		while ((m < end) && (data.dataGetX(pivot) >= data.dataGetX(m)))
 		{
-			m += size;
+			m += PIXEL_SIZE;
 		}
 		
-		while ((n > beg) && (pivot.getX() <= n.getX()))
+		while ((n > beg) && (data.dataGetX(pivot) <= data.dataGetX(n)))
 		{
-			n -= size;
+			n -= PIXEL_SIZE;
 		}
 		
 		while (m < n)
 		{
-			m.getAll(_tempCell);
-			m.setAllEx(n);
-			n.setAll(_tempCell);
+            data.dataSwapPixel(m, n);
 			
-			while ((m < end) && (pivot.getX() >= m.getX()))
+			while ((m < end) && (data.dataGetX(pivot) >= data.dataGetX(m)))
 			{
-				m += size;
+				m += PIXEL_SIZE;
 			}
 			
-			while ((n > beg) && (pivot.getX() <= n.getX()))
+			while ((n > beg) && (data.dataGetX(pivot) <= data.dataGetX(n)))
 			{
-				n -= size;
+				n -= PIXEL_SIZE;
 			}
 		}
 		if (pivot != n)
-		{	
-			n.getAll(_tempCell);
-			n.setAllEx(pivot);
-			pivot.setAll(_tempCell);
-		}		
+		{
+            data.dataSwapPixel(pivot, n);
+		}
+
 		return n;
 	}	
 	//---------------------------------------------------------------------------------------------------
@@ -466,7 +484,9 @@ class PixelCellRasterizer
 		i = 0;
 		while(i < _cellsCount)
 		{
-			var index = (_cellsPtr + (i << 4)).getY() - _minY;
+            _cellsPtr.offset =  i * PIXEL_SIZE;
+			var index = _cellsPtr.getY() - _minY;
+
 			_sortedY[index].start++;
 			++i;
 		}
@@ -484,8 +504,13 @@ class PixelCellRasterizer
 		i = 0;
 		while (i < _cellsCount)
 		{
-			var sortedIndex = (_cellsPtr + (i << 4)).getY() - _minY;
-			(_sortedCellsPtr + ((_sortedY[sortedIndex].start + _sortedY[sortedIndex].num) << 4)).setAllEx(_cellsPtr + (i << 4));
+            _cellsPtr.offset = i * PIXEL_SIZE;
+			var sortedIndex = _cellsPtr.getY() - _minY;
+
+            _cellsPtr.offset = i * PIXEL_SIZE;
+            _sortedCellsPtr.offset = (_sortedY[sortedIndex].start + _sortedY[sortedIndex].num) * PIXEL_SIZE;
+			_sortedCellsPtr.setAllEx(_cellsPtr);
+
 			++_sortedY[sortedIndex].num;
 			++i;
 		}
@@ -495,7 +520,15 @@ class PixelCellRasterizer
 		{
 			if (_sortedY[i].num != 0)
 			{
-				qsort(_sortedCellsPtr + (_sortedY[i].start << 4), _sortedCellsPtr + ((_sortedY[i].start + _sortedY[i].num - 1) << 4));
+                /*trace('before sort:');
+                for (j in 0 ... _sortedY[i].num)
+                {
+                    _sortedCellsPtr.offset = (_sortedY[i].start + j) * PIXEL_SIZE;
+                    _sortedCellsPtr.getAll(_tempCell);
+                    trace(_tempCell);
+                }*/
+
+				qsort(_sortedCellsPtr.data, _sortedY[i].start * PIXEL_SIZE, (_sortedY[i].start + _sortedY[i].num - 1) * PIXEL_SIZE);
 			}
 			++i;
 		}

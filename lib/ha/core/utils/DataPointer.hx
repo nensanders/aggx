@@ -12,7 +12,7 @@ class DataPointer
         this.data = data;
     }
 
-    public function get(add: Int = 0): Data
+    public inline function get(add: Int = 0): Data
     {
         data.offset = offset + add;
         return data;
