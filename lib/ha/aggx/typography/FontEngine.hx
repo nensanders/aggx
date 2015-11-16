@@ -18,6 +18,7 @@
 
 package lib.ha.aggx.typography;
 //=======================================================================================================
+import haxe.Utf8;
 import lib.ha.core.utils.Debug;
 import lib.ha.aggx.rasterizer.GammaPower;
 import lib.ha.aggx.rasterizer.Scanline;
@@ -92,13 +93,14 @@ class FontEngine
 	{
 		_path.removeAll();
 		var i:UInt = 0;
-		var c:UInt = string.length;
+		var c:UInt = Utf8.length(string);
 		var x = 0.;
 		var scale = fontSize / _currentFont.unitsPerEm;
 		var y = _currentFont.ascender * scale;
 		while (i < c)
 		{
-			var face = _typefaceCache.getFace(string.charCodeAt(i));
+
+			var face = _typefaceCache.getFace(Utf8.charCodeAt(string, i));
 			face.getOutline(_path);
 			var transform = AffineTransformer.scaler(scale, scale);
 			transform.multiply(AffineTransformer.translator(x + dx, y + dy));
@@ -113,14 +115,13 @@ class FontEngine
 		_rasterizerizer.reset();
 		_rasterizerizer.gamma(new GammaPower(1));
 		var i:UInt = 0;
-		var c:UInt = string.length;
+        var c:UInt = Utf8.length(string);
 		var x = 0.;
 		var scale = fontSize / _currentFont.unitsPerEm;
 		var y = _currentFont.ascender * scale;
-
-		while (i < string.length)
+		while (i < c)
 		{
-			var face = _typefaceCache.getFace(string.charCodeAt(i));
+			var face = _typefaceCache.getFace(Utf8.charCodeAt(string, i));
 			var transform = AffineTransformer.scaler(scale, scale);
 			transform.multiply(AffineTransformer.translator(x + dx, y + dy));
 			_path.removeAll();
