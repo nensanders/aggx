@@ -23,10 +23,11 @@ import lib.ha.core.memory.Pointer;
 //=======================================================================================================
 class PixelCell
 {
-	private static inline var PIXEL_CELL_X = 0;
-	private static inline var PIXEL_CELL_Y = 4;
-	private static inline var PIXEL_CELL_AREA = 8;
-	private static inline var PIXEL_CELL_COVER = 12;
+	public static inline var PIXEL_CELL_X = 0;
+	public static inline var PIXEL_CELL_Y = 4;
+	public static inline var PIXEL_CELL_AREA = 8;
+	public static inline var PIXEL_CELL_COVER = 12;
+	public static inline var SIZE = 16;
 	//---------------------------------------------------------------------------------------------------
 	public var x:Int;
 	public var y:Int;
@@ -46,7 +47,13 @@ class PixelCell
 			cover = cell.cover;
 			area = cell.area;
 		}
-	}	
+	}
+
+	public function toString(): String
+	{
+		return '{x: $x, y: $y, cover: $cover, area: $area}';
+	}
+
 	//---------------------------------------------------------------------------------------------------
 	public function initial():Void
 	{

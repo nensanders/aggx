@@ -18,13 +18,17 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
+import lib.ha.core.utils.DataPointer;
 import haxe.ds.Vector;
 import lib.ha.aggx.vectorial.IVertexSource;
 import lib.ha.aggx.vectorial.PathUtils;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.Ref;
 import lib.ha.aggx.rasterizer.PixelCell;
+import lib.ha.aggx.rasterizer.PixelCellDataExtensions;
+
 using lib.ha.aggx.rasterizer.PixelCell;
+using lib.ha.aggx.rasterizer.PixelCellDataExtensions;
 //=======================================================================================================
 class ScanlineRasterizer implements IRasterizer
 {	
@@ -147,7 +151,7 @@ class ScanlineRasterizer implements IRasterizer
 			if(_scanY > _outline.maxY) return false;
 			sl.resetSpans();
 			var numCells = _outline.getScanlineCellsCount(_scanY);
-			var cells = _outline.getScanlineCells(_scanY);
+			var cells:DataPointer = _outline.getScanlineCells(_scanY);
 			var cover = 0;
 
 			while(numCells != 0)
@@ -162,7 +166,7 @@ class ScanlineRasterizer implements IRasterizer
 				while(numCells != 0)
 				{
 					--numCells;
-					cells += 16;
+					cells.offset += PixelCell.SIZE;
 					cells.getAll(currentCell);
 					if(currentCell.x != x) break;
 					area += currentCell.area;

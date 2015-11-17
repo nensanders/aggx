@@ -18,6 +18,7 @@
 
 package lib.ha.aggx.renderer;
 //=======================================================================================================
+import lib.ha.core.memory.MemoryUtils;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.rasterizer.IScanline;
 import lib.ha.aggx.rasterizer.ScanlineRasterizer;
@@ -62,11 +63,11 @@ class SolidScanlineRenderer implements IRenderer
 			var x = span.x;
 			if(span.len > 0)
 			{
-				render.blendSolidHSpan(x, y, span.len, color, span.covers);
+				render.blendSolidHSpan(x, y, span.len, color, span.getCovers());
 			}
 			else
 			{
-				render.blendHLine(x, y, (x - span.len - 1), color, span.covers.getByte());
+				render.blendHLine(x, y, (x - span.len - 1), color, span.getCovers().readUInt8());
 			}
 			if(--numSpans == 0) break;
 			spanIterator.next();
@@ -92,11 +93,12 @@ class SolidScanlineRenderer implements IRenderer
 					var x = span.x;
 					if(span.len > 0)
 					{
-						ren.blendSolidHSpan(x, y, span.len, renColor, span.covers);
+						ren.blendSolidHSpan(x, y, span.len, renColor, span.getCovers());
 					}
 					else
 					{
-						ren.blendHLine(x, y, (x - span.len - 1), renColor, span.covers.getByte());
+						trace(span.getCovers().readUInt8());
+						ren.blendHLine(x, y, (x - span.len - 1), renColor, span.getCovers().readUInt8());
 					}
 					if (--num_spans == 0) break;
 					spanIterator.next();

@@ -32,17 +32,17 @@ class GradientRadialFocus implements IGradientFunction
 	//---------------------------------------------------------------------------------------------------
 	public function new(r:Float = 100, fx:Float = 0, fy:Float = 0)	
 	{
-		_r = Calc.iround(r * gradient_subpixel_scale);
-		_fx = Calc.iround(fx * gradient_subpixel_scale);
-		_fy = Calc.iround(fy * gradient_subpixel_scale);
+		_r = Calc.iround(r * SpanGradient.GRADIENT_SUBPIXEL_SCALE);
+		_fx = Calc.iround(fx * SpanGradient.GRADIENT_SUBPIXEL_SCALE);
+		_fy = Calc.iround(fy * SpanGradient.GRADIENT_SUBPIXEL_SCALE);
 		updateValues();
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function init(r:Float, fx:Float, fy:Float)
 	{
-		_r = Calc.iround(r * gradient_subpixel_scale);
-		_fx = Calc.iround(fx * gradient_subpixel_scale);
-		_fy = Calc.iround(fy * gradient_subpixel_scale);
+		_r = Calc.iround(r * SpanGradient.GRADIENT_SUBPIXEL_SCALE);
+		_fx = Calc.iround(fx * SpanGradient.GRADIENT_SUBPIXEL_SCALE);
+		_fy = Calc.iround(fy * SpanGradient.GRADIENT_SUBPIXEL_SCALE);
 		updateValues();
 	}
 	//---------------------------------------------------------------------------------------------------
@@ -60,8 +60,8 @@ class GradientRadialFocus implements IGradientFunction
 		var d = (_r2 - (_fx2 + _fy2));
 		if(d == 0)
 		{
-			if (_fx) { if (_fx < 0)++_fx; else--_fx; }			
-			if (_fy) { if (_fy < 0)++_fy; else--_fy; }			
+			if (_fx != 0) { if (_fx < 0)++_fx; else--_fx; }
+			if (_fy != 0) { if (_fy < 0)++_fy; else--_fy; }
 			_fx2 = _fx * _fx;
 			_fy2 = _fy * _fy;
 			d = (_r2 - (_fx2 + _fy2));
@@ -78,12 +78,12 @@ class GradientRadialFocus implements IGradientFunction
 		return Calc.iround((dx * _fx + dy * _fy + Math.sqrt(Calc.fabs(d3))) * _mul);
 	}
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_radius():Int { return _r / gradient_subpixel_scale; }
-	public var radius(get, null):Int;
+	private inline function get_radius():Float { return _r / SpanGradient.GRADIENT_SUBPIXEL_SCALE; }
+	public var radius(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_focusX():Int { return _fx / gradient_subpixel_scale; }
-	public var focusX(get, null):Int;
+	private inline function get_focusX():Float { return _fx / SpanGradient.GRADIENT_SUBPIXEL_SCALE; }
+	public var focusX(get, null):Float;
 	//---------------------------------------------------------------------------------------------------
-	private inline function get_focusY():Int { return _fy / gradient_subpixel_scale; }
-	public var focusY(get, null):Int;
+	private inline function get_focusY():Float { return _fy / SpanGradient.GRADIENT_SUBPIXEL_SCALE; }
+	public var focusY(get, null):Float;
 }

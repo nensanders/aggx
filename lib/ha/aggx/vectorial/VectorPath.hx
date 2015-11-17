@@ -26,6 +26,7 @@ class VectorPath implements IVertexSource
 {
 	private var _vertices:VertexBlockStorage;
 	private var _vertextIterator:UInt;
+    private var _svgArc: BezierArcSvg = new BezierArcSvg();
 	//---------------------------------------------------------------------------------------------------
 	public function new() 
 	{
@@ -222,7 +223,41 @@ class VectorPath implements IVertexSource
 		relToAbs(rdx_ctrl2, rdy_ctrl2);
 		relToAbs(rdx_to, rdy_to);
 		curve4To(Ref.putFloat(rdx_ctrl2).value, Ref.putFloat(rdy_ctrl2).value, Ref.putFloat(rdx_to).value, Ref.putFloat(rdy_to).value);
-	}	
+	}
+
+    private function arcImpl(x0: FloatRef, y0: FloatRef, rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float)
+    {
+        _svgArc.init(x0.value, y0.value, rx, ry, angle, isLargeArc, isSweep, x, y);
+        _svgArc.addToPath(this);
+
+    }
+	public function arc(rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, x: Float, y: Float)
+    {
+        var x0 = Ref.getFloat();
+        var y0 = Ref.getFloat();
+
+        if(PathUtils.isVertex(getLastVertex(x0, y0)))
+        {
+            arcImpl(x0, y0, rx, ry, angle, isLargeArc, isSweep, x, y);
+        }
+        else
+        {
+            moveTo(x, y);
+        }
+
+        Ref.putFloat(x0);
+        Ref.putFloat(y0);
+    }
+
+	public function arcRel(rx: Float, ry: Float, angle: Float, isLargeArc: Bool, isSweep: Bool, dx: Float, dy: Float)
+    {
+        var rdx = Ref.getFloat().set(dx);
+        var rdy = Ref.getFloat().set(dy);
+
+        relToAbs(rdx, rdy);
+        arc(rx, ry, angle, isLargeArc, isSweep, Ref.putFloat(rdx).value, Ref.putFloat(rdy).value);
+    }
+
 	//---------------------------------------------------------------------------------------------------
 	public inline function endPoly(flags:Int):Void
 	{
@@ -270,7 +305,10 @@ class VectorPath implements IVertexSource
 				{
 					if(Calc.distance(x.value, y.value, x0.value, y0.value) > Calc.VERTEX_DIST_EPSILON)
 					{
-						if(PathUtils.isMoveTo(cmd)) cmd = PathCommands.LINE_TO;
+						if(PathUtils.isMoveTo(cmd))
+                        {
+                            cmd = PathCommands.LINE_TO;
+                        }
 						_vertices.addVertex(x.value, y.value, cmd);
 					}
 				}

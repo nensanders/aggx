@@ -32,7 +32,9 @@ class MemoryAccess
         domainMemory = b;
     }
 
-    public static inline function resize(newSize: Int): Void {
+    public static inline function resize(newSize: Int): Void
+    {
+        trace('resize: ${domainMemory.allocedLength} -> $newSize');
         domainMemory.resize(newSize);
     }
 

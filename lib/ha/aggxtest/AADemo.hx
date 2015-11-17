@@ -1,5 +1,6 @@
 package lib.ha.aggxtest;
 //=======================================================================================================
+import lib.ha.core.memory.MemoryUtils;
 import haxe.ds.Vector;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.aggx.rasterizer.GammaNone;
@@ -139,13 +140,13 @@ class EnlargedRenderer implements IRenderer
 		{
 			var s = spanIterator.current;//spanIterator.data[span.offset];
 			var x = s.x;
-			var covers = s.covers;
+			var covers = s.getCovers();
 			var num_pix = s.len;
 
 			do
 			{
-				var a = (covers.getByte() * _color.a) >> 8;
-				covers++;
+				var a = (covers.readUInt8() * _color.a) >> 8;
+				covers.offset++;
 				_square.draw(_ras, _sl, _ren, new RgbaColor(_color.r, _color.g, _color.b, a), x, y);
 				++x;
 			}

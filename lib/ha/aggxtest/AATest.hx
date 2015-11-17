@@ -221,6 +221,10 @@ class ColorArray implements IColorFunction
 	//---------------------------------------------------------------------------------------------------
 	public function get(idx:UInt):RgbaColor
 	{
+		if (idx >= _colors.length)
+		{
+			idx = _colors.length - 1;
+		}
 		return RgbaColor.fromRgbaColor(_colors[idx]);
 	}
 	//---------------------------------------------------------------------------------------------------

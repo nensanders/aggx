@@ -36,6 +36,17 @@ class VertexBlockStorage
 		_commands = new Array();
 		_verticesCount = 0;
 	}
+
+	public function toString(): String
+	{
+		var buf: StringBuf = new StringBuf();
+		for (i in 0 ... _verticesCount)
+		{
+			buf.add('{${_coordsX[i]}, ${_coordsY[i]}} -> ${getCommand(i)}\n');
+		}
+
+        return buf.toString();
+	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_lastCommand():Int
 	{

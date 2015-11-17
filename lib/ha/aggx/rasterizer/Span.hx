@@ -18,13 +18,26 @@
 
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 //=======================================================================================================
 class Span 
 {
-	public var x:Int = 0;
-	public var len:Int = 0;
-	public var covers:Pointer = -1;
+	public var x: Int = 0;
+	public var len: Int = 0;
+	private var data: Data;
+	private var dataOffset: Int;
+	//public var covers:Pointer = -1;
 	//---------------------------------------------------------------------------------------------------
-	public function new() { }
+	public function new(data: Data, offset: Int)
+    {
+        this.data = data;
+        dataOffset = offset;
+    }
+
+    public function getCovers(): Data
+    {
+        data.offset = dataOffset;
+        return data;
+    }
 }

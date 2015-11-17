@@ -18,6 +18,7 @@
 
 package lib.ha.core.memory;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.MemoryWriter;
 using lib.ha.core.memory.MemoryWriter;
 //=======================================================================================================
@@ -37,5 +38,18 @@ class MemoryUtils
 			dst++;
 			++i;
 		}
+	}
+
+	public static function dataSet(data: Data, dst: Int, val: Byte, size: UInt)
+	{
+		var tmpOffset = data.offset;
+		data.offset = dst;
+		for (i in 0 ... size)
+		{
+			data.writeUInt8(val);
+			data.offset++;
+		}
+
+		data.offset = tmpOffset;
 	}
 }

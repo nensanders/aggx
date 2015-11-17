@@ -26,6 +26,13 @@
 
 package tests.meshTest;
 
+import lib.ha.aggx.vectorial.Ellipse;
+import lib.ha.aggx.color.RgbaColorF;
+import lib.ha.aggx.renderer.ScanlineRenderer;
+import lib.ha.aggx.color.SpanGradient;
+import lib.ha.aggx.color.SpanAllocator;
+import lib.ha.aggx.color.SpanInterpolatorLinear;
+import lib.ha.aggx.color.GradientX;
 import lib.ha.aggx.vectorial.converters.ConvSegmentator;
 import lib.ha.aggx.vectorial.converters.ConvAdaptorVcgen;
 import lib.ha.aggx.vectorial.converters.ConvBSpline;
@@ -72,7 +79,13 @@ class MeshTest extends OpenGLTest
     inline private static var FONT_PATH_ARIAL = "meshTest/fonts/arial.ttf";
     inline private static var FONT_PATH_COMIC = "meshTest/fonts/Pacifico.ttf";
     inline private static var FONT_PATH_JAPAN = "meshTest/fonts/font_1_ant-kaku.ttf";
-    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/paths.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/chars/Bendy2.svg";
+    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_transform.svg";
+    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";
     inline private static var VERTEXSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.vsh";
     inline private static var FRAGMENTSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.fsh";
 
@@ -86,13 +99,14 @@ class MeshTest extends OpenGLTest
     static var pixelBufferHeight:UInt = 768;
     static var pixelBufferSize:UInt = pixelBufferWidth * pixelBufferHeight * 4;
     //---------------------------------------------------------------------------------------------------
-    static var pixelBuffer:MemoryBlock = MemoryManager.malloc(pixelBufferSize);
-    static var renderingBuffer = new RenderingBuffer(pixelBuffer, pixelBufferWidth, pixelBufferHeight, pixelBufferWidth * 4);
-    static var pixelFormatRenderer = new PixelFormatRenderer(renderingBuffer);
-    static var clippingRenderer = new ClippingRenderer(pixelFormatRenderer);
-    static var scanline = new Scanline();
-    static var rasterizer = new ScanlineRasterizer();
-    static var scanlineRenderer = new SolidScanlineRenderer(clippingRenderer);
+    static var data: Data;
+    static var pixelBuffer: MemoryBlock;
+    static var renderingBuffer: RenderingBuffer;
+    static var pixelFormatRenderer: PixelFormatRenderer;
+    static var clippingRenderer: ClippingRenderer;
+    static var scanline: Scanline;
+    static var rasterizer: ScanlineRasterizer;
+    static var scanlineRenderer: SolidScanlineRenderer;
 
     static var enterFrame: Void -> Void = null;
 
@@ -100,6 +114,15 @@ class MeshTest extends OpenGLTest
     override private function onCreate(): Void
     {
         super.onCreate();
+
+        data = new Data(pixelBufferSize);
+        pixelBuffer = MemoryManager.mallocEx(data);
+        renderingBuffer = new RenderingBuffer(pixelBuffer, pixelBufferWidth, pixelBufferHeight, pixelBufferWidth * 4);
+        pixelFormatRenderer = new PixelFormatRenderer(renderingBuffer);
+        clippingRenderer = new ClippingRenderer(pixelFormatRenderer);
+        scanline = new Scanline();
+        rasterizer = new ScanlineRasterizer();
+        scanlineRenderer = new SolidScanlineRenderer(clippingRenderer);
 
         configureOpenGLState();
         createShader();
@@ -217,16 +240,17 @@ class MeshTest extends OpenGLTest
         //clippingRenderer.setClippingBounds(0, 0, 512, 512);
         clippingRenderer.clear(new RgbaColor(255, Std.int(255.0 * 1.0), Std.int(255.0 * 1.0), 255));
 
-        //t0();
+        t0();
         //t3();
         //t4();
         //t5();
         //t6();
         //t7();
-        //t8();
+        ///t8();
         //t9();
         //t10();
-        t11();
+        //t11();
+        //t12();
     }
 
 //---------------------------------------------------------------------------------------------------
@@ -252,13 +276,12 @@ class MeshTest extends OpenGLTest
         var fontEngine = new FontEngine(ttc);
         var fontSize = 80;
 
-        scanlineRenderer.color = new RgbaColor(240, 27, 106);
+        scanlineRenderer.color = new RgbaColor(255, 0, 0);
 
         var x = 10;
         var y = 0 * fontSize / 20;
 
         fontEngine.renderString(string1, fontSize, x, y, scanlineRenderer);
-
 
         scanlineRenderer.color = new RgbaColor(27, 106, 240);
 
@@ -442,15 +465,40 @@ class MeshTest extends OpenGLTest
         stroke.width = 1;
         stroke.lineCap = LineCap.ROUND;
 
-        rasterizer.addPath(curve);
+        //rasterizer.addPath(curve);
+
+        var storage = new VectorPath();
+        var ellipse = new Ellipse(50, 50, 50, 50);
+        rasterizer.addPath(ellipse);
 
         scanlineRenderer.color = new RgbaColor(160, 180, 80, 80);
         SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
 
-        rasterizer.addPath(stroke);
+        /*rasterizer.addPath(stroke);
         scanlineRenderer.color = new RgbaColor(120, 100, 0);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
+        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);*/
 
+        var gradientFunction = new GradientX();
+        var gradientMatrix = new AffineTransformer();
+        gradientMatrix.premultiply(AffineTransformer.translator(50, 0));
+        gradientMatrix.invert();
+        var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
+        var spanAllocator = new SpanAllocator();
+        var gradientColors = new ColorArray(256);
+        var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, gradientColors, 0, 100);
+        var gradientRenderer = new ScanlineRenderer(clippingRenderer, spanAllocator, gradientSpan);
+
+        var begin = new RgbaColorF(1, 0, 0).toRgbaColor();
+        var end = new RgbaColorF(0, 1, 0).toRgbaColor();
+
+        var i = 0;
+        while (i < 256)
+        {
+            gradientColors.set(begin.gradient(end, i / 255.0), i);
+            ++i;
+        }
+
+        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, gradientRenderer);
     }
 
 //---------------------------------------------------------------------------------------------------

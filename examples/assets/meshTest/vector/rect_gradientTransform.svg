@@ -1,0 +1,40 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="8cm" height="8cm" viewBox="0 0 800 800" version="1.1"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <defs>
+      <!--<linearGradient gradientUnits="userSpaceOnUse" x1="150" id="MyGradient">-->
+      <linearGradient id="g3" xlink:href="#g2"/>
+      <linearGradient id="MyGradient" gradientTransform="rotate(90)">
+        <stop offset="5%" stop-color="red" />
+        <stop offset="95%" stop-color="green" />
+      </linearGradient>
+      <radialGradient id="g1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop stop-color="black" offset="0%"/>
+            <!--<stop stop-color="teal" offset="50%"/>-->
+            <stop stop-color="white" offset="100%"/>
+        </radialGradient>
+
+      <linearGradient id="g2" xlink:href="#MyGradient" spreadMethod="reflect"/>
+
+       <radialGradient id="MyRadialGradient" gradientUnits="userSpaceOnUse" gradientTransform="translate(-100, -100) scale(0.8)"
+                      cx="400" cy="200" r="300" fx="400" fy="200">
+        <stop offset="5%" stop-color="red" />
+        <stop offset="95%" stop-color="green" />
+      </radialGradient>
+
+      <rect id="r1" width="100" height="200" stroke="black" stroke-width="1" fill="url(#g1)"/>
+
+    </defs>
+
+
+    <rect id="outline" fill="red"
+          x="1" y="1" width="100" height="10"/>
+
+
+
+  </g>
+</svg>

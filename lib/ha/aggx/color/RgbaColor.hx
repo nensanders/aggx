@@ -186,4 +186,9 @@ class RgbaColor
 		g = gamma.getInverseGamma(g);
 		b = gamma.getInverseGamma(b);
 	}
+
+	public function toString(): String
+	{
+		return '[$r, $g, $b, $a]';
+	}
 }

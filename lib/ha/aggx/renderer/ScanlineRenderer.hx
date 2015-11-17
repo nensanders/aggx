@@ -18,6 +18,7 @@
 
 package lib.ha.aggx.renderer;
 //=======================================================================================================
+import lib.ha.core.memory.MemoryUtils;
 import haxe.ds.Vector;
 import lib.ha.aggx.color.ISpanAllocator;
 import lib.ha.aggx.color.ISpanGenerator;
@@ -65,12 +66,12 @@ class ScanlineRenderer implements IRenderer
 			var span = spanIter.current;
 			var x = span.x;
 			var len = span.len;
-			var covers = span.covers;
+			var covers = span.getCovers();
 
 			if(len < 0) len = -len;
 			var colors = alloc.allocate(len);
 			spanGen.generate(colors, x, y, len);
-			ren.blendColorHSpan(x, y, len, colors, (span.len < 0) ? 0 : covers, covers.getByte());
+			ren.blendColorHSpan(x, y, len, colors, (span.len < 0) ? null : covers, covers.readUInt8());
 
 			if (--numSpans == 0) break;
 			spanIter.next();

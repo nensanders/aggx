@@ -23,6 +23,7 @@ private class RefBase<T>
 	public var value:T;
 	public function new(?val:T) { value = val; }
 	public inline function set(?val:T):RefBase<T> { value = val; return this; }
+    public function toString(){return '$value';}
 }
 //=======================================================================================================
 typedef FloatRef = RefBase<Float>;

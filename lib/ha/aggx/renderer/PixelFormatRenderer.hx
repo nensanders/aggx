@@ -18,6 +18,8 @@
 
 package lib.ha.aggx.renderer;
 //=======================================================================================================
+import lib.ha.core.utils.Debug;
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.aggx.color.GammaLookupTable;
 import lib.ha.aggx.color.RgbaColor;
@@ -30,6 +32,7 @@ import lib.ha.core.memory.MemoryUtils;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReader;
 using lib.ha.core.memory.MemoryReader;
+
 import lib.ha.core.memory.RgbaReaderWriter;
 using lib.ha.core.memory.RgbaReaderWriter;
 //=======================================================================================================
@@ -196,14 +199,15 @@ class PixelFormatRenderer
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendSolidHSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Pointer):Void
+	public function blendSolidHSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Data):Void
 	{
 		if (color.a != 0)
 		{
 			var p = _rbuf.getRowPtr(y) + (x << 2);
 			do
 			{
-				var cover = covers.getByte();
+				var cover = covers.readUInt8();
+				covers.offset++;
 				var alpha:UInt = (color.a * (cover + 1)) >> 8;
 				if(alpha == RgbaColor.BASE_MASK)
 				{
@@ -215,13 +219,12 @@ class PixelFormatRenderer
 					Blender.blendPix(p, color.r, color.g, color.b, alpha, cover);
 				}
 				p += 4;
-				++covers;
 			}
 			while(--len > 0);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendSolidVSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Pointer):Void
+	public function blendSolidVSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Data):Void
 	{
 		if (color.a != 0)
 		{
@@ -229,7 +232,8 @@ class PixelFormatRenderer
 			do
 			{
 				var p = _rbuf.getRowPtr(y++) + x;
-				var cover = covers.getByte();
+				var cover = covers.readUInt8();
+				covers.offset++;
 				var alpha:UInt = (color.a * (cover + 1)) >> 8;
 				if(alpha == RgbaColor.BASE_MASK)
 				{
@@ -241,7 +245,6 @@ class PixelFormatRenderer
 					Blender.blendPix(p, color.r, color.g, color.b, alpha, cover);
 				}
 				p += 4;
-				++covers;
 			}
 			while(--len > 0);
 		}
@@ -276,18 +279,18 @@ class PixelFormatRenderer
 		while(--len > 0);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendColorHSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Pointer, cover:Byte):Void
+	public function blendColorHSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Data, cover:Byte):Void
 	{
 		var ci = colors.offset;
 		var color:RgbaColor;
 		var p = _rbuf.getRowPtr(y) + (x << 2);
-		if(covers != 0)
+		if(covers != null)
 		{
 			do
 			{
 				color = colors.data[ci];
-				copyOrBlendPix(p, color.r, color.g, color.b, color.a, covers.getByte());
-				covers++;
+				copyOrBlendPix(p, color.r, color.g, color.b, color.a, covers.readUInt8());
+				covers.offset++;
 				p += 4;
 				++ci;
 			}
@@ -320,20 +323,20 @@ class PixelFormatRenderer
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function blendColorVSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Pointer, cover:Byte):Void
+	public function blendColorVSpan(x:Int, y:Int, len:Int, colors:RgbaColorStorage, covers:Data, cover:Byte):Void
 	{
 		var p:Pointer, color:RgbaColor;
 		var ci = colors.offset;
 		var cvi:Int = 0;
 		x = (x << 2);
-		if(covers != 0)
+		if(covers != null)
 		{
 			do
 			{
 				color = colors.data[ci];
 				p = _rbuf.getRowPtr(y++) + x;
-				copyOrBlendPix(p, color.r, color.g, color.b, color.a, covers.getByte());
-				covers++;
+				copyOrBlendPix(p, color.r, color.g, color.b, color.a, covers.readUInt8());
+				covers.offset++;
 				p += 4;
 				++ci;
 			}
