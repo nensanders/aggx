@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -43,36 +44,36 @@ class HheaTable
 	private var _metricDataFormat:Int;			//SHORT
 	private var _numberOfHMetrics:UInt;			//USHORT
 	//---------------------------------------------------------------------------------------------------
-	public function new(record:TableRecord, data:Pointer) 
+	public function new(record:TableRecord, data: Data)
 	{
 		_tableRecord = record;
 		
-		_version = data.getInt();
-		data += 4;
-		_ascender = data.getShort();
-		data += 2;
-		_descender = data.getShort();
-		data += 2;
-		_lineGap = data.getShort();
-		data += 2;
-		_advanceWidthMax = data.getUShort();
-		data += 2;
-		_minLeftSideBearing = data.getShort();
-		data += 2;
-		_minRightSideBearing = data.getShort();
-		data += 2;
-		_xMaxExtent = data.getShort();
-		data += 2;
-		_caretSlopeRise = data.getShort();
-		data += 2;
-		_caretSlopeRun = data.getShort();
-		data += 2;
-		_caretOffset = data.getShort();
-		data += 2;
-		data += 8;
-		_metricDataFormat = data.getShort();
-		data += 2;
-		_numberOfHMetrics = data.getUShort();
+		_version = data.dataGetInt();
+		data.offset += 4;
+		_ascender = data.dataGetShort();
+		data.offset += 2;
+		_descender = data.dataGetShort();
+		data.offset += 2;
+		_lineGap = data.dataGetShort();
+		data.offset += 2;
+		_advanceWidthMax = data.dataGetUShort();
+		data.offset += 2;
+		_minLeftSideBearing = data.dataGetShort();
+		data.offset += 2;
+		_minRightSideBearing = data.dataGetShort();
+		data.offset += 2;
+		_xMaxExtent = data.dataGetShort();
+		data.offset += 2;
+		_caretSlopeRise = data.dataGetShort();
+		data.offset += 2;
+		_caretSlopeRun = data.dataGetShort();
+		data.offset += 2;
+		_caretOffset = data.dataGetShort();
+		data.offset += 2;
+		data.offset += 8;
+		_metricDataFormat = data.dataGetShort();
+		data.offset += 2;
+		_numberOfHMetrics = data.dataGetUShort();
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numberOfHMetrics():UInt { return _numberOfHMetrics; }

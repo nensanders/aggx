@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -28,7 +29,7 @@ class LocaTable
 	private var _tableRecord:TableRecord;
 	private var _offsets:Vector<UInt>;
 	//---------------------------------------------------------------------------------------------------
-	public function new(record:TableRecord, data:Pointer, numGlyphs:UInt, offsetsType:UInt) 
+	public function new(record:TableRecord, data: Data, numGlyphs:UInt, offsetsType:UInt)
 	{
 		_offsets = new Vector(numGlyphs);
 		var i:UInt = 0;
@@ -36,8 +37,8 @@ class LocaTable
 		{
 			while (i < numGlyphs)
 			{
-				_offsets[i] = data.getUShort() * 2;
-				data += 2;
+				_offsets[i] = data.dataGetUShort() * 2;
+				data.offset += 2;
 				++i;
 			}
 		}
@@ -45,8 +46,8 @@ class LocaTable
 		{
 			while (i < numGlyphs)
 			{
-				_offsets[i] = data.getUInt();
-				data += 4;
+				_offsets[i] = data.dataGetUInt();
+				data.offset += 4;
 				++i;
 			}
 		}

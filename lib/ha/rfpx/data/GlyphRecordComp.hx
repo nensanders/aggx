@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.utils.Bits;
@@ -49,7 +50,7 @@ class GlyphRecordComp
 	private var _point1:Int;
 	private var _point2:Int;	
 	//---------------------------------------------------------------------------------------------------
-	public function new(dataRef:PointerRef) 
+	public function new(data: Data)
 	{
 		_xscale = 1.0;
 		_yscale = 1.0;
@@ -59,27 +60,26 @@ class GlyphRecordComp
 		_ytranslate = 0;
 		_point1 = 0;
 		_point2 = 0;
+
 		
-		var data = dataRef.value;
-		
-		_flags = data.getUShort();
-		data += 2;
-		_glyphIndex = data.getUShort();
-		data += 2;
+		_flags = data.dataGetUShort();
+		data.offset += 2;
+		_glyphIndex = data.dataGetUShort();
+		data.offset += 2;
 		
 		if (Bits.hasBitAt(_flags, ARG_1_AND_2_ARE_WORDS))
 		{
-			_argument1 = data.getShort();
-			data += 2;
-			_argument2 = data.getShort();
-			data += 2;
+			_argument1 = data.dataGetShort();
+			data.offset += 2;
+			_argument2 = data.dataGetShort();
+			data.offset += 2;
 		}
 		else
 		{
-			_argument1 = data.getByte();
-			data++;
-			_argument2 = data.getByte();
-			data++;
+			_argument1 = data.readInt8();
+			data.offset++;
+			_argument2 = data.readUInt8();
+			data.offset++;
 		}
 		
 		if (Bits.hasBitAt(_flags, ARGS_ARE_XY_VALUES))
@@ -92,41 +92,37 @@ class GlyphRecordComp
 			_point1 = _argument1;
 			_point2 = _argument2;
 		}
-		
-		dataRef.value = data;
+
 		var i:Int;
 		
 		if (Bits.hasBitAt(_flags, WE_HAVE_A_SCALE))
 		{
-			_xscale = _yscale = readF2Dot14(dataRef);
+			_xscale = _yscale = readF2Dot14(data);
 		}
 		else if (Bits.hasBitAt(_flags, WE_HAVE_AN_X_AND_Y_SCALE))
 		{
-			_xscale = readF2Dot14(dataRef);
-			_yscale = readF2Dot14(dataRef);
+			_xscale = readF2Dot14(data);
+			_yscale = readF2Dot14(data);
 		}
 		else if (Bits.hasBitAt(_flags, WE_HAVE_A_TWO_BY_TWO))
 		{
-			_xscale = readF2Dot14(dataRef);
-			_scale01 = readF2Dot14(dataRef);
-			_scale10 = readF2Dot14(dataRef);
-			_yscale = readF2Dot14(dataRef);
+			_xscale = readF2Dot14(data);
+			_scale01 = readF2Dot14(data);
+			_scale10 = readF2Dot14(data);
+			_yscale = readF2Dot14(data);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-    private static function readF2Dot14(dataRef:PointerRef):Float
+    private static function readF2Dot14(data: Data):Float
 	{
-		var data = dataRef.value;
-		
-        var major = data.getByte();
-		data++;
-        var minor = data.getByte();
-		data++;
+        var major = data.readUInt8();
+		data.offset++;
+        var minor = data.readUInt8();
+		data.offset++;
         var fraction = minor + ((major & 0x3f) << 8);
         var mantissa = major >> 6;
         if (mantissa >= 2) mantissa -= 4;
-		
-		dataRef.value = data;
+
         return mantissa + fraction / 16384.0;
     }	
 	//---------------------------------------------------------------------------------------------------

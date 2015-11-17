@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.utils.Bits;
@@ -26,14 +27,13 @@ class GlyphDescrComp
 {
 	private var _components:Array<GlyphRecordComp>;
 	//---------------------------------------------------------------------------------------------------
-	public function new(data:Pointer) 
+	public function new(data: Data)
 	{
 		_components = new Array();
-		var dataRef = Ref.getPointer().set(data);
 		var comp:GlyphRecordComp;
 		do
 		{
-			_components[_components.length] = comp = new GlyphRecordComp(dataRef);
+			_components[_components.length] = comp = new GlyphRecordComp(data);
 		}
 		while (Bits.hasBitAt(comp.flags, GlyphRecordComp.MORE_COMPONENTS));
 	}

@@ -19,6 +19,8 @@
 package lib.ha.rfpx;
 //=======================================================================================================
 
+import types.Data;
+import lib.ha.core.utils.DataPointer;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
@@ -40,7 +42,6 @@ import lib.ha.rfpx.data.NameTable;
 class TrueTypeFont
 {
 	private var _fc:TrueTypeCollection;
-	private var _data:Pointer;
 	private var _tableRecords:Vector<TableRecord>;
 	private var _head:HeadTable;
 	private var _hhea:HheaTable;
@@ -94,35 +95,41 @@ class TrueTypeFont
 		}
 		return null;
 	}
-	//---------------------------------------------------------------------------------------------------
-	private function parseTables():Void
+
+	private function getTableRecordOffset(tag: UInt, data: Data, baseOffset): TableRecord
 	{
-		var tr:TableRecord;
-		_cmap = new CmapTable(tr = getTableRecord(TableTags.cmap), _data + tr.offset);
-		_head = new HeadTable(tr = getTableRecord(TableTags.head), _data + tr.offset);
-		_maxp = new MaxpTable(tr = getTableRecord(TableTags.maxp), _data + tr.offset);
-		_hhea = new HheaTable(tr = getTableRecord(TableTags.hhea), _data + tr.offset);
-		_hmtx = new HmtxTable(tr = getTableRecord(TableTags.hmtx), _data + tr.offset, _maxp.numGlyphs, _hhea.numberOfHMetrics);
-		_name = new NameTable(tr = getTableRecord(TableTags.name), _data + tr.offset);
-		_os2 = new Os2Table(tr = getTableRecord(TableTags.OS_2), _data + tr.offset);
-		_post = new PostTable(tr = getTableRecord(TableTags.post), _data + tr.offset);
-		_loca = new LocaTable(tr = getTableRecord(TableTags.loca), _data + tr.offset, _maxp.numGlyphs, _head.indexToLocFormat);
-		_glyf = new GlyfTable(tr = getTableRecord(TableTags.glyf), _data + tr.offset, _maxp.numGlyphs, _loca);
+		var tr = getTableRecord(tag);
+		data.offset = tr.offset;
+		return tr;
+	}
+
+	private function parseTables(data: Data):Void
+	{
+		var offset = data.offset;
+
+		_cmap = new CmapTable(getTableRecordOffset(TableTags.cmap, data, offset), data);
+		_head = new HeadTable(getTableRecordOffset(TableTags.head, data, offset), data);
+		_maxp = new MaxpTable(getTableRecordOffset(TableTags.maxp, data, offset), data);
+		_hhea = new HheaTable(getTableRecordOffset(TableTags.hhea, data, offset), data);
+		_hmtx = new HmtxTable(getTableRecordOffset(TableTags.hmtx, data, offset), data, _maxp.numGlyphs, _hhea.numberOfHMetrics);
+		_name = new NameTable(getTableRecordOffset(TableTags.name, data, offset), data);
+		_os2 = new Os2Table(getTableRecordOffset(TableTags.OS_2, data, offset), data);
+		_post = new PostTable(getTableRecordOffset(TableTags.post, data, offset), data);
+		_loca = new LocaTable(getTableRecordOffset(TableTags.loca, data, offset), data, _maxp.numGlyphs, _head.indexToLocFormat);
+		_glyf = new GlyfTable(getTableRecordOffset(TableTags.glyf, data, offset), data, _maxp.numGlyphs, _loca);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function read(data:Pointer):Void
+	public function read(data: Data):Void
 	{
-		_data = data;
-		var refPtr = Ref.getPointer().set(_data);
-		var ot = new OffsetTable(refPtr);
+		var ot = new OffsetTable(data);
 		var numTables = ot.numTables;
 		_tableRecords = new Vector(numTables);
 		var i:UInt = 0;
 		while (i < numTables)
 		{
-			_tableRecords[i] = new TableRecord(refPtr);
+			_tableRecords[i] = new TableRecord(data);
 			++i;
 		}
-		parseTables();
+		parseTables(data);
 	}
 }

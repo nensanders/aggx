@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
 import lib.ha.core.memory.Ref;
@@ -64,76 +65,74 @@ class Os2Table
 	private var _breakChar:Int;					//USHORT
 	private var _maxContext:Int;				//USHORT
 	//---------------------------------------------------------------------------------------------------
-	public function new(record:TableRecord, ptr:Pointer)
+	public function new(record:TableRecord, ptr: Data)
 	{
 		_tableRecord = record;
 
-		_version = ptr.getUShort();
-		ptr += 2;
-		_avgCharWidth = ptr.getShort();
-		ptr += 2;
-		_weightClass = ptr.getUShort();
-		ptr += 2;
-		_widthClass = ptr.getUShort();
-		ptr += 2;
-		_type = ptr.getUShort();
-		ptr += 2;
-		_subscriptXSize = ptr.getShort();
-		ptr += 2;
-		_subscriptYSize = ptr.getShort();
-		ptr += 2;
-		_subscriptXOffset = ptr.getShort();
-		ptr += 2;
-		_subscriptYOffset = ptr.getShort();
-		ptr += 2;
-		_superscriptXSize = ptr.getShort();
-		ptr += 2;
-		_superscriptYSize = ptr.getShort();
-		ptr += 2;
-		_superscriptXOffset = ptr.getShort();
-		ptr += 2;
-		_superscriptYOffset = ptr.getShort();
-		ptr += 2;
-		_strikeoutSize = ptr.getShort();
-		ptr += 2;
-		_strikeoutPosition = ptr.getShort();
-		ptr += 2;
-		_familyClass = ptr.getShort();
-		ptr += 2;
+		_version = ptr.dataGetUShort();
+		ptr.offset += 2;
+		_avgCharWidth = ptr.dataGetShort();
+		ptr.offset += 2;
+		_weightClass = ptr.dataGetUShort();
+		ptr.offset += 2;
+		_widthClass = ptr.dataGetUShort();
+		ptr.offset += 2;
+		_type = ptr.dataGetUShort();
+		ptr.offset += 2;
+		_subscriptXSize = ptr.dataGetShort();
+		ptr.offset += 2;
+		_subscriptYSize = ptr.dataGetShort();
+		ptr.offset += 2;
+		_subscriptXOffset = ptr.dataGetShort();
+		ptr.offset += 2;
+		_subscriptYOffset = ptr.dataGetShort();
+		ptr.offset += 2;
+		_superscriptXSize = ptr.dataGetShort();
+		ptr.offset += 2;
+		_superscriptYSize = ptr.dataGetShort();
+		ptr.offset += 2;
+		_superscriptXOffset = ptr.dataGetShort();
+		ptr.offset += 2;
+		_superscriptYOffset = ptr.dataGetShort();
+		ptr.offset += 2;
+		_strikeoutSize = ptr.dataGetShort();
+		ptr.offset += 2;
+		_strikeoutPosition = ptr.dataGetShort();
+		ptr.offset += 2;
+		_familyClass = ptr.dataGetShort();
+		ptr.offset += 2;
+
+		_panose = new Panose(ptr);
 		
-		var refPtr = Ref.getPointer().set(ptr);
-		_panose = new Panose(refPtr);
-		ptr = refPtr.value;
-		
-		_unicodeRange1 = ptr.getUInt();
-		ptr += 4;
-		_unicodeRange2 = ptr.getUInt();
-		ptr += 4;
-		_unicodeRange3 = ptr.getUInt();
-		ptr += 4;
-		_unicodeRange4 = ptr.getUInt();
-		ptr += 4;
-		_vendorID = ptr.getInt();
-		ptr += 4;
-		_selection = ptr.getUShort();
-		ptr += 2;
-		_rirstCharIndex = ptr.getUInt();
-		ptr += 2;
-		_lastCharIndex  = ptr.getUInt();
-		ptr += 2;
-		_typoAscender = ptr.getShort();
-		ptr += 2;
-		_typoDescender = ptr.getShort();
-		ptr += 2;
-		_typoLineGap = ptr.getShort();
-		ptr += 2;
-		_winAscent = ptr.getUShort();
-		ptr += 2;
-		_winDescent = ptr.getUShort();
-		ptr += 2;
-		_codePageRange1 = ptr.getUInt();
-		ptr += 4;
-		_codePageRange2 = ptr.getUInt();
-		ptr += 4;		
+		_unicodeRange1 = ptr.dataGetUInt();
+		ptr.offset += 4;
+		_unicodeRange2 = ptr.dataGetUInt();
+		ptr.offset += 4;
+		_unicodeRange3 = ptr.dataGetUInt();
+		ptr.offset += 4;
+		_unicodeRange4 = ptr.dataGetUInt();
+		ptr.offset += 4;
+		_vendorID = ptr.dataGetInt();
+		ptr.offset += 4;
+		_selection = ptr.dataGetUShort();
+		ptr.offset += 2;
+		_rirstCharIndex = ptr.dataGetUInt();
+		ptr.offset += 2;
+		_lastCharIndex  = ptr.dataGetUInt();
+		ptr.offset += 2;
+		_typoAscender = ptr.dataGetShort();
+		ptr.offset += 2;
+		_typoDescender = ptr.dataGetShort();
+		ptr.offset += 2;
+		_typoLineGap = ptr.dataGetShort();
+		ptr.offset += 2;
+		_winAscent = ptr.dataGetUShort();
+		ptr.offset += 2;
+		_winDescent = ptr.dataGetUShort();
+		ptr.offset += 2;
+		_codePageRange1 = ptr.dataGetUInt();
+		ptr.offset += 4;
+		_codePageRange2 = ptr.dataGetUInt();
+		ptr.offset += 4;
 	}
 }

@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -33,31 +34,27 @@ class NameRecord
 	private var _offset:UInt;//USHORT
 	private var _record:String;
 	//---------------------------------------------------------------------------------------------------
-	public function new(dataRef:PointerRef) 
+	public function new(data: Data)
 	{
-		var data = dataRef.value;
-		
-		_platformID = data.getUShort();
-		data += 2;
-		_encodingID = data.getUShort();
-		data += 2;
-		_languageID = data.getUShort();
-		data += 2;
-		_nameID = data.getUShort();
-		data += 2;
-		_length = data.getUShort();
-		data += 2;
-		_offset = data.getUShort();
-		data += 2;
-		
-		dataRef.value = data;
+		_platformID = data.dataGetUShort();
+		data.offset += 2;
+		_encodingID = data.dataGetUShort();
+		data.offset += 2;
+		_languageID = data.dataGetUShort();
+		data.offset += 2;
+		_nameID = data.dataGetUShort();
+		data.offset += 2;
+		_length = data.dataGetUShort();
+		data.offset += 2;
+		_offset = data.dataGetUShort();
+		data.offset += 2;
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function readString(data:Pointer):Void
-	{		
+	public function readString(data: Data):Void
+	{
 		var sb:String = "";
 		var i:UInt = 0, len:UInt, c:UInt;
-		data += _offset;
+		data.offset += _offset;
 		if (_platformID == 0)
 		{
 			 //Unicode (big-endian)
@@ -65,9 +62,9 @@ class NameRecord
 			len = _length >> 1;
 			while (i < len)
 			{
-				c = data.getUShort();
+				c = data.dataGetUShort();
 				sb += String.fromCharCode(c);
-				data += 2;
+				data.offset += 2;
 				++i;
 			}
 		}
@@ -77,9 +74,9 @@ class NameRecord
 			i = 0;
 			while (i < _length)			
 			{
-				c = data.getByte();
+				c = data.readUInt8();
 				sb += String.fromCharCode(c);
-				data++;
+				data.offset++;
 				++i;
 			}
 		}
@@ -89,9 +86,9 @@ class NameRecord
 			i = 0;
 			while (i < _length)
 			{
-				c = data.getByte();
+				c = data.readUInt8();
 				sb += String.fromCharCode(c);
-				data++;
+				data.offset++;
 				++i;
 			}
 		}
@@ -102,9 +99,9 @@ class NameRecord
 			len = _length >> 1;
 			while (i < len)
 			{
-				c = data.getUShort();
+				c = data.dataGetUShort();
 				sb += String.fromCharCode(c);
-				data += 2;
+				data.offset += 2;
 				++i;
 			}
 		}

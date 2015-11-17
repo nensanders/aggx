@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
@@ -27,8 +28,9 @@ class GlyfTable
 	private var _tableRecord:TableRecord;
 	private var _glyphRecords:Vector<GlyphRecord>;
 	//---------------------------------------------------------------------------------------------------
-	public function new(record:TableRecord, data:Pointer, numGlyphs:UInt, locaTable:LocaTable) //<=== from MaxpTable
+	public function new(record:TableRecord, data: Data, numGlyphs:UInt, locaTable:LocaTable) //<=== from MaxpTable
 	{
+		var offset = data.offset;
 		_tableRecord = record;
 		
 		_glyphRecords = new Vector(numGlyphs);
@@ -39,7 +41,8 @@ class GlyfTable
 		{
 			if (i < z && (locaTable.getOffset(i + 1) - locaTable.getOffset(i)) > 0)
 			{
-				_glyphRecords[i] = new GlyphRecord(data + locaTable.getOffset(i));
+				data.offset = offset + locaTable.getOffset(i);
+				_glyphRecords[i] = new GlyphRecord(data);
 			}
 			else 
 			{

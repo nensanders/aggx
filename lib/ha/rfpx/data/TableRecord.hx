@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -29,20 +30,16 @@ class TableRecord
 	private var _offset:UInt; 		//ULONG
 	private var _length:UInt; 		//ULONG
 	//---------------------------------------------------------------------------------------------------
-	public function new(dataPtr:PointerRef) 
+	public function new(data: Data)
 	{
-		var ptr = dataPtr.value;
-		
-		_tag = ptr.getUInt();
-		ptr += 4;
-		_checkSum = ptr.getUInt();
-		ptr += 4;
-		_offset = ptr.getUInt();
-		ptr += 4;
-		_length = ptr.getUInt();
-		ptr += 4;
-
-		dataPtr.value = ptr;
+		_tag = data.dataGetUInt();
+		data.offset += 4;
+		_checkSum = data.dataGetUInt();
+		data.offset += 4;
+		_offset = data.dataGetUInt();
+		data.offset += 4;
+		_length = data.dataGetUInt();
+		data.offset += 4;
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_tag():UInt { return _tag; }

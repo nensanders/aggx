@@ -31,7 +31,6 @@ class TrueTypeCollection
 
     }
 
-	private var _data:MemoryBlock;
 	private var _fonts:Vector<TrueTypeFont>;
 	//---------------------------------------------------------------------------------------------------
 	public function getFont(i:Int):TrueTypeFont
@@ -51,8 +50,7 @@ class TrueTypeCollection
 	//---------------------------------------------------------------------------------------------------
 	private function read(file:Data, pathName:String = ""):Void
 	{
-		_data = MemoryManager.mallocEx(file);
-		if(TTCHeader.isTTC(_data))
+		if(TTCHeader.isTTC(file))
 		{
 			//_ttcHeader = new TTCHeader(_data);
 			//_fonts = new Vector( _ttcHeader.getDirectoryCount());
@@ -67,7 +65,7 @@ class TrueTypeCollection
 			// This is a standalone font
 			_fonts = new Vector(1);
 			_fonts[0] = new TrueTypeFont(this);
-			_fonts[0].read(_data.ptr);
+			_fonts[0].read(file);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
