@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -41,43 +42,43 @@ class MaxpTable
 	private var _maxComponentElements:UInt;				//USHORT
 	private var _maxComponentDepth:UInt;				//USHORT
 	//---------------------------------------------------------------------------------------------------	
-	public function new(record:TableRecord, data:Pointer) 
+	public function new(record:TableRecord, data: Data)
 	{
 		_tableRecord = record;
 		
-		_version = data.getInt();
-		data += 4;
+		_version = data.dataGetInt();
+		data.offset += 4;
 		
-		_numGlyphs = data.getUShort();
-		data += 2;
+		_numGlyphs = data.dataGetUShort();
+		data.offset += 2;
 		
 		if (_version == 0x00010000) 
 		{
-			_maxPoints = data.getUShort();
-			data += 2;
-			_maxContours = data.getUShort();
-			data += 2;
-			_maxCompositePoints = data.getUShort();
-			data += 2;
-			_maxCompositeContours = data.getUShort();
-			data += 2;
-			_maxZones = data.getUShort();
-			data += 2;
-			_maxTwilightPoints = data.getUShort();
-			data += 2;
-			_maxStorage = data.getUShort();
-			data += 2;
-			_maxFunctionDefs = data.getUShort();
-			data += 2;
-			_maxInstructionDefs = data.getUShort();
-			data += 2;
-			_maxStackElements = data.getUShort();
-			data += 2;
-			_maxSizeOfInstructions = data.getUShort();
-			data += 2;
-			_maxComponentElements = data.getUShort();
-			data += 2;
-			_maxComponentDepth = data.getUShort();
+			_maxPoints = data.dataGetUShort();
+			data.offset += 2;
+			_maxContours = data.dataGetUShort();
+			data.offset += 2;
+			_maxCompositePoints = data.dataGetUShort();
+			data.offset += 2;
+			_maxCompositeContours = data.dataGetUShort();
+			data.offset += 2;
+			_maxZones = data.dataGetUShort();
+			data.offset += 2;
+			_maxTwilightPoints = data.dataGetUShort();
+			data.offset += 2;
+			_maxStorage = data.dataGetUShort();
+			data.offset += 2;
+			_maxFunctionDefs = data.dataGetUShort();
+			data.offset += 2;
+			_maxInstructionDefs = data.dataGetUShort();
+			data.offset += 2;
+			_maxStackElements = data.dataGetUShort();
+			data.offset += 2;
+			_maxSizeOfInstructions = data.dataGetUShort();
+			data.offset += 2;
+			_maxComponentElements = data.dataGetUShort();
+			data.offset += 2;
+			_maxComponentDepth = data.dataGetUShort();
 		}
 	}	
 	//---------------------------------------------------------------------------------------------------

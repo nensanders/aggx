@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -34,14 +35,14 @@ class TTCHeader
 	private var _dsigLength:UInt;					//ULONG
 	private var _dsigOffset:UInt;					//ULONG
 	//---------------------------------------------------------------------------------------------------
-	public function new(data:MemoryBlock)
+	public function new(data: Data)
 	{
-		_version = data.ptr.getInt();
+		_version = data.dataGetInt();
 	}
 	//---------------------------------------------------------------------------------------------------
-	public static function isTTC(data:MemoryBlock):Bool
+	public static function isTTC(data: Data):Bool
 	{
-		var check = data.ptr.getInt();
+		var check = data.dataGetInt();
 		return check == TTCTag;
 	}
 }

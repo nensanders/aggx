@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -28,18 +29,16 @@ class EncodingRecord
 	private var _encodingID:UInt;		//USHORT
 	private var _offset:UInt;			//ULONG
 	//---------------------------------------------------------------------------------------------------
-	public function new(dataPtr:PointerRef) 
+	public function new(data: Data)
 	{
-		var ptr = dataPtr.value;
-		
-		_platformID = ptr.getUShort();
-		ptr += 2;
-		_encodingID = ptr.getUShort();
-		ptr += 2;
-		_offset = ptr.getUInt();
-		ptr += 4;
-		
-		dataPtr.value = ptr;
+		_platformID = data.dataGetUShort();
+		data.offset += 2;
+
+		_encodingID = data.dataGetUShort();
+		data.offset += 2;
+
+		_offset = data.dataGetUInt();
+		data.offset += 4;
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_offset():UInt { return _offset; }

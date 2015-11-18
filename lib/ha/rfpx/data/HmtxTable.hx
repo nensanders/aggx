@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -29,7 +30,7 @@ class HmtxTable
 	private var _hMetrics:Vector<LongHorMetric>;
 	private var _leftSideBearing:Vector<Int>;			//SHORT[numGlyphs - numberOfHMetrics]
 	//---------------------------------------------------------------------------------------------------
-	public function new(record:TableRecord, data:Pointer, numGlyphs:UInt, numberOfHMetrics:UInt) 
+	public function new(record:TableRecord, data: Data, numGlyphs:UInt, numberOfHMetrics:UInt)
 	{
 		_tableRecord = record;
 		
@@ -38,10 +39,10 @@ class HmtxTable
 		var i:UInt = 0;
 		while (i < numberOfHMetrics) 
 		{
-			var advWidth = data.getUShort();
-			data += 2;
-			var lsb = data.getShort();
-			data += 2;
+			var advWidth = data.dataGetUShort();
+			data.offset += 2;
+			var lsb = data.dataGetShort();
+			data.offset += 2;
 			_hMetrics[i] = new LongHorMetric(advWidth, lsb);
 			++i;
 		}
@@ -51,8 +52,8 @@ class HmtxTable
 		i = 0;
 		while (i < lsbCount)
 		{
-			_leftSideBearing[i] = data.getShort();
-			data += 2;
+			_leftSideBearing[i] = data.dataGetShort();
+			data.offset += 2;
 			++i;
 		}
 	}

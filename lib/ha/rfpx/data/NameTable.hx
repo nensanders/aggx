@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
@@ -34,48 +35,51 @@ class NameTable
 	private var _langTagCount:UInt;							//USHORT
 	private var _langTagRecord:Vector<LangTagRecord>;		//LangTagRecord[langTagCount]
 	//---------------------------------------------------------------------------------------------------
-	public function new(record:TableRecord, data:Pointer) 
+	public function new(record:TableRecord, data: Data)
 	{
 		_tableRecord = record;
 		
-		var dataPtr = data;		
+		var dataPtr = data.offset;
 		
-		_format = data.getUShort();
-		data += 2;
-		_count = data.getUShort();
-		data += 2;
-		_stringOffset = data.getUShort();
-		data += 2;
+		_format = data.dataGetUShort();
+		data.offset += 2;
+		_count = data.dataGetUShort();
+		data.offset += 2;
+		_stringOffset = data.dataGetUShort();
+		data.offset += 2;
 		
 		var strDataPtr = dataPtr + _stringOffset;
 		_nameRecord = new Vector(_count);
 		
-		var refPtr = Ref.getPointer().set(data);
-		
 		var i:UInt = 0, nameRecord:NameRecord;
 		while (i < _count) 
 		{
-			_nameRecord[i] = nameRecord = new NameRecord(refPtr);
-			nameRecord.readString(strDataPtr);
+			_nameRecord[i] = nameRecord = new NameRecord(data);
 			++i;
 		}
 		
-		data = refPtr.value;
-		
 		if (_format == 1)
 		{
-			_langTagCount = data.getUShort();
+			_langTagCount = data.dataGetUShort();
             _langTagRecord = new Vector(_langTagCount);
 			i = 0;
 			while (i < _langTagCount)
 			{
-				var len = data.getUShort();
-				data += 2;
-				var ofs = data.getUShort();
-				data += 2;
+				var len = data.dataGetUShort();
+				data.offset += 2;
+				var ofs = data.dataGetUShort();
+				data.offset += 2;
 				_langTagRecord[i] = new LangTagRecord(len, ofs);
 				++i;
 			}
 		}
+
+		var offset = data.offset;
+		for (i in 0 ... _count)
+		{
+			data.offset = strDataPtr;
+			_nameRecord[i].readString(data);
+		}
+		data.offset = offset;
 	}
 }

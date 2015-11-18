@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -30,14 +31,14 @@ class CmapFormat0
 	private var _language:UInt;				//USHORT
 	private var _glyphIdArray:Vector<Int>;	//BYTE[256]
 	//---------------------------------------------------------------------------------------------------
-	public function new(data:Pointer, encRecord:EncodingRecord) 
+	public function new(data: Data, encRecord:EncodingRecord)
 	{
 		_format = 0;
 		
-		_length = data.getUShort();
-		data += 2;
-		_language = data.getUShort();
-		data += 2;
+		_length = data.dataGetUShort();
+		data.offset += 2;
+		_language = data.dataGetUShort();
+		data.offset += 2;
 		
 		var s = String.fromCharCode(0x02df);//"\x007e\x0000\x00c4\x00a0\x00c7\x00c9\x00d1\x00d6\x00dc\x00e1";
 		var upper = getUpper129(encRecord.platformID, encRecord.encodingID, _language);
@@ -48,15 +49,15 @@ class CmapFormat0
 		var i:UInt = 0;
 		while (i < 126)
 		{
-			_glyphIdArray[data.getByte()] = i;
-			data++;
+			_glyphIdArray[data.readUInt8()] = i;
+			data.offset++;
 			++i;
 		}
 		
 		while (i < 256)
 		{
-			_glyphIdArray[data.getByte()] = upper.charCodeAt(i - 127);
-			data++;
+			_glyphIdArray[data.readUInt8()] = upper.charCodeAt(i - 127);
+			data.offset++;
 			++i;
 		}
 		_glyphIdArray[0] = 0;

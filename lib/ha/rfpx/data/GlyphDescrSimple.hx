@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.core.memory.Pointer;
@@ -39,27 +40,27 @@ class GlyphDescrSimple
 	private var _tags:Vector<UInt>;
 	private var _numberOfPoints:UInt;
 	//---------------------------------------------------------------------------------------------------
-	public function new(data:Pointer, numberOfContours:UInt) 
+	public function new(data: Data, numberOfContours:UInt)
 	{
 		_endPtsOfContours = new Vector(numberOfContours);
 		
 		var i:UInt = 0;
 		while (i < numberOfContours)
 		{
-			_endPtsOfContours[i] = data.getUShort();
-			data += 2;
+			_endPtsOfContours[i] = data.dataGetUShort();
+			data.offset += 2;
 			++i;
 		}
 		
-		_instructionLength = data.getUShort();
-		data += 2;
+		_instructionLength = data.dataGetUShort();
+		data.offset += 2;
 		
 		_instructions = new Vector(_instructionLength);
 		i = 0;
 		while (i < _instructionLength)
 		{
-			_instructions[i] = data.getByte();
-			data++;
+			_instructions[i] = data.readInt8();
+			data.offset++;
 			++i;
 		}
 		_numberOfPoints = _endPtsOfContours[_endPtsOfContours.length - 1] + 1;
@@ -71,13 +72,13 @@ class GlyphDescrSimple
 		i = 0;
 		while (i < _numberOfPoints) 
 		{
-			c = data.getByte();
+			c = data.readUInt8();
 			_tags[i++] = c;
-			data++;
+			data.offset++;
 			if ((c & 8) != 0) 
 			{
-				count = data.getByte();
-				data++;
+				count = data.readUInt8();
+				data.offset++;
 				while (count > 0) 
 				{
 					_tags[i++] = c;
@@ -97,14 +98,14 @@ class GlyphDescrSimple
 			var y:Int = 0;
 			if ((f & 2) != 0)
 			{
-				y = data.getByte();
-				data++;
+				y = data.readUInt8();
+				data.offset++;
 				if ((f & 16) == 0) y = -y;
 			}
 			else if ((f & 16) == 0)
 			{
-				y = data.getShort();
-				data += 2;
+				y = data.dataGetShort();
+				data.offset += 2;
 			}
 			x += y;
 			_xCoordinates[i] = x;
@@ -118,15 +119,15 @@ class GlyphDescrSimple
 			var y:Int = 0;
 			if ((f & 4) != 0)
 			{
-				y = data.getByte();
-				data++;
+				y = data.readUInt8();
+				data.offset++;
 				if ((f & 32) == 0) y = -y;
 				
 			}
 			else if ((f & 32) == 0)
 			{
-				y = data.getShort();
-				data += 2;
+				y = data.dataGetShort();
+				data.offset += 2;
 			}
 			x += y;
 			_yCoordinates[i] = x;

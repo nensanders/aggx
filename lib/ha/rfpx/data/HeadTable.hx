@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -43,43 +44,43 @@ class HeadTable
 	private var _indexToLocFormat:Int;			//SHORT
 	private var _glyphDataFormat:Int;			//SHORT
 	//---------------------------------------------------------------------------------------------------
-	public function new(record:TableRecord, data:Pointer) 
+	public function new(record:TableRecord, data: Data)
 	{
 		_tableRecord = record;
 		
-		_version = data.getInt();
-		data += 4;
-		_fontRevision = data.getInt();
-		data += 4;
-		_checkSumAdjustment = data.getUInt();
-		data += 4;
-		_magicNumber = data.getUInt();
-		data += 4;
-		_flags = data.getUShort();
-		data += 2;
-		_unitsPerEm = data.getUShort();
-		data += 2;
-		_created = data.getDouble();
-		data += 8;
-		_modified = data.getDouble();
-		data += 8;
-		_xMin = data.getShort();
-		data += 2;
-		_yMin = data.getShort();
-		data += 2;
-		_xMax = data.getShort();
-		data += 2;
-		_yMax = data.getShort();
-		data += 2;
-		_macStyle = data.getUShort();
-		data += 2;
-		_lowestRecPPEM = data.getUShort();
-		data += 2;
-		_fontDirectionHint = data.getShort();
-		data += 2;
-		_indexToLocFormat = data.getShort();
-		data += 2;
-		_glyphDataFormat = data.getShort();
+		_version = data.dataGetInt();
+		data.offset += 4;
+		_fontRevision = data.dataGetInt();
+		data.offset += 4;
+		_checkSumAdjustment = data.dataGetUInt();
+		data.offset += 4;
+		_magicNumber = data.dataGetUInt();
+		data.offset += 4;
+		_flags = data.dataGetUShort();
+		data.offset += 2;
+		_unitsPerEm = data.dataGetUShort();
+		data.offset += 2;
+		_created = data.readFloat64();
+		data.offset += 8;
+		_modified = data.readFloat64();
+		data.offset += 8;
+		_xMin = data.dataGetShort();
+		data.offset += 2;
+		_yMin = data.dataGetShort();
+		data.offset += 2;
+		_xMax = data.dataGetShort();
+		data.offset += 2;
+		_yMax = data.dataGetShort();
+		data.offset += 2;
+		_macStyle = data.dataGetUShort();
+		data.offset += 2;
+		_lowestRecPPEM = data.dataGetUShort();
+		data.offset += 2;
+		_fontDirectionHint = data.dataGetShort();
+		data.offset += 2;
+		_indexToLocFormat = data.dataGetShort();
+		data.offset += 2;
+		_glyphDataFormat = data.dataGetShort();
 	}
 	//---------------------------------------------------------------------------------------------------
 	public var indexToLocFormat(get, null):Int;

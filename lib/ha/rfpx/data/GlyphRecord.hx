@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -33,18 +34,18 @@ class GlyphRecord
 	private var _compositeDescr:GlyphDescrComp;
 	private var _isSimple:Bool;
 	//---------------------------------------------------------------------------------------------------
-	public function new(data:Pointer) 
+	public function new(data: Data)
 	{
-		_numberOfContours = data.getShort();
-		data += 2;
-		_xMin = data.getShort();
-		data += 2;
-		_yMin = data.getShort();
-		data += 2;
-		_xMax = data.getShort();
-		data += 2;
-		_yMax = data.getShort();
-		data += 2;
+		_numberOfContours = data.dataGetShort();
+		data.offset += 2;
+		_xMin = data.dataGetShort();
+		data.offset += 2;
+		_yMin = data.dataGetShort();
+		data.offset += 2;
+		_xMax = data.dataGetShort();
+		data.offset += 2;
+		_yMax = data.dataGetShort();
+		data.offset += 2;
 		
 		if (_numberOfContours > 0)
 		{

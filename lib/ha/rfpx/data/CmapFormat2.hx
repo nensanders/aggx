@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -32,21 +33,21 @@ class CmapFormat2
 	private var _subHeaders:Vector<Int>;		//INT[]   // TODO Unused?
 	private var _glyphIndexArray:Vector<UInt>;	//USHORT[] // TODO Unused?
 	//---------------------------------------------------------------------------------------------------
-	public function new(data:Pointer) 
+	public function new(data: Data)
 	{
 		_format = 2;
 
         _subHeaderKeys = new Vector(256);
 
-		_length = data.getUShort();
-		data += 2;
-		_language = data.getUShort();
-		data += 2;
+		_length = data.dataGetUShort();
+		data.offset += 2;
+		_language = data.dataGetUShort();
+		data.offset += 2;
 		var i:UInt = 0;
 		while (i < 256) 
 		{
-			_subHeaderKeys[i] = data.getUShort();
-			data += 2;
+			_subHeaderKeys[i] = data.dataGetUShort();
+			data.offset += 2;
 			++i;
 		}
 	}

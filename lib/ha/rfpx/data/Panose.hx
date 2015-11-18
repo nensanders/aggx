@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -35,31 +36,27 @@ class Panose
 	private var _midline:Int;				//BYTE
 	private var _height:Int;				//BYTE
 	//---------------------------------------------------------------------------------------------------
-	public function new(dataRef:PointerRef) 
+	public function new(ptr: Data)
 	{
-		var ptr = dataRef.value;
-		
-		_familyType = ptr.getByte();
-		ptr++;
-		_serifStyle = ptr.getByte();
-		ptr++;
-		_weight = ptr.getByte();
-		ptr++;
-		_proportion = ptr.getByte();
-		ptr++;
-		_contrast = ptr.getByte();
-		ptr++;
-		_strokeVariation = ptr.getByte();
-		ptr++;
-		_armStyle = ptr.getByte();		
-		ptr++;
-		_letterform = ptr.getByte();
-		ptr++;
-		_midline = ptr.getByte();
-		ptr++;
-		_height = ptr.getByte();
-		ptr++;
-		
-		dataRef.value = ptr;
+		_familyType = ptr.readUInt8();
+		ptr.offset++;
+		_serifStyle = ptr.readUInt8();
+		ptr.offset++;
+		_weight = ptr.readUInt8();
+		ptr.offset++;
+		_proportion = ptr.readUInt8();
+		ptr.offset++;
+		_contrast = ptr.readUInt8();
+		ptr.offset++;
+		_strokeVariation = ptr.readUInt8();
+		ptr.offset++;
+		_armStyle = ptr.readUInt8();
+		ptr.offset++;
+		_letterform = ptr.readUInt8();
+		ptr.offset++;
+		_midline = ptr.readUInt8();
+		ptr.offset++;
+		_height = ptr.readUInt8();
+		ptr.offset++;
 	}
 }

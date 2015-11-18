@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
@@ -30,22 +31,18 @@ class OffsetTable
 	private var _entrySelector:UInt;	//USHORT
 	private var _rangeShift:UInt; 		//USHORT
 	//---------------------------------------------------------------------------------------------------
-	public function new(dataPtr:PointerRef) 
+	public function new(data: Data)
 	{
-		var ptr = dataPtr.value;
-		
-		_sfntVersion = ptr.getInt();
-		ptr += 4;
-		_numTables = ptr.getUShort();
-		ptr += 2;
-		_searchRange = ptr.getUShort();
-		ptr += 2;
-		_entrySelector = ptr.getUShort();
-		ptr += 2;
-		_rangeShift = ptr.getUShort();
-		ptr += 2;
-		
-		dataPtr.value = ptr;
+		_sfntVersion = data.dataGetInt();
+		data.offset += 4;
+		_numTables = data.dataGetUShort();
+		data.offset += 2;
+		_searchRange = data.dataGetUShort();
+		data.offset += 2;
+		_entrySelector = data.dataGetUShort();
+		data.offset += 2;
+		_rangeShift = data.dataGetUShort();
+		data.offset += 2;
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_numTables():UInt { return _numTables; }

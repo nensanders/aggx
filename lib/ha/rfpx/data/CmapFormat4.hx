@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReaderEx;
@@ -41,44 +42,44 @@ class CmapFormat4
 	
 	private var _idRangeOffsetPtr:Pointer;
 	//---------------------------------------------------------------------------------------------------
-	public function new(data:Pointer) 
+	public function new(data: Data)
 	{
 		_format = 4;
 		
 		//var dataPtr = data;
 		
-		_length = data.getUShort();
-		data += 2;
-		_language = data.getUShort();
-		data += 2;
-		_segCountX2 = data.getUShort();
-		data += 2;
-		_searchRange = data.getUShort();
-		data += 2;
-		_entrySelector = data.getUShort();
-		data += 2;
-		_rangeShift = data.getUShort();
-		data += 2;
+		_length = data.dataGetUShort();
+		data.offset += 2;
+		_language = data.dataGetUShort();
+		data.offset += 2;
+		_segCountX2 = data.dataGetUShort();
+		data.offset += 2;
+		_searchRange = data.dataGetUShort();
+		data.offset += 2;
+		_entrySelector = data.dataGetUShort();
+		data.offset += 2;
+		_rangeShift = data.dataGetUShort();
+		data.offset += 2;
 		
 		var segCount:UInt = _segCountX2 >> 1;
 		_endCount = new Vector(segCount);
 		var i:UInt = 0;
 		while (i < segCount)
 		{
-			_endCount[i] = data.getUShort();
-			data += 2;
+			_endCount[i] = data.dataGetUShort();
+			data.offset += 2;
 			++i;
 		}
 		
 		_reservedPad = 0;		
-		data += 2;
+		data.offset += 2;
 		
 		_startCount = new Vector(segCount);
 		i = 0;
 		while (i < segCount)
 		{
-			_startCount[i] = data.getUShort();
-			data += 2;
+			_startCount[i] = data.dataGetUShort();
+			data.offset += 2;
 			++i;
 		}
 		
@@ -86,22 +87,22 @@ class CmapFormat4
 		i = 0;
 		while (i < segCount)
 		{
-			_idDelta[i] = data.getShort();
-			data += 2;
+			_idDelta[i] = data.dataGetShort();
+			data.offset += 2;
 			++i;
 		}
 		
 		_idRangeOffset = new Vector(segCount);
-		_idRangeOffsetPtr = data;
+		_idRangeOffsetPtr = data.offset;
 		i = 0;
 		while (i < segCount)
 		{
-			_idRangeOffset[i] = data.getUShort();
-			data += 2;
+			_idRangeOffset[i] = data.dataGetShort();
+			data.offset += 2;
 			++i;
 		}
 		
-		_glyphIndexArray = data;
+		_glyphIndexArray = data.dataGetUShort();
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function getGlyphIndex(charCode:UInt):UInt
