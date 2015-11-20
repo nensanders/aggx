@@ -38,20 +38,22 @@ class FontEngine
 	private var _flipY:Bool;
 	private var _fontCollection:TrueTypeCollection;
 	private var _currentFont:TrueTypeFont;
-	private var _scanline:Scanline;
-	private var _rasterizerizer:ScanlineRasterizer;
-	private var _typefaceCache:TypefaceCache;
 	private var _path:VectorPath;
 	private var _curve:ConvCurve;
+    private var _typefaceCache:TypefaceCache;
+
+    public var rasterizer: ScanlineRasterizer;
+    public var scanline: Scanline;
+
 	//---------------------------------------------------------------------------------------------------
-	public function new(ttc:TrueTypeCollection) 
+	public function new(ttc:TrueTypeCollection, ?scanline: Scanline, ?rasterizer: ScanlineRasterizer)
 	{
         _flipY = true;
         _fontCollection = ttc;
 		_currentFontIndex = 0;
 		_currentFont = ttc.getFont(_currentFontIndex);
-		_rasterizerizer = new ScanlineRasterizer();
-		_scanline = new Scanline();
+        this.rasterizer = rasterizer;
+		this.scanline = scanline;
 		_typefaceCache = new TypefaceCache(_currentFont);
 		_path = new VectorPath();
 		_curve = new ConvCurve(_path);
@@ -112,8 +114,18 @@ class FontEngine
 	//---------------------------------------------------------------------------------------------------
 	public function renderString(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer):Void
 	{
-		_rasterizerizer.reset();
-		_rasterizerizer.gamma(new GammaPower(1));
+        if (rasterizer == null)
+        {
+            rasterizer = new ScanlineRasterizer();
+        }
+
+        if (scanline == null)
+        {
+            scanline = new Scanline();
+        }
+
+		rasterizer.reset();
+		rasterizer.gamma(new GammaPower(1));
 		var i:UInt = 0;
         var c:UInt = Utf8.length(string);
 		var x = 0.;
@@ -128,12 +140,12 @@ class FontEngine
 			face.getOutline(_path);
 			_path.transformAllPaths(transform);
 			x += face.glyph.advanceWidth * scale;
-			_rasterizerizer.addPath(_curve);
+            rasterizer.addPath(_curve);
 
 			++i;
 		}
 
-		SolidScanlineRenderer.renderScanlines(_rasterizerizer, _scanline, renderer);
+		SolidScanlineRenderer.renderScanlines(rasterizer, scanline, renderer);
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_path():VectorPath { return _path; }
