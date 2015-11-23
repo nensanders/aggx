@@ -68,5 +68,10 @@ class TrueTypeCollection
 			_fonts[0].read(file);
 		}
 	}
-	//---------------------------------------------------------------------------------------------------
+
+	public function getFontName(): String
+	{
+		_fonts[0].getName();
+	}
+
 }

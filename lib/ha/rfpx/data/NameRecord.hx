@@ -18,6 +18,7 @@
 
 package lib.ha.rfpx.data;
 //=======================================================================================================
+import lib.ha.core.utils.Debug;
 import types.Data;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.Ref;
@@ -26,13 +27,13 @@ using lib.ha.core.memory.MemoryReaderEx;
 //=======================================================================================================
 class NameRecord 
 {
-	private var _platformID:UInt;			//USHORT
-	private var _encodingID:UInt;			//USHORT
-	private var _languageID:UInt;			//USHORT
+	public var _platformID:UInt;			//USHORT
+    public var _encodingID:UInt;			//USHORT
+    public var _languageID:UInt;			//USHORT
 	private var _nameID:UInt;				//USHORT
 	private var _length:UInt;				//USHORT
 	private var _offset:UInt;//USHORT
-	private var _record:String;
+    public var _record:String;
 	//---------------------------------------------------------------------------------------------------
 	public function new(data: Data)
 	{
@@ -54,7 +55,7 @@ class NameRecord
 	{
 		var sb:String = "";
 		var i:UInt = 0, len:UInt, c:UInt;
-		data.offset += _offset;
+		data.offset = data.offset + _offset;
 
 		if (_platformID == 0)
 		{
@@ -107,23 +108,14 @@ class NameRecord
 			}
 		}
 		_record = sb;
-	}	
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_offset():UInt { return _offset; }
-	public var offset(get, null):UInt;
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_length():UInt { return _length; }
-	public var length(get, null):UInt;
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_platformID():UInt { return _platformID; }
-	public var platformID(get, null):UInt;
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_languageID():UInt { return _languageID; }
-	public var languageID(get, null):UInt;
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_nameID():UInt { return _nameID; }
-	public var nameID(get, null):UInt;
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_encodingID():UInt { return _encodingID; }
-	public var encodingID(get, null):UInt;
+	}
+    public function isFontName()
+    {
+        if (_languageID == 0 && _nameID == 3)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

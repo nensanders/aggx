@@ -37,11 +37,11 @@ class FontEngine
 	private var _currentFontIndex:UInt;
 	private var _flipY:Bool;
 	private var _fontCollection:TrueTypeCollection;
-	private var _currentFont:TrueTypeFont;
 	private var _path:VectorPath;
 	private var _curve:ConvCurve;
     private var _typefaceCache:TypefaceCache;
 
+    public var currentFont(default, null): TrueTypeFont;
     public var rasterizer: ScanlineRasterizer;
     public var scanline: Scanline;
 
@@ -51,10 +51,10 @@ class FontEngine
         _flipY = true;
         _fontCollection = ttc;
 		_currentFontIndex = 0;
-		_currentFont = ttc.getFont(_currentFontIndex);
+		currentFont = ttc.getFont(_currentFontIndex);
         this.rasterizer = rasterizer;
 		this.scanline = scanline;
-		_typefaceCache = new TypefaceCache(_currentFont);
+		_typefaceCache = new TypefaceCache(currentFont);
 		_path = new VectorPath();
 		_curve = new ConvCurve(_path);
 		_curve.approximationScale = 4.0;
@@ -64,7 +64,7 @@ class FontEngine
 	{
 		while (fromCharCode < toCharCode)
 		{
-			var glyph = _currentFont.getGlyphByCharCode(fromCharCode);
+			var glyph = currentFont.getGlyphByCharCode(fromCharCode);
 			var face = new Typeface(glyph, fromCharCode);
 			_typefaceCache.cache(face);
 			++fromCharCode;
@@ -73,7 +73,7 @@ class FontEngine
 	//---------------------------------------------------------------------------------------------------
 	public function getScale(fontSize:Float):Float
 	{
-		return fontSize / _currentFont.unitsPerEm;
+		return fontSize / currentFont.unitsPerEm;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function vectorizeCharacter(charCode:UInt, fontSize, dx:Float, dy:Float):Typeface
@@ -81,7 +81,7 @@ class FontEngine
 		_path.removeAll();
 		var i:UInt = 0;
 		var x = 0.;
-		var scale = fontSize / _currentFont.unitsPerEm;
+		var scale = fontSize / currentFont.unitsPerEm;
 		var y = _currentFont.ascender * scale;
 		var face = _typefaceCache.getFace(charCode);
 		face.getOutline(_path);
@@ -97,8 +97,8 @@ class FontEngine
 		var i:UInt = 0;
 		var c:UInt = Utf8.length(string);
 		var x = 0.;
-		var scale = fontSize / _currentFont.unitsPerEm;
-		var y = _currentFont.ascender * scale;
+		var scale = fontSize / currentFont.unitsPerEm;
+		var y = currentFont.ascender * scale;
 		while (i < c)
 		{
 
@@ -129,8 +129,8 @@ class FontEngine
 		var i:UInt = 0;
         var c:UInt = Utf8.length(string);
 		var x = 0.;
-		var scale = fontSize / _currentFont.unitsPerEm;
-		var y = _currentFont.ascender * scale;
+		var scale = fontSize / currentFont.unitsPerEm;
+		var y = currentFont.ascender * scale;
 		while (i < c)
 		{
 			var face = _typefaceCache.getFace(Utf8.charCodeAt(string, i));

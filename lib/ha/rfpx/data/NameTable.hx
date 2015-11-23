@@ -34,7 +34,9 @@ class NameTable
 	private var _nameRecord:Vector<NameRecord>;				//NameRecord[count]
 	private var _langTagCount:UInt;							//USHORT
 	private var _langTagRecord:Vector<LangTagRecord>;		//LangTagRecord[langTagCount]
-	//---------------------------------------------------------------------------------------------------
+
+    public var fontName: String = "";
+
 	public function new(record:TableRecord, data: Data)
 	{
 		_tableRecord = record;
@@ -77,8 +79,14 @@ class NameTable
 		var offset = data.offset;
 		for (i in 0 ... _count)
 		{
+            var nameRecord: NameRecord = _nameRecord[i];
 			data.offset = strDataPtr;
-			_nameRecord[i].readString(data);
+			nameRecord.readString(data);
+
+            if (nameRecord.isFontName())
+            {
+                fontName = nameRecord._record;
+            }
 		}
 		data.offset = offset;
 	}

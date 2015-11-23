@@ -132,4 +132,10 @@ class TrueTypeFont
 		}
 		parseTables(data);
 	}
+
+	public function getName(): String
+	{
+		return _name.fontName;
+	}
+
 }
