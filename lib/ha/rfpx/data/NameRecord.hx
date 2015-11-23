@@ -55,6 +55,7 @@ class NameRecord
 		var sb:String = "";
 		var i:UInt = 0, len:UInt, c:UInt;
 		data.offset += _offset;
+
 		if (_platformID == 0)
 		{
 			 //Unicode (big-endian)
