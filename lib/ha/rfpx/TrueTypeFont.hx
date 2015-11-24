@@ -128,6 +128,7 @@ class TrueTypeFont
 		while (i < numTables)
 		{
 			_tableRecords[i] = new TableRecord(data);
+			//trace('$i - ${_tableRecords[i]}');
 			++i;
 		}
 		parseTables(data);

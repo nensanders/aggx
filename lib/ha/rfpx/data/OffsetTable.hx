@@ -33,6 +33,7 @@ class OffsetTable
 	//---------------------------------------------------------------------------------------------------
 	public function new(data: Data)
 	{
+		//trace(data.offset);
 		_sfntVersion = data.dataGetInt();
 		data.offset += 4;
 		_numTables = data.dataGetUShort();
@@ -44,7 +45,12 @@ class OffsetTable
 		_rangeShift = data.dataGetUShort();
 		data.offset += 2;
 	}
-	//---------------------------------------------------------------------------------------------------
+
+	public function toString(): String
+	{
+		return 'OffsetTable{version: $_sfntVersion numTables: $_numTables}';
+	}
+
 	private inline function get_numTables():UInt { return _numTables; }
 	public var numTables(get, null):UInt;
 }

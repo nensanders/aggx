@@ -29,7 +29,12 @@ class TableRecord
 	private var _checkSum:UInt; 	//ULONG
 	private var _offset:UInt; 		//ULONG
 	private var _length:UInt; 		//ULONG
-	//---------------------------------------------------------------------------------------------------
+
+	public function toString(): String
+	{
+		return 'TableRecord {tag: $_tag offset: $_offset length: $_length}';
+	}
+
 	public function new(data: Data)
 	{
 		_tag = data.dataGetUInt();
