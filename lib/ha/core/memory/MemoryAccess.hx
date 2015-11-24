@@ -28,17 +28,21 @@ class MemoryAccess
 {
     static public var domainMemory: Data;
 
-    public static inline function select( b : Data ) : Void {
+    public static inline function select( b : Data ) : Void
+    {
         domainMemory = b;
     }
 
     public static inline function resize(newSize: Int): Void
     {
         trace('resize: ${domainMemory.allocedLength} -> $newSize');
-        domainMemory.resize(newSize);
+        throw "not implemented";
+        //domainMemory.resize(newSize);
     }
 
-    public static inline function resizeOffset(offset: Int): Void {
+    public static inline function resizeOffset(offset: Int): Void
+    {
+        throw "not implemented";
         var newSize: Int = domainMemory.allocedLength + offset;
         resize(newSize);
     }

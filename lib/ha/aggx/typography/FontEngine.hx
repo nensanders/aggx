@@ -82,7 +82,7 @@ class FontEngine
 		var i:UInt = 0;
 		var x = 0.;
 		var scale = fontSize / currentFont.unitsPerEm;
-		var y = _currentFont.ascender * scale;
+		var y = currentFont.ascender * scale;
 		var face = _typefaceCache.getFace(charCode);
 		face.getOutline(_path);
 		var transform = AffineTransformer.scaler(scale, scale);

@@ -28,21 +28,19 @@ using lib.ha.core.memory.MemoryWriter;
 //=======================================================================================================
 class RenderingBuffer
 {
-	private var _buf:MemoryBlock;
 	private var _start:Pointer;
 	private var _width:UInt;
 	private var _height:UInt;
 	private var _stride:Int;
 	//---------------------------------------------------------------------------------------------------
-	public function new(buf:MemoryBlock, width:UInt, height:UInt, stride:Int) 
+	public function new(width:UInt, height:UInt, stride:Int)
 	{
-		attach(buf, width, height, stride);
+		attach(width, height, stride);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public function attach(buf:MemoryBlock, width:UInt, height:UInt, stride:Int):Void
-	{		
-		_buf = buf;
-		_start = _buf.ptr;
+	public function attach(width:UInt, height:UInt, stride:Int):Void
+	{
+		_start = 0;
 		_width = width;
 		_height = height;
 		_stride = stride;
@@ -108,7 +106,4 @@ class RenderingBuffer
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_strideAbs():UInt { return Calc.abs(_stride); }
 	public var strideAbs(get, null):UInt;
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_buf():MemoryBlock { return MemoryBlock.clone(_buf); }
-	public var buf(get, null):MemoryBlock;
 }

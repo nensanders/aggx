@@ -71,7 +71,7 @@ class TrueTypeCollection
 
 	public function getFontName(): String
 	{
-		_fonts[0].getName();
+		return _fonts[0].getName();
 	}
 
 }
