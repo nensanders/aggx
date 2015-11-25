@@ -108,10 +108,12 @@ class NameRecord
 			}
 		}
 		_record = sb;
+
+        //trace('name: $_nameID lang: $_languageID: string: $_record');
 	}
     public function isFontName()
     {
-        if (_languageID == 0 && _nameID == 3)
+        if (_languageID == 0 && _nameID == 4)
         {
             return true;
         }
