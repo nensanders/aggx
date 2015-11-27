@@ -18,6 +18,7 @@
 
 package lib.ha.aggx.typography;
 //=======================================================================================================
+import types.Vector2;
 import haxe.Utf8;
 import lib.ha.core.utils.Debug;
 import lib.ha.aggx.rasterizer.GammaPower;
@@ -111,8 +112,23 @@ class FontEngine
 			++i;
 		}
 	}
-	//---------------------------------------------------------------------------------------------------
-	public function renderString(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer):Void
+
+    public function measureString(string: String, fontSize: Float, vector: Vector2)
+    {
+        var scale = fontSize / currentFont.unitsPerEm;
+        var x: Float = 0;
+        var y = currentFont.ascender * scale;
+
+        for (i in 0 ... Utf8.length(string))
+        {
+            var face = _typefaceCache.getFace(Utf8.charCodeAt(string, i));
+            x += face.glyph.advanceWidth * scale;
+        }
+
+        vector.setXY(x, y);
+    }
+
+	public function renderString(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, vector: Vector2 = null):Void
 	{
         if (rasterizer == null)
         {
@@ -146,6 +162,11 @@ class FontEngine
 		}
 
 		SolidScanlineRenderer.renderScanlines(rasterizer, scanline, renderer);
+
+        if (vector != null)
+        {
+            vector.setXY(x, y);
+        }
 	}
 	//---------------------------------------------------------------------------------------------------
 	private inline function get_path():VectorPath { return _path; }
