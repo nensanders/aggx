@@ -33,6 +33,7 @@ class SolidScanlineRenderer implements IRenderer
 	public function new(clipRen:ClippingRenderer) 
 	{
 		_clippingRenderer = clipRen;
+		_color = new RgbaColor();
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function attach(clipRen:ClippingRenderer)
