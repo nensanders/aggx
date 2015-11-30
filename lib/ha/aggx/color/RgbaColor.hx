@@ -17,6 +17,7 @@
 //----------------------------------------------------------------------------
 
 package lib.ha.aggx.color;
+import types.Color4F;
 import lib.ha.aggx.rasterizer.CoverScale;
 //=======================================================================================================
 class RgbaColor
@@ -53,7 +54,15 @@ class RgbaColor
 	{
 		return new RgbaColor(0, 0, 0, 0);
 	}
-	//---------------------------------------------------------------------------------------------------
+
+	public function setFromColor4F(src: Color4F): Void
+	{
+		r = Std.int(src.r * RgbaColor.BASE_MASK);
+		g = Std.int(src.g * RgbaColor.BASE_MASK);
+		b = Std.int(src.b * RgbaColor.BASE_MASK);
+		a = Std.int(src.a * RgbaColor.BASE_MASK);
+	}
+
 	private inline function get_opacity():Float { return a / BASE_MASK; }
 	private inline function set_opacity(value:Float):Float
 	{
