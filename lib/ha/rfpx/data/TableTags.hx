@@ -54,4 +54,50 @@ class TableTags
 	public static inline var post = 0x706f7374; // PostScript information [r]
 	public static inline var vhea = 0x76686561; // Vertical Metrics header
 	public static inline var vmtx = 0x766d7478; // Vertical Metrics
+
+	private static var tableNames: Map<Int, String> = null;
+
+	public static function getName(tag: Int): String
+	{
+		if (tableNames == null)
+		{
+			tableNames =
+			[
+				BASE => "BASE",
+				CFF => "CFF",
+				DSIG => "DSIG",
+				EBDT => "EBDT",
+				EBLC => "EBLC",
+				EBSC => "EBSC",
+				GDEF => "GDEF",
+				GPOS => "GPOS",
+				GSUB => "GSUB",
+				JSTF => "JSTF",
+				LTSH => "LTSH",
+				MMFX => "MMFX",
+				MMSD => "MMSD",
+				PCLT => "PCLT",
+				VDMX => "VDMX",
+				cmap => "cmap",
+				cvt => "cvt",
+				fpgm => "fpgm",
+				gasp => "gasp",
+				glyf => "glyf",
+				hdmx => "hdmx",
+				head => "head",
+				hhea => "hhea",
+				hmtx => "hmtx",
+				kern => "kern",
+				loca => "loca",
+				maxp => "maxp",
+				name => "name",
+				prep => "prep",
+				post => "post",
+				vhea => "vhea",
+				vmtx => "vmtx"
+			];
+		}
+
+		return tableNames.get(tag);
+	}
 }
