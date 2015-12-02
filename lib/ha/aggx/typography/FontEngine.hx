@@ -71,13 +71,13 @@ class FontEngine
 			++fromCharCode;
 		}
 	}
-	//---------------------------------------------------------------------------------------------------
+
 	public function getScale(fontSize:Float):Float
 	{
 		return fontSize / currentFont.unitsPerEm;
 	}
-	//---------------------------------------------------------------------------------------------------
-	public function vectorizeCharacter(charCode:UInt, fontSize, dx:Float, dy:Float):Typeface
+
+	public function vectorizeCharacter(charCode:UInt, fontSize: Float, dx:Float, dy:Float):Typeface
 	{
 		_path.removeAll();
 		var i:UInt = 0;
@@ -91,7 +91,12 @@ class FontEngine
 		_path.transformAllPaths(transform);
 		return face;
 	}
-	//---------------------------------------------------------------------------------------------------
+
+    public function getFace(charCode:UInt): Typeface
+    {
+        return _typefaceCache.getFace(charCode);
+    }
+
 	public function vectorizeString(string:String, fontSize:Float, dx:Float, dy:Float):Void
 	{
 		_path.removeAll();
