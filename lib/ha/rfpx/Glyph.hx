@@ -54,7 +54,7 @@ class Glyph
 			_bounds.x1 = _record.xMin;
 			_bounds.y1 = _record.yMin;
 			_bounds.x2 = _record.xMax;
-			_bounds.y2 = _record.yMin;
+			_bounds.y2 = _record.yMax;
 			processGlyph(glyphTable);
 		}
 	}
