@@ -18,6 +18,8 @@
 
 package lib.ha.aggx.typography;
 //=======================================================================================================
+import lib.ha.aggx.vectorial.IVertexSource;
+import lib.ha.aggx.vectorial.converters.ConvStroke;
 import types.Vector2;
 import haxe.Utf8;
 import lib.ha.core.utils.Debug;
@@ -40,6 +42,7 @@ class FontEngine
 	private var _fontCollection:TrueTypeCollection;
 	private var _path:VectorPath;
 	private var _curve:ConvCurve;
+	private var _stroke:ConvStroke;
     private var _typefaceCache:TypefaceCache;
 
     public var currentFont(default, null): TrueTypeFont;
@@ -59,6 +62,7 @@ class FontEngine
 		_path = new VectorPath();
 		_curve = new ConvCurve(_path);
 		_curve.approximationScale = 4.0;
+        _stroke = new ConvStroke(_curve);
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function preCacheFaces(fromCharCode:UInt, toCharCode:UInt):Void
@@ -118,7 +122,7 @@ class FontEngine
 		}
 	}
 
-    public function measureString(string: String, fontSize: Float, vector: Vector2)
+    public function measureString(string: String, fontSize: Float, vector: Vector2, kern: Float = 0.0)
     {
         var scale = fontSize / currentFont.unitsPerEm;
         var x: Float = 0;
@@ -127,13 +131,26 @@ class FontEngine
         for (i in 0 ... Utf8.length(string))
         {
             var face = _typefaceCache.getFace(Utf8.charCodeAt(string, i));
-            x += face.glyph.advanceWidth * scale;
+            x += face.glyph.advanceWidth * scale + kern;
         }
 
         vector.setXY(x, y);
     }
 
-	public function renderString(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, vector: Vector2 = null):Void
+	public function renderString(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, kern: Float = 0.0, vector: Vector2 = null):Void
+    {
+        renderStringInternal(_curve, string, fontSize, dx, dy, renderer, kern, vector);
+    }
+
+    public function renderStringStroke(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, width: Float, kern: Float = 0.0, vector: Vector2 = null):Void
+    {
+        _stroke.width = width * fontSize / 100;
+        trace('${_stroke.width}');
+        
+        renderStringInternal(_stroke, string, fontSize, dx, dy, renderer, kern, vector);
+    }
+
+    private function renderStringInternal(path: IVertexSource, string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, kern: Float = 0.0, vector: Vector2 = null):Void
 	{
         if (rasterizer == null)
         {
@@ -160,8 +177,8 @@ class FontEngine
 			_path.removeAll();
 			face.getOutline(_path);
 			_path.transformAllPaths(transform);
-			x += face.glyph.advanceWidth * scale;
-            rasterizer.addPath(_curve);
+			x += face.glyph.advanceWidth * scale + kern;
+            rasterizer.addPath(path);
 
 			++i;
 		}
