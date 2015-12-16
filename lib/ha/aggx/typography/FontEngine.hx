@@ -145,8 +145,6 @@ class FontEngine
     public function renderStringStroke(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, width: Float, kern: Float = 0.0, vector: Vector2 = null):Void
     {
         _stroke.width = width * fontSize / 100;
-        trace('${_stroke.width}');
-        
         renderStringInternal(_stroke, string, fontSize, dx, dy, renderer, kern, vector);
     }
 
@@ -173,10 +171,12 @@ class FontEngine
 		{
 			var face = _typefaceCache.getFace(Utf8.charCodeAt(string, i));
 			var transform = AffineTransformer.scaler(scale, scale);
+			//trace('x+dx: ${x + dx}');
 			transform.multiply(AffineTransformer.translator(x + dx, y + dy));
 			_path.removeAll();
 			face.getOutline(_path);
 			_path.transformAllPaths(transform);
+			//trace('cahr: ${Utf8.sub(string, i, 1)} x: $x advance: ${face.glyph.advanceWidth * scale} kern: $kern');
 			x += face.glyph.advanceWidth * scale + kern;
             rasterizer.addPath(path);
 
