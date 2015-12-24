@@ -116,8 +116,7 @@ class MeshTest extends OpenGLTest
         super.onCreate();
 
         data = new Data(pixelBufferSize);
-        pixelBuffer = MemoryManager.mallocEx(data);
-        renderingBuffer = new RenderingBuffer(pixelBuffer, pixelBufferWidth, pixelBufferHeight, pixelBufferWidth * 4);
+        renderingBuffer = new RenderingBuffer(pixelBufferWidth, pixelBufferHeight, pixelBufferWidth * 4);
         pixelFormatRenderer = new PixelFormatRenderer(renderingBuffer);
         clippingRenderer = new ClippingRenderer(pixelFormatRenderer);
         scanline = new Scanline();
@@ -175,10 +174,6 @@ class MeshTest extends OpenGLTest
 
     private function createTexture(): Void
     {
-        var data: Data = MemoryAccess.domainMemory;
-        data.offset = pixelBuffer.start;
-        data.offsetLength = pixelBufferSize;
-
         var bitmap: Bitmap = new Bitmap(data, pixelBufferWidth, pixelBufferHeight, 4);
 
         /// Create, configure and upload opengl texture
@@ -195,6 +190,7 @@ class MeshTest extends OpenGLTest
         GL.texParameteri(GLDefines.TEXTURE_2D, GLDefines.TEXTURE_WRAP_S, GLDefines.CLAMP_TO_EDGE);
         GL.texParameteri(GLDefines.TEXTURE_2D, GLDefines.TEXTURE_WRAP_T, GLDefines.CLAMP_TO_EDGE);
 
+        bitmap.data.offset = 0;
         // Copy data to gpu memory
         switch (bitmap.components)
         {
@@ -237,10 +233,11 @@ class MeshTest extends OpenGLTest
 
     private function testAggx(): Void
     {
+        MemoryAccess.select(data);
         //clippingRenderer.setClippingBounds(0, 0, 512, 512);
         clippingRenderer.clear(new RgbaColor(255, Std.int(255.0 * 1.0), Std.int(255.0 * 1.0), 255));
 
-        t0();
+        //t0(); //fonts
         //t3();
         //t4();
         //t5();
@@ -249,7 +246,7 @@ class MeshTest extends OpenGLTest
         ///t8();
         //t9();
         //t10();
-        //t11();
+        t11(); // SVG
         //t12();
     }
 
