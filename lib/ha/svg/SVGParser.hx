@@ -8,13 +8,10 @@ import lib.ha.svg.gradients.SVGGradient.GradientType;
 import lib.ha.svg.gradients.SVGGradient.SVGStop;
 import lib.ha.svg.gradients.SVGGradient;
 import Array;
-import types.AffineTransform;
-import lib.ha.core.math.Calc;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.aggx.vectorial.LineJoin;
 import lib.ha.aggx.vectorial.LineCap;
 import Xml;
-import haxe.xml.Fast;
 import lib.ha.aggx.color.RgbaColor;
 import haxe.ds.Vector;
 import types.Data;
@@ -28,7 +25,7 @@ using lib.ha.svg.SVGStringParsers;
 
 class SVGParser
 {
-    private var _path: SVGData;
+    private var _path: SVGDataBuilder;
     private var _tokenizer: SVGPathTokenizer;
     private var currentGradient: SVGGradient;
     private var _useStack: GenericStack<SVGUseElement> = new GenericStack<SVGUseElement>();
@@ -44,7 +41,7 @@ class SVGParser
     private var _attr_name_len: UInt;   // UNSIGNED
     private var _attr_value_len: UInt;  // UNSIGNED
 
-    public function new(path: SVGData)
+    public function new(path: SVGDataBuilder)
     {
         _path = path;
         _tokenizer = new SVGPathTokenizer();
@@ -147,7 +144,7 @@ class SVGParser
         if (transform != null)
         {
             _path.pushElement();
-            transform.parseTransform(_path.transform());
+            transform.parseTransform(_path.curElement().transform);
         }
 
         if (beginElement(linked))
@@ -318,7 +315,7 @@ class SVGParser
         }
 
         currentGradient.calculateColorArray(stops);
-        _path.addGradient(currentGradient);
+        _path.data.addGradient(currentGradient);
     }
 
     private function parseGradientStop(element: Xml): SVGStop
@@ -499,87 +496,88 @@ class SVGParser
 
     private function parseShapeAtribute(name: String, value: String): Bool
     {
+        var element = _path.curElement();
         switch (name)
         {
             case "fill":
                 {
                     if (value == "none")
                     {
-                        _path.fill_none();
+                        element.fill_none();
                     }
                     else if(value.indexOf("url(") == 0)
                     {
-                        _path.fillGradient(value.parseFillUrl());
+                        element.fillGradient(value.parseFillUrl());
                     }
                     else
                     {
-                        _path.fill(value.parseColor());
+                        element.fill(value.parseColor());
                     }
                 }
             case "fill-opacity":
                 {
-                    _path.fill_opacity(Std.parseFloat(value));
+                    element.fill_opacity = Std.parseFloat(value);
                 }
             case "stroke":
                 {
                     if (value == "none")
                     {
-                        _path.stroke_none();
+                        element.stroke_none();
                     }
                     else
                     {
-                        _path.stroke(value.parseColor());
+                        element.stroke(value.parseColor());
                     }
                 }
             case "stroke-width":
                 {
-                    _path.stroke_width(Std.parseFloat(value));
+                    element.stroke_width = Std.parseFloat(value);
                 }
             case "stroke-linecap":
                 {
                     if (value == "butt")
                     {
-                        _path.line_cap(LineCap.BUTT);
+                        element.line_cap = LineCap.BUTT;
                     }
                     else if (value == "round")
                     {
-                        _path.line_cap(LineCap.ROUND);
+                        element.line_cap = LineCap.ROUND;
                     }
                     else if (value == "square")
                     {
-                        _path.line_cap(LineCap.SQUARE);
+                        element.line_cap = LineCap.SQUARE;
                     }
                 }
             case "stroke-linejoin":
                 {
                     if (value == "miter")
                     {
-                        _path.line_join(LineJoin.MITER);
+                        element.line_join = LineJoin.MITER;
                     }
                     else if (value == "round")
                     {
-                        _path.line_join(LineJoin.ROUND);
+                        element.line_join = LineJoin.ROUND;
                     }
                     else if (value == "bevel")
                     {
-                        _path.line_join(LineJoin.BEVEL);
+                        element.line_join =LineJoin.BEVEL;
                     }
                 }
             case "stroke-miterlimit":
                 {
-                    _path.miter_limit(Std.parseFloat(value));
+                    element.miter_limit = Std.parseFloat(value);
                 }
             case "stroke-opacity":
                 {
-                    _path.stroke_opacity(Std.parseFloat(value));
+                    element.stroke_opacity(Std.parseFloat(value));
                 }
             case "transform":
                 {
-                    value.parseTransform(_path.transform());
+                    value.parseTransform(element.transform);
                 }
             case "id":
                 {
-                    _path.id(value);
+                    element.id = value;
                 }
 
             default: return false;

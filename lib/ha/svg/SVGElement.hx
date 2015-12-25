@@ -60,4 +60,39 @@ class SVGElement
         result.transform = AffineTransformer.of(attr.transform);
         return result;
     }
+
+    public function fill_none(): Void
+    {
+        fill_flag = false;
+    }
+
+    public function fill(color: RgbaColor): Void
+    {
+        fill_color.set(color);
+        fill_flag = true;
+    }
+
+    public function fillGradient(id: String)
+    {
+        fill_none();
+        gradientId = id;
+    }
+
+    public function stroke_none(): Void
+    {
+        stroke_flag = false;
+    }
+
+    public function stroke(color: RgbaColor): Void
+    {
+        stroke_color.set(color);
+        stroke_flag = true;
+    }
+
+
+    public function stroke_opacity(strokeOpacity: Float): Void
+    {
+        stroke_color.opacity = strokeOpacity;
+    }
+
 }

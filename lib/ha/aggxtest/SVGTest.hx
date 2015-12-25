@@ -1,9 +1,7 @@
 package lib.ha.aggxtest;
 
+import lib.ha.svg.SVGDataBuilder;
 import lib.ha.svg.SVGRenderer;
-import lib.ha.aggx.vectorial.converters.ConvStroke;
-import lib.ha.aggx.vectorial.converters.ConvCurve;
-import lib.ha.aggx.vectorial.VectorPath;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.svg.SVGParser;
@@ -26,7 +24,7 @@ class SVGTest
     private var _scanline:Scanline;
     private var _rasterizer:ScanlineRasterizer;
 
-    private var _path: SVGData;
+    private var _path: SVGDataBuilder;
     private var _svgRenderer: SVGRenderer;
 
 //---------------------------------------------------------------------------------------------------
@@ -40,7 +38,7 @@ class SVGTest
         _svgRenderer = new SVGRenderer();
         //_scanlineRenderer = new SolidScanlineRenderer(_clippingRenderer);
 
-        _path = new SVGData();
+        _path = new SVGDataBuilder();
 
         parseSVG(svgData);
     }
@@ -64,11 +62,10 @@ class SVGTest
 
         var mtx: AffineTransformer = AffineTransformer.translator(0.0, 0.0);
 
-        _path.expand(0.1); // Important value
+        _path.data.expandValue = 0.1;
         var alpha: Float = 1.0;
 
-
-        _svgRenderer.render(_path, _rasterizer, _scanline, _clippingRenderer, mtx, alpha);
+        _svgRenderer.render(_path.data, _rasterizer, _scanline, _clippingRenderer, mtx, alpha);
     }
 
 }

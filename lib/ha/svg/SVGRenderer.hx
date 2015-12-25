@@ -93,7 +93,7 @@ class SVGRenderer
             SolidScanlineRenderer.renderAASolidScanlines(ras, sl, ren, color);
         }
 
-        var gradientManager: GradientManager = data.getGradientManager();
+        var gradientManager: GradientManager = data.gradientManager;
         var gradient: SVGGradient;
 
         if (element.gradientId != null && (gradient = gradientManager.getGradient(element.gradientId)) != null)
@@ -156,10 +156,10 @@ class SVGRenderer
 
     public function render(data: SVGData, ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float): Void
     {
-        _curved_trans_contour.width = data.getExpandValue();
-        _curved.attach(data.getVertexStorage());
+        _curved_trans_contour.width = data.expandValue;
+        _curved.attach(data.storage);
 
-        for (elem in data.getElementStorage())
+        for (elem in data.elementStorage)
         {
             renderElement(elem, data, ras, sl, ren, mtx, alpha);
         }
