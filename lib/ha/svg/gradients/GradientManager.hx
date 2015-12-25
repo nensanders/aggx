@@ -14,11 +14,17 @@ class GradientManager
     private var _zeroFloatRef: FloatRef = Ref.getFloat();
     private var _oneFloatRef: FloatRef = Ref.getFloat();
     private var _halfFloatRef: FloatRef = Ref.getFloat();
+
     public function new()
     {
         _zeroFloatRef.value = 0;
         _oneFloatRef.value = 1;
         _halfFloatRef.value = 0.5;
+    }
+
+    public function removeAll(): Void
+    {
+        _gradients = new Map<String, SVGGradient>();
     }
 
     public function getGradient(id: String): SVGGradient

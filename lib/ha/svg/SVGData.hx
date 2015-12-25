@@ -25,6 +25,7 @@ class SVGData
     {
         storage.removeAll();
         elementStorage = [];
+        gradientManager.removeAll();
     }
 
     // Make all polygons CCW-oriented
