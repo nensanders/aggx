@@ -1,12 +1,13 @@
 package lib.ha.aggxtest;
 
+import lib.ha.svg.SVGRenderer;
 import lib.ha.aggx.vectorial.converters.ConvStroke;
 import lib.ha.aggx.vectorial.converters.ConvCurve;
 import lib.ha.aggx.vectorial.VectorPath;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.aggx.color.RgbaColor;
 import lib.ha.svg.SVGParser;
-import lib.ha.svg.SVGPathRenderer;
+import lib.ha.svg.SVGData;
 import types.Data;
 import lib.ha.aggx.rasterizer.ScanlineRasterizer;
 import lib.ha.aggx.rasterizer.Scanline;
@@ -25,7 +26,8 @@ class SVGTest
     private var _scanline:Scanline;
     private var _rasterizer:ScanlineRasterizer;
 
-    private var _path: SVGPathRenderer;
+    private var _path: SVGData;
+    private var _svgRenderer: SVGRenderer;
 
 //---------------------------------------------------------------------------------------------------
     public function new(rbuf:RenderingBuffer, svgData: Data)
@@ -35,9 +37,10 @@ class SVGTest
         _clippingRenderer = new ClippingRenderer(_pixelFormatRenderer);
         _scanline = new Scanline();
         _rasterizer = new ScanlineRasterizer();
+        _svgRenderer = new SVGRenderer();
         //_scanlineRenderer = new SolidScanlineRenderer(_clippingRenderer);
 
-        _path = new SVGPathRenderer();
+        _path = new SVGData();
 
         parseSVG(svgData);
     }
@@ -63,7 +66,9 @@ class SVGTest
 
         _path.expand(0.1); // Important value
         var alpha: Float = 1.0;
-        _path.render(_rasterizer, _scanline, _clippingRenderer, mtx, alpha);
+
+
+        _svgRenderer.render(_path, _rasterizer, _scanline, _clippingRenderer, mtx, alpha);
     }
 
 }

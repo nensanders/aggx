@@ -28,7 +28,7 @@ using lib.ha.svg.SVGStringParsers;
 
 class SVGParser
 {
-    private var _path: SVGPathRenderer;
+    private var _path: SVGData;
     private var _tokenizer: SVGPathTokenizer;
     private var currentGradient: SVGGradient;
     private var _useStack: GenericStack<SVGUseElement> = new GenericStack<SVGUseElement>();
@@ -44,7 +44,7 @@ class SVGParser
     private var _attr_name_len: UInt;   // UNSIGNED
     private var _attr_value_len: UInt;  // UNSIGNED
 
-    public function new(path: SVGPathRenderer)
+    public function new(path: SVGData)
     {
         _path = path;
         _tokenizer = new SVGPathTokenizer();
