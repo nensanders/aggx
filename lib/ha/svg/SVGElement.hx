@@ -1,5 +1,10 @@
 package lib.ha.svg;
 
+import lib.ha.aggx.vectorial.VectorPath;
+import lib.ha.aggx.vectorial.PathUtils;
+import lib.ha.aggx.vectorial.PathCommands;
+import lib.ha.core.memory.Ref;
+import lib.ha.core.memory.Ref.FloatRef;
 import lib.ha.aggx.vectorial.LineCap;
 import lib.ha.aggx.vectorial.LineJoin;
 import lib.ha.core.geometry.AffineTransformer;
@@ -8,19 +13,25 @@ import lib.ha.aggx.color.RgbaColor;
 class SVGElement
 {
     public var index: UInt;
-    public var fill_color: RgbaColor;
-    public var fill_opacity: Null<Float>;
-    public var stroke_color: RgbaColor;
-    public var fill_flag: Bool;
-    public var stroke_flag: Bool;
-    public var even_odd_flag: Bool;
-    public var line_join: Int; // ENUM CLASS
-    public var line_cap: Int; // ENUM CLASS
-    public var miter_limit: Float;
-    public var stroke_width: Float;
     public var transform: AffineTransformer;
     public var id: String;
     public var gradientId: String;
+
+    public var fill_flag: Bool;
+    public var fill_color: RgbaColor;
+    public var fill_opacity: Null<Float>;
+
+    public var stroke_flag: Bool;
+    public var stroke_color: RgbaColor;
+    public var stroke_width: Float;
+
+    public var even_odd_flag: Bool;
+
+    public var line_join: Int; // ENUM CLASS
+    public var line_cap: Int; // ENUM CLASS
+
+    public var miter_limit: Float;
+
     public var bounds: SVGPathBounds = new SVGPathBounds();
 
     private function new ()
@@ -89,10 +100,34 @@ class SVGElement
         stroke_flag = true;
     }
 
-
     public function stroke_opacity(strokeOpacity: Float): Void
     {
         stroke_color.opacity = strokeOpacity;
     }
 
+    public function calculateBoundingBox(storage: VectorPath): Void
+    {
+        bounds.reset();
+        storage.rewind(index);
+
+        var x: FloatRef = Ref.getFloat();
+        var y: FloatRef = Ref.getFloat();
+
+        var cmd: Int = 0;
+
+        while ((cmd = storage.getVertex(x, y)) != PathCommands.STOP)
+        {
+            if (!PathUtils.isVertex(cmd))
+            {
+                continue;
+            }
+
+            bounds.add(x.value, y.value);
+        }
+
+        Ref.putFloat(x);
+        Ref.putFloat(y);
+
+        storage.rewind(0);
+    }
 }

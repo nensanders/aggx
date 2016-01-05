@@ -34,7 +34,6 @@ class SVGData
         storage.arrangeOrientationsAllPaths(PathFlags.CCW);
     }
 
-
     public function addGradient(gradient: SVGGradient): Void
     {
         gradientManager.addGradient(gradient);

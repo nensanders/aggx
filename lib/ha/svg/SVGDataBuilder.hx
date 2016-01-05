@@ -73,26 +73,9 @@ class SVGDataBuilder
         element.index = idx;
         data.elementStorage[data.elementStorage.length - 1] = element;
 
-        data.storage.rewind(element.index);
-        var x: FloatRef = Ref.getFloat();
-        var y: FloatRef = Ref.getFloat();
-        var cmd: Int = 0;
-        while ((cmd = data.storage.getVertex(x, y)) != PathCommands.STOP)
-        {
-            if (!PathUtils.isVertex(cmd))
-            {
-                continue;
-            }
-
-            element.bounds.add(x.value, y.value);
-        }
-
-        Ref.putFloat(x);
-        Ref.putFloat(y);
-
-        data.storage.rewind(0);
-
+        element.calculateBoundingBox(data.storage);
         //trace('${element.id}: ${element.bounds}');
+
         popElement();
 
         //debugBox(element.bounds);
