@@ -31,13 +31,14 @@ class SVGGradient
 {
     public var id: String = "";
     public var gradientColors: ColorArray;
-    public var type: GradientType;
     public var link: String;
     public var transform: AffineTransformer;
-    public var gradientVector: Vector<FloatRef> = new Vector<FloatRef>(4);
-    public var focalGradientParameters: Vector<FloatRef> = new Vector<FloatRef>(5);
     public var userSpace: Null<Bool>;
     public var spreadMethod: Null<SpreadMethod>;
+    public var type: GradientType;
+    public var gradientVector: Vector<FloatRef> = new Vector<FloatRef>(4);
+    public var focalGradientParameters: Vector<FloatRef> = new Vector<FloatRef>(5);
+    public var stops: Array<SVGStop> = [];
 
     public function new()
     {
@@ -46,6 +47,9 @@ class SVGGradient
 
     public function calculateColorArray(stops: Array<SVGStop>): Void
     {
+        this.stops = [];
+        this.stops.concat(stops);
+
         if (stops.length < 1)
         {
             return;
