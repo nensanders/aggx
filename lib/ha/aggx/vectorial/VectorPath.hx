@@ -18,6 +18,8 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
+import types.Data;
+import lib.ha.core.memory.Byte;
 import lib.ha.core.geometry.AffineTransformer;
 import lib.ha.core.memory.Ref;
 import lib.ha.core.math.Calc;
@@ -44,6 +46,23 @@ class VectorPath implements IVertexSource
 		}
 		return _vertices.verticesCount;
 	}
+
+	public function addVertex(x:Float, y:Float, cmd:Byte):Void
+	{
+		_vertices.addVertex(x, y, cmd);
+	}
+
+    public function save(data: Data): Void
+    {
+        _vertices.save(data);
+    }
+
+    public function load(data: Data): Void
+    {
+        _vertices.load(data);
+        _vertextIterator = 0;
+    }
+
 	//---------------------------------------------------------------------------------------------------
 	public function relToAbs(x:FloatRef, y:FloatRef):Void
 	{

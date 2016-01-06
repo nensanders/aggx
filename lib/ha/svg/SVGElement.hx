@@ -12,9 +12,9 @@ import lib.ha.aggx.color.RgbaColor;
 
 class SVGElement
 {
+    public var id: String;
     public var index: UInt;
     public var transform: AffineTransformer;
-    public var id: String;
     public var gradientId: String;
 
     public var fill_flag: Bool;

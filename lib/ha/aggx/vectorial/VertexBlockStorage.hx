@@ -18,6 +18,7 @@
 
 package lib.ha.aggx.vectorial;
 //=======================================================================================================
+import types.Data;
 import lib.ha.core.memory.Byte;
 import lib.ha.core.memory.Ref;
 //=======================================================================================================
@@ -35,6 +36,57 @@ class VertexBlockStorage
 		_coordsY = new Array();
 		_commands = new Array();
 		_verticesCount = 0;
+	}
+
+	public function save(data: Data): Void
+	{
+		data.writeUInt32(_verticesCount);
+		data.offset += 4;
+
+		for (i in 0 ... _verticesCount)
+		{
+			data.writeFloat32(_coordsX[i]);
+			data.offset += 4;
+		}
+
+		for (i in 0 ... _verticesCount)
+		{
+			data.writeFloat32(_coordsY[i]);
+			data.offset += 4;
+		}
+
+		for (i in 0 ... _verticesCount)
+		{
+			data.writeUInt8(_commands[i]);
+			data.offset += 1;
+		}
+	}
+
+	public function load(data: Data): Void
+	{
+		_verticesCount = data.readUInt32();
+		data.offset += 4;
+
+		_coordsX = [];
+        for (i in 0 ... _verticesCount)
+        {
+            _coordsX.push(data.readFloat32());
+            data.offset += 4;
+        }
+
+        _coordsY = [];
+        for (i in 0 ... _verticesCount)
+        {
+            _coordsY.push(data.readFloat32());
+            data.offset += 4;
+        }
+
+        _commands = [];
+        for (i in 0 ... _verticesCount)
+        {
+            _commands.push(data.readUInt8());
+            data.offset += 1;
+        }
 	}
 
 	public function toString(): String
