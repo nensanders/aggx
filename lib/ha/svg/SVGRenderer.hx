@@ -43,6 +43,7 @@ class SVGRenderer
 
     public function new()
     {
+        _transform = new AffineTransformer();
         //_curved = new ConvCurve(_storage);
         _curved = new ConvCurve();
 
@@ -54,7 +55,6 @@ class SVGRenderer
 
         _curved_trans_contour.autoDetect = false;
         _spanInterpolator = new SpanInterpolatorLinear(_gradientMatrix);
-        _transform = new AffineTransformer();
     }
 
     private function renderElement(element: SVGElement, data: SVGData, ras:ScanlineRasterizer, sl:IScanline, ren:ClippingRenderer, mtx: AffineTransformer, alpha: Float)

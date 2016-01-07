@@ -11,7 +11,7 @@ import lib.ha.core.memory.Ref.Ref;
 class SVGData
 {
     public var storage(default, null): VectorPath = new VectorPath();
-    public var elementStorage(default, null): Array<SVGElement> = [];
+    public var elementStorage: Array<SVGElement> = [];
     public var gradientManager(default, null): GradientManager = new GradientManager();
 
     public var expandValue: Float = 0;
