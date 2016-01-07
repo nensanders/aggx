@@ -1,5 +1,6 @@
 package lib.ha.svg.gradients;
 
+import types.Data;
 import lib.ha.aggx.color.GradientRadialFocus;
 import lib.ha.aggx.color.SpanGradient.SpreadMethod;
 import lib.ha.aggxtest.AATest.ColorArray;
@@ -10,6 +11,7 @@ import lib.ha.core.geometry.AffineTransformer;
 class GradientManager
 {
     private var _gradients: Map<String, SVGGradient> = new Map<String, SVGGradient>();
+    private var _count: Int = 0;
     private var _bboxTransform: AffineTransformer = new AffineTransformer();
     private var _zeroFloatRef: FloatRef = Ref.getFloat();
     private var _oneFloatRef: FloatRef = Ref.getFloat();
@@ -25,6 +27,7 @@ class GradientManager
     public function removeAll(): Void
     {
         _gradients = new Map<String, SVGGradient>();
+        _count = 0;
     }
 
     public function getGradient(id: String): SVGGradient
@@ -34,7 +37,22 @@ class GradientManager
 
     public function addGradient(gradient: SVGGradient): Void
     {
+        if (!_gradients.exists(gradient.id))
+        {
+            _count++;
+        }
+
         _gradients.set(gradient.id, gradient);
+    }
+
+    public function getCount(): Int
+    {
+        return _count;
+    }
+
+    public function iterator()
+    {
+        return _gradients.iterator();
     }
 
     private function eachGradiendAncestor(id: String, callback: SVGGradient -> Bool): Int
