@@ -85,12 +85,14 @@ class SVGParser
             switch (name)
             {
                 case "linearGradient" | "radialGradient" : parseGradient(element);
+                case "pattern": throw "<pattern> is not supported";
+                case "image": throw "<image> is not supported";
                 default: parseDef(element);
             }
         });
     }
 
-    private function processXML(xml: Xml): Void
+    public function processXML(xml: Xml): Void
     {
         //begin with parsing all defs elements witch may scattered across all the document
         var defsCbk = function(element: Xml): Bool
@@ -184,26 +186,13 @@ class SVGParser
                     });
 
                 }
-            case "path":
-                {
-                    parse_path(attr, element);
-                }
-            case "rect":
-                {
-                    parse_rect(attr, element);
-                }
-            case "line":
-                {
-                    parse_line(attr, element);
-                }
-            case "polyline":
-                {
-                    parse_poly(attr, element, false);
-                }
-            case "polygon":
-                {
-                    parse_poly(attr, element, true);
-                }
+            case "path": parse_path(attr, element);
+            case "rect": parse_rect(attr, element);
+            case "line": parse_line(attr, element);
+            case "polyline": parse_poly(attr, element, false);
+            case "polygon": parse_poly(attr, element, true);
+            case "image": throw "<image> is not supported";
+            case "pattern": throw "<pattern> is not supported";
             default:
         }
 
