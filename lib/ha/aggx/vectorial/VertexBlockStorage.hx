@@ -40,6 +40,16 @@ class VertexBlockStorage
 
 	public function save(data: Data): Void
 	{
+        var bytesLeft = data.allocedLength - data.offset;
+        var size: Int = 4 + 4 * 2 * _verticesCount + _verticesCount;
+
+        if (bytesLeft < size)
+        {
+            var newSize = Math.ceil(Math.max(size, data.allocedLength) * 1.8);
+            //trace('resize ${data.allocedLength} -> $newSize');
+            data.resize(newSize);
+        }
+
 		data.writeUInt32(_verticesCount);
 		data.offset += 4;
 
