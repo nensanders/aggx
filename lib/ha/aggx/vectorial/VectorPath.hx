@@ -477,6 +477,7 @@ class VectorPath implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function invertPolygon(start:UInt, ?end:UInt):Void
 	{
+		var _end: UInt = end;
 		if (end == null)		
 		{
 			while (start < _vertices.verticesCount &&
@@ -486,27 +487,27 @@ class VectorPath implements IVertexSource
 				PathUtils.isMoveTo(_vertices.getCommand(start)) &&
 				PathUtils.isMoveTo(_vertices.getCommand(start + 1))) {++start; }
 
-			end = start + 1;
+			_end = start + 1;
 			while(end < _vertices.verticesCount &&
-				!PathUtils.isNextPoly(_vertices.getCommand(end))) {++end; }				
+				!PathUtils.isNextPoly(_vertices.getCommand(_end))) {++_end; }
 		}
 		
 		var tmp_cmd = _vertices.getCommand(start);
 
-		--end;
+		--_end;
 
 		var i = start;
-		while(i < end)
+		while(i < _end)
 		{
 			_vertices.modifyCommand(i, _vertices.getCommand(i + 1));
 			i++;
 		}
 
-		_vertices.modifyCommand(end, tmp_cmd);
+		_vertices.modifyCommand(_end, tmp_cmd);
 
-		while(end > start)
+		while(_end > start)
 		{
-			_vertices.swapVertices(start++, end--);
+			_vertices.swapVertices(start++, _end--);
 		}
 	}
 	//---------------------------------------------------------------------------------------------------

@@ -5,7 +5,7 @@ import types.Data;
 import lib.ha.core.utils.DataPointer;
 class PixelCellDataExtensions
 {
-    public static inline function dataGetX(data: Data, pointer: Int):Int
+    public static inline function dataGetX(data: Data, pointer: UInt):Int
     {
         data.offset = pointer + PixelCell.PIXEL_CELL_X;
         //trace('offset: $pointer value: ${data.readInt32()}}');
@@ -41,7 +41,7 @@ class PixelCellDataExtensions
         pointer.get(PixelCell.PIXEL_CELL_X).writeInt32(v);
     }
 
-    public static inline function dataSetX(data: Data, pointer: Int, v:Int):Void
+    public static inline function dataSetX(data: Data, pointer: UInt, v:Int):Void
     {
         data.offset = pointer + PixelCell.PIXEL_CELL_X;
         data.writeInt32(v);
@@ -74,7 +74,7 @@ class PixelCellDataExtensions
         data.writeInt32(v);
     }
 
-    public static inline function dataSwapPixel(data: Data, a: Int, b: Int): Void
+    public static inline function dataSwapPixel(data: Data, a: UInt, b: UInt): Void
     {
         var x: Int = readInt32Offset(data, a + PixelCell.PIXEL_CELL_X);
         var y: Int = readInt32Offset(data, a + PixelCell.PIXEL_CELL_Y);
