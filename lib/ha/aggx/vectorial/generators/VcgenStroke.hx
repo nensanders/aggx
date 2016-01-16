@@ -46,7 +46,7 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 	private var _srcVertices:VertexSequence;
 	private var _outVertices:Array<Coord>;
 	private var _shorten:Float;
-	private var _isClosed:Int;
+	private var _isClosed:UInt;
 	private var _status:Int;
 	private var _prevStatus:Int;
 	private var _srcVertexIndex:UInt;

@@ -48,7 +48,7 @@ class VcgenDash implements ICurveGenerator implements IVertexSource //Vertex Cur
 	private var _v1:IDistanceProvider;
 	private var _v2:IDistanceProvider;
 	private var _srcVertices:VertexSequence;
-	private var _isClosed:Int;
+	private var _isClosed:UInt;
 	private var _status:Int;
 	private var _srcVertexIndex:UInt;
 	//---------------------------------------------------------------------------------------------------

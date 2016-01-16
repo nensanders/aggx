@@ -61,17 +61,17 @@ class VertexSequence
         _storage.push(v);
 	}
 	//---------------------------------------------------------------------------------------------------
-	public inline function prev(idx:Int):IDistanceProvider
+	public inline function prev(idx: UInt):IDistanceProvider
 	{
 		return _storage[(idx + _storage.length - 1) % _storage.length];
 	}
 	//---------------------------------------------------------------------------------------------------
-	public inline function curr(idx:Int):IDistanceProvider
+	public inline function curr(idx: UInt):IDistanceProvider
 	{
 		return _storage[idx];
 	}
 	//---------------------------------------------------------------------------------------------------
-	public inline function next(idx:Int):IDistanceProvider
+	public inline function next(idx: UInt):IDistanceProvider
 	{
 		return _storage[(idx + _storage.length + 1) % _storage.length];
 	}	
@@ -96,12 +96,12 @@ class VertexSequence
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public inline function get(i:Int):IDistanceProvider
+	public inline function get(i: UInt):IDistanceProvider
 	{
 		return _storage[i];
 	}
 	//---------------------------------------------------------------------------------------------------
-	public inline function set(i:Int, val:IDistanceProvider):Void
+	public inline function set(i: UInt, val:IDistanceProvider):Void
 	{
 		_storage[i] = val;
 	}
