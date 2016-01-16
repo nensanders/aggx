@@ -19,7 +19,6 @@
 package lib.ha.aggx.rasterizer;
 //=======================================================================================================
 import lib.ha.core.utils.Debug;
-import de.polygonal.ds.mem.MemoryAccess;
 import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Byte;

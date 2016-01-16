@@ -21,7 +21,6 @@ package lib.ha.aggx.rasterizer;
 import lib.ha.core.utils.Debug;
 import lib.ha.core.utils.DataPointer;
 import haxe.CallStack;
-import de.polygonal.ds.Stack;
 import haxe.ds.Vector;
 import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryManager;
