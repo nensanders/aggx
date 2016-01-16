@@ -1,0 +1,1 @@
+haxe -main MainCs.hx -cp aggx -cp examples/source -cp csharp -cs export-csharp -v
