@@ -51,7 +51,7 @@ class PixelCell
 
 	public function toString(): String
 	{
-		return '{x: $x, y: $y, cover: $cover, area: $area}';
+		return '{x: $x, y: $y, area: $area, cover: $cover}';
 	}
 
 	//---------------------------------------------------------------------------------------------------

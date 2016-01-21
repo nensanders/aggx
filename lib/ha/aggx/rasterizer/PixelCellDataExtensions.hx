@@ -92,12 +92,19 @@ class PixelCellDataExtensions
         writeInt32Offset(data, b + PixelCell.PIXEL_CELL_COVER, cover);
     }
 
+    //private static var tmp: PixelCell = new PixelCell();
     public static inline function setAll(pointer: DataPointer, cell:PixelCell):Void
     {
+        //trace('${pointer.offset} <= $cell');
+        //pointer.data.dump();
         pointer.get(PixelCell.PIXEL_CELL_X).writeInt32(cell.x);
         pointer.get(PixelCell.PIXEL_CELL_Y).writeInt32(cell.y);
         pointer.get(PixelCell.PIXEL_CELL_COVER).writeInt32(cell.cover);
         pointer.get(PixelCell.PIXEL_CELL_AREA).writeInt32(cell.area);
+        //pointer.data.dump();
+
+        //getAll(pointer, tmp);
+        //trace('${pointer.offset} => $cell');
     }
 
     public static inline function setAllEx(to: DataPointer, from: DataPointer):Void

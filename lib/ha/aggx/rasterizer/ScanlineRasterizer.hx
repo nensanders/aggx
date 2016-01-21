@@ -152,11 +152,13 @@ class ScanlineRasterizer implements IRasterizer
 			sl.resetSpans();
 			var numCells = _outline.getScanlineCellsCount(_scanY);
 			var cells:DataPointer = _outline.getScanlineCells(_scanY);
+			//cells.data.dump();
 			var cover = 0;
 
 			while(numCells != 0)
 			{
 				cells.getAll(currentCell);
+				//trace(currentCell);
 				var x = currentCell.x;
 				var area = currentCell.area;
 				var alpha:Int;
