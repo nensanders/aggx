@@ -27,13 +27,16 @@ class PixelCellDataExtensions
         return pointer.get(PixelCell.PIXEL_CELL_AREA).readInt32();
     }
 
+
     public static inline function getAll(pointer: DataPointer, cell:PixelCell):Void
     {
-        cell.define(
-            pointer.get(PixelCell.PIXEL_CELL_X).readInt32(),
-            pointer.get(PixelCell.PIXEL_CELL_Y).readInt32(),
-            pointer.get(PixelCell.PIXEL_CELL_COVER).readInt32(),
-            pointer.get(PixelCell.PIXEL_CELL_AREA).readInt32());
+        var x: Int = pointer.get(PixelCell.PIXEL_CELL_X).readInt32();
+        var y: Int = pointer.get(PixelCell.PIXEL_CELL_Y).readInt32();
+        var c: Int = pointer.get(PixelCell.PIXEL_CELL_COVER).readInt32();
+        var a: Int = pointer.get(PixelCell.PIXEL_CELL_AREA).readInt32();
+        cell.define(x, y, c, a);
+
+        //trace('${pointer.offset} => $cell');
     }
 
     public static inline function setX(pointer: DataPointer, v:Int):Void
