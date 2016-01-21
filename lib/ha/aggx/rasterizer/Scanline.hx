@@ -53,10 +53,10 @@ class Scanline implements IScanline
     {
         for (i in 1 ... _covers.allocedLength)
         {
+			_covers.offset = i;
             _covers.writeInt8(0);
         }
     }
-
 
 	public function reset(minX:Int, maxX:Int):Void
 	{
@@ -68,7 +68,6 @@ class Scanline implements IScanline
             if (maxLen > _covers.allocedLength)
             {
                 _covers = new Data(maxLen);
-                cleanCovers();
             }
 		}
 		_lastX = 0x7FFFFFF0;
@@ -78,7 +77,7 @@ class Scanline implements IScanline
 	//---------------------------------------------------------------------------------------------------
 	public function addCell(x:Int, cover:Byte):Void
 	{
-        //trace('addCell x: $x cover: $cover');
+        //trace('addCell x: $x cover: $cover minX: $_minX');
 		x -= _minX;
         _covers.offset = x;
         _covers.writeUInt8(cover);
