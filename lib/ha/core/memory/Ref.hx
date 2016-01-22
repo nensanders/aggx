@@ -26,7 +26,13 @@ private class RefBase<T>
     public function toString(){return '$value';}
 }
 //=======================================================================================================
-typedef FloatRef = RefBase<Float>;
+class FloatRef
+{
+    public var value:Float;
+    public function new() {}
+    public inline function set(val:Float): FloatRef { value = val; return this; }
+    public function toString(){return '$value';}
+}
 //=======================================================================================================
 typedef IntRef = RefBase<Int>;
 //=======================================================================================================
@@ -34,46 +40,46 @@ typedef PointerRef = RefBase<Pointer>;
 //=======================================================================================================
 class Ref
 {
-    private static var intPool: Array<RefBase<Int>> = new Array();
-    private static var floatPool: Array<RefBase<Float>> = new Array();
+    private static var intPool: Array<IntRef> = new Array();
+    private static var floatPool: Array<FloatRef> = new Array();
 
-    public static function getInt(): RefBase<Int>
+    public static function getInt(): IntRef
     {
-        var result: RefBase<Int>;
+        var result: IntRef;
         if (intPool.length > 0)
         {
             result = intPool.pop();
         }
         else
         {
-            result = new RefBase<Int>();
+            result = new IntRef();
         }
         result.value = 0;
         return result;
     }
 
-    public static function putInt(value: RefBase<Int>): RefBase<Int>
+    public static function putInt(value: IntRef): IntRef
     {
         intPool.push(value);
         return value;
     }
 
-    public static function getFloat(): RefBase<Float>
+    public static function getFloat(): FloatRef
     {
-        var result: RefBase<Float>;
+        var result: FloatRef;
         if (floatPool.length > 0)
         {
             result = floatPool.pop();
         }
         else
         {
-            result = new RefBase<Float>();
+            result = new FloatRef();
         }
         result.value = 0.0;
         return result;
     }
 
-    public static function putFloat(value: RefBase<Float>): RefBase<Float>
+    public static function putFloat(value: FloatRef): FloatRef
     {
         floatPool.push(value);
         return value;
