@@ -159,7 +159,7 @@ class PixelCellRasterizer
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
-	public inline function setCurrentCell(x:Int, y:Int):Void
+	public function setCurrentCell(x:Int, y:Int):Void
 	{
 		if(_currentCell.isNotEqual(x, y))
 		{
@@ -407,17 +407,28 @@ class PixelCellRasterizer
 		{
 			return;
 		}
-		
-		var pivot = getPivotPoint(data, beg, end);
-		
-		if (pivot > beg)
+
+		var stack = new Vector(end - beg + 1);
+		var top = -1;
+		stack[++top] = beg;
+		stack[++top] = end;
+
+		while (top >= 0)
 		{
-			qsort(data, beg, pivot - PIXEL_SIZE);
-		}
-		
-		if (pivot < end)
-		{
-			qsort(data, pivot + PIXEL_SIZE, end);
+			end = stack[top--];
+			beg = stack[top--];
+			var pivot = getPivotPoint(data, beg, end);
+			if (pivot > beg)
+			{
+				stack[++top] = beg;
+				stack[++top] = pivot - PIXEL_SIZE;
+			}
+
+			if (pivot < end)
+			{
+				stack[++top] = pivot + PIXEL_SIZE;
+				stack[++top] = end;
+			}
 		}
 	}
 	//---------------------------------------------------------------------------------------------------
