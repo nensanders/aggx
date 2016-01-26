@@ -115,6 +115,7 @@ class ScanlineRasterizer implements IRasterizer
 		var y = Ref.getFloat();
 		
 		var cmd:Int;
+
 		vs.rewind(pathId);
 		if(_outline.isSorted) reset();
 		while(!PathUtils.isStop(cmd = vs.getVertex(x, y)))
@@ -261,6 +262,7 @@ class ScanlineRasterizer implements IRasterizer
 	//---------------------------------------------------------------------------------------------------
 	public function addVertex(x:Float, y:Float, cmd:Int):Void
 	{
+		//trace('addVertex $x $y');
 		if(PathUtils.isMoveTo(cmd))
 		{
 			moveToD(x, y);

@@ -34,6 +34,12 @@ class VectorPath implements IVertexSource
 	{
 		_vertices = new VertexBlockStorage();
 	}
+
+	public function toString(): String
+	{
+		return _vertices.toString();
+	}
+
 	public function removeAll():Void { _vertices.removeAll(); _vertextIterator = 0; }
 	//---------------------------------------------------------------------------------------------------
 	public function freeAll():Void { _vertices.freeAll(); _vertextIterator = 0; }
@@ -368,8 +374,15 @@ class VectorPath implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public inline function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
-		//if (_vertextIterator >= _vertices.verticesCount) return PathCommands.STOP;			
-		return (_vertextIterator >= _vertices.verticesCount) ? PathCommands.STOP : _vertices.getVertex(_vertextIterator++, x, y);
+		if (_vertextIterator >= _vertices.verticesCount)
+		{
+			return PathCommands.STOP;
+		}
+
+		var cmd = _vertices.getVertex(_vertextIterator, x, y);
+		_vertextIterator++;
+
+		return cmd;
 	}
 	//---------------------------------------------------------------------------------------------------
 	public inline function getVertexByIndex(idx:Int, x:FloatRef, y:FloatRef):Int

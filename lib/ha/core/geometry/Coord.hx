@@ -28,4 +28,9 @@ class Coord
 		x = x_;
 		y = y_;
 	}
+
+	public function toString(): String
+	{
+		return '{x: $x, y: $y}';
+	}
 }
