@@ -127,13 +127,15 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
                 }
 				else 
 				{
-					_stroker.calcJoin(_outVertices,
-										_srcVertices.prev(_srcVertex), 
-										_srcVertices.curr(_srcVertex), 
-										_srcVertices.next(_srcVertex), 
-										_srcVertices.prev(_srcVertex).dist,
-										_srcVertices.curr(_srcVertex).dist);
-
+					var prev = _srcVertices.prev(_srcVertex);
+					var curr = _srcVertices.curr(_srcVertex);
+					var next = _srcVertices.next(_srcVertex);
+					var prevDist = prev.dist;
+					var currDist = curr.dist;
+					#if cs
+					_outVertices = [];
+					#end
+					_stroker.calcJoin(_outVertices, prev, curr, next, prevDist, currDist);
 					++_srcVertex;
 					_status = OUT_VERTICES;
 					_outVertex = 0;

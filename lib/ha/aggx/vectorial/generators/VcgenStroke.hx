@@ -163,6 +163,9 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 				}
 
 			case CAP1:
+				#if cs
+					_outVertices = [];
+				#end
 				_stroker.calcCap(_outVertices, _srcVertices.get(0), _srcVertices.get(1), _srcVertices.get(0).dist);
 				_srcVertexIndex = 1;
 				_prevStatus = OUTLINE1;
@@ -170,6 +173,9 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 				_outVertexIndex = 0;
 
 			case CAP2:
+				#if cs
+					_outVertices = [];
+				#end
 				_stroker.calcCap(_outVertices, _srcVertices.get(_srcVertices.size - 1), _srcVertices.get(_srcVertices.size - 2), _srcVertices.get(_srcVertices.size - 2).dist);
 				_prevStatus = OUTLINE2;
 				_status = OUT_VERTICES;
@@ -196,6 +202,9 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 				}
 				if (proceed) 
 				{
+					#if cs
+						_outVertices = [];
+					#end
 					_stroker.calcJoin(_outVertices,
 										_srcVertices.prev(_srcVertexIndex),
 										_srcVertices.curr(_srcVertexIndex),
@@ -221,6 +230,9 @@ class VcgenStroke implements ICurveGenerator implements IVertexSource //Vertex C
 				else 
 				{
 					--_srcVertexIndex;
+					#if cs
+						_outVertices = [];
+					#end
 					_stroker.calcJoin(_outVertices,
 										_srcVertices.next(_srcVertexIndex),
 										_srcVertices.curr(_srcVertexIndex),
