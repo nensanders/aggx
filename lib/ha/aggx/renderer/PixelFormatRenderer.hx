@@ -121,6 +121,7 @@ class PixelFormatRenderer
 	//---------------------------------------------------------------------------------------------------
 	public function blendHLine(x:Int, y:Int, len:Int, color:RgbaColor, cover:Byte):Void
 	{
+		//trace('blendHLine $x $y $len $color $cover');
 		if (color.a != 0)
 		{
 			var p = _rbuf.getRowPtr(y) + (x << 2);
@@ -201,6 +202,9 @@ class PixelFormatRenderer
 	//---------------------------------------------------------------------------------------------------
 	public function blendSolidHSpan(x:Int, y:Int, len:Int, color:RgbaColor, covers:Data):Void
 	{
+		//trace('!blendSolidHSpan: $x, $y, $len, $color');
+		//covers.dump();
+
 		if (color.a != 0)
 		{
 			var p = _rbuf.getRowPtr(y) + (x << 2);
@@ -209,6 +213,7 @@ class PixelFormatRenderer
 				var cover = covers.readUInt8();
 				covers.offset++;
 				var alpha:UInt = (color.a * (cover + 1)) >> 8;
+				//trace('cover: $cover alpha: $alpha BASE_MASK: ${RgbaColor.BASE_MASK}');
 				if(alpha == RgbaColor.BASE_MASK)
 				{
 					color.a = RgbaColor.BASE_MASK;

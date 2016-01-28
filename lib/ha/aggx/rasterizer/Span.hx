@@ -35,6 +35,11 @@ class Span
         dataOffset = offset;
     }
 
+    public function toString(): String
+    {
+        return '{x: $x, len: $len coversOffset: $dataOffset}';
+    }
+
     public function getCovers(): Data
     {
         data.offset = dataOffset;
