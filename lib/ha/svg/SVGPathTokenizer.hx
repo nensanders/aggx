@@ -163,6 +163,13 @@ class SVGPathTokenizer
                 break;
             }
         }
+
+        if (number.length == 0)
+        {
+            _last_number = 0;
+            return true;
+        }
+
         _last_number = Std.parseFloat(number);
         return true;
     }
