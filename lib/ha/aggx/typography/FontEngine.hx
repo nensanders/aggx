@@ -139,11 +139,13 @@ class FontEngine
 
 	public function renderString(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, kern: Float = 0.0, vector: Vector2 = null):Void
     {
+        //trace('renderString() string: $string, dx: $dx dy: $dy  kern: $kern font: ${currentFont.getName()}');
         renderStringInternal(_curve, string, fontSize, dx, dy, renderer, kern, vector);
     }
 
     public function renderStringStroke(string:String, fontSize:Float, dx:Float, dy:Float, renderer:IRenderer, width: Float, kern: Float = 0.0, vector: Vector2 = null):Void
     {
+		//trace('renderStringStroke() string: $string, dx: $dx dy: $dy width: $width kern: $kern font: ${currentFont.getName()}');
         _stroke.width = width * fontSize / 100;
         renderStringInternal(_stroke, string, fontSize, dx, dy, renderer, kern, vector);
     }
