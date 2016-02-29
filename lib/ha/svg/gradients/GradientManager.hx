@@ -67,7 +67,15 @@ class GradientManager
                 break;
             }
 
-            cur = _gradients.get(cur.link);
+            if (cur.link != null)
+            {
+                cur = _gradients.get(cur.link);
+            }
+            else
+            {
+                cur = null;
+            }
+
             iteration++;
         }
 
