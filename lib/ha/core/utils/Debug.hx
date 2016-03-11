@@ -26,12 +26,14 @@ class Debug
         return '${stack[2]}';
     }
 
-    public static function assert(condition: Bool, message: String)
+    public static function assert(condition: Bool, message: String): Bool
     {
         if (!condition)
         {
             trace('Failed assert: $message caller: ${calledFrom()}');
             Debug.brk();
         }
+
+        return condition;
     }
 }
