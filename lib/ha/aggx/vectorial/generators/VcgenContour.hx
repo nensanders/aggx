@@ -95,7 +95,6 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function getVertex(x:FloatRef, y:FloatRef):UInt 
 	{
-		//trace('$_status');
         var cmd = PathCommands.LINE_TO;
         while(!PathUtils.isStop(cmd))
         {
@@ -169,8 +168,6 @@ class VcgenContour implements ICurveGenerator implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function addVertex(x:Float, y:Float, cmd:UInt):Void 
 	{
-		//trace('{x: $x y: $y cmd: $cmd}');
-
         _status = INITIAL;
         if(PathUtils.isMoveTo(cmd))
         {

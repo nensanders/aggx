@@ -153,13 +153,11 @@ class ScanlineRasterizer implements IRasterizer
 			sl.resetSpans();
 			var numCells = _outline.getScanlineCellsCount(_scanY);
 			var cells:DataPointer = _outline.getScanlineCells(_scanY);
-			//cells.data.dump();
 			var cover = 0;
 
 			while(numCells != 0)
 			{
 				cells.getAll(currentCell);
-				//trace(currentCell);
 				var x = currentCell.x;
 				var area = currentCell.area;
 				var alpha:Int;
@@ -262,7 +260,6 @@ class ScanlineRasterizer implements IRasterizer
 	//---------------------------------------------------------------------------------------------------
 	public function addVertex(x:Float, y:Float, cmd:Int):Void
 	{
-		//trace('addVertex $x $y');
 		if(PathUtils.isMoveTo(cmd))
 		{
 			moveToD(x, y);

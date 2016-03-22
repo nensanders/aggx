@@ -109,6 +109,7 @@ class NameRecord
 		}
 		_record = sb;
 
+		//intentionally left here for debugging
         //trace('name: $_nameID lang: $_languageID: string: $_record');
 	}
     public function isFontName()

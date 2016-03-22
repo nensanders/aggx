@@ -54,14 +54,12 @@ class TypefaceCache
 		if (_faces[msb] != null)
 		{
 			face = _faces[msb][charCode & 0xFF];
-			//trace("cached");
 		}
 		if (face == null) 
 		{
 			var glyph = _font.getGlyphByCharCode(charCode);
 			face = new Typeface(glyph, charCode);
 			cache(face);
-			//trace("missed");
 		}
 		return face;
 	}

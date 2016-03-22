@@ -48,7 +48,6 @@ class TrueTypeCollection
 	//---------------------------------------------------------------------------------------------------
 	private function read(file:Data, pathName:String = ""):Void
 	{
-        //trace('${file.offset}');
 		if(TTCHeader.isTTC(file))
 		{
 			//_ttcHeader = new TTCHeader(_data);

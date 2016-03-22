@@ -76,7 +76,6 @@ class ClippingScanlineRasterizer
 	//---------------------------------------------------------------------------------------------------
 	public function lineTo(ras:PixelCellRasterizer, x2:Float, y2:Float):Void
 	{
-		//trace('lineTo: $x2 $y2');
 		if(_isClipping)
 		{
 			var f2 = LiangBarskyClipper.getClippingFlags(x2, y2, _clippingBox);

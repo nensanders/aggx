@@ -33,7 +33,6 @@ class OffsetTable
 	//---------------------------------------------------------------------------------------------------
 	public function new(data: Data)
 	{
-		//trace(data.offset);
 		_sfntVersion = data.dataGetInt();
 		data.offset += 4;
 		_numTables = data.dataGetUShort();

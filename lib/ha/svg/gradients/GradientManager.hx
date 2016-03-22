@@ -224,12 +224,11 @@ class GradientManager
         var x2: FloatRef = getGradientVectorElement(gradientId, 2);
         var y2: FloatRef = getGradientVectorElement(gradientId, 3);
 
+        //intentionally left here for debugging
         //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         gradientTransform.transform(x1, y1);
         gradientTransform.transform(x2, y2);
-
-        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         _bboxTransform.reset();
         if (!isUserspaceGradient(gradientId))
@@ -240,19 +239,14 @@ class GradientManager
         _bboxTransform.transform(x1, y1);
         _bboxTransform.transform(x2, y2);
 
-        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
-
         transform.transform(x1, y1);
         transform.transform(x2, y2);
-
-        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}}');
 
         output.reset();
         var dx = x2.value - x1.value;
         var dy = y2.value - y1.value;
 
         var scale: Float = Math.sqrt(dx * dx + dy * dy) / gradientD2;
-        //trace('{${x1.value}, ${y1.value}} - {${x2.value}, ${y2.value}} scale:$scale');
 
         output.multiply(AffineTransformer.scaler(scale));
         output.multiply(AffineTransformer.rotator(Math.atan2(dy, dx)));

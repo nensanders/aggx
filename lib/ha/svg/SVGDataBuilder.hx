@@ -74,11 +74,8 @@ class SVGDataBuilder
         data.elementStorage[data.elementStorage.length - 1] = element;
 
         element.calculateBoundingBox(data.storage);
-        //trace('${element.id}: ${element.bounds}');
 
         popElement();
-
-        //debugBox(element.bounds);
     }
 
     public function debugBox(bounds: SVGPathBounds)

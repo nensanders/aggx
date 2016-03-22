@@ -68,7 +68,6 @@ class ConvAdaptorVcgen implements IVertexSource
 	//---------------------------------------------------------------------------------------------------
 	public function getVertex(x:FloatRef, y:FloatRef):UInt
 	{
-		//trace('$_status');
 		var cmd = PathCommands.STOP;
 		var done = false;
 		while(!done)

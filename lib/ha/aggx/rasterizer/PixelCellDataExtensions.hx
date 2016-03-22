@@ -8,7 +8,6 @@ class PixelCellDataExtensions
     public static inline function dataGetX(data: Data, pointer: UInt):Int
     {
         data.offset = pointer + PixelCell.PIXEL_CELL_X;
-        //trace('offset: $pointer value: ${data.readInt32()}}');
         return data.readInt32();
     }
 
@@ -35,8 +34,6 @@ class PixelCellDataExtensions
         var c: Int = pointer.get(PixelCell.PIXEL_CELL_COVER).readInt32();
         var a: Int = pointer.get(PixelCell.PIXEL_CELL_AREA).readInt32();
         cell.define(x, y, c, a);
-
-        //trace('${pointer.offset} => $cell');
     }
 
     public static inline function setX(pointer: DataPointer, v:Int):Void
@@ -95,19 +92,12 @@ class PixelCellDataExtensions
         writeInt32Offset(data, b + PixelCell.PIXEL_CELL_COVER, cover);
     }
 
-    //private static var tmp: PixelCell = new PixelCell();
     public static inline function setAll(pointer: DataPointer, cell:PixelCell):Void
     {
-        //trace('${pointer.offset} <= $cell');
-        //pointer.data.dump();
         pointer.get(PixelCell.PIXEL_CELL_X).writeInt32(cell.x);
         pointer.get(PixelCell.PIXEL_CELL_Y).writeInt32(cell.y);
         pointer.get(PixelCell.PIXEL_CELL_COVER).writeInt32(cell.cover);
         pointer.get(PixelCell.PIXEL_CELL_AREA).writeInt32(cell.area);
-        //pointer.data.dump();
-
-        //getAll(pointer, tmp);
-        //trace('${pointer.offset} => $cell');
     }
 
     public static inline function setAllEx(to: DataPointer, from: DataPointer):Void

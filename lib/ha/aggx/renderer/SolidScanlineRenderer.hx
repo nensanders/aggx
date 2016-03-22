@@ -91,7 +91,6 @@ class SolidScanlineRenderer implements IRenderer
 				while(true)
 				{
 					var span = spanIterator.current;
-					//trace(span);
 					var x = span.x;
 					if(span.len > 0)
 					{
@@ -99,7 +98,6 @@ class SolidScanlineRenderer implements IRenderer
 					}
 					else
 					{
-						//trace(span.getCovers().readUInt8());
 						ren.blendHLine(x, y, (x - span.len - 1), renColor, span.getCovers().readUInt8());
 					}
 					if (--num_spans == 0) break;

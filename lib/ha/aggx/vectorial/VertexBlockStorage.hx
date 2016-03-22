@@ -46,6 +46,7 @@ class VertexBlockStorage
         if (bytesLeft < size)
         {
             var newSize = Math.ceil(Math.max(size, data.allocedLength) * 1.8);
+			//intentionally left here for debugging
             //trace('resize ${data.allocedLength} -> $newSize');
             data.resize(newSize);
         }
@@ -53,24 +54,14 @@ class VertexBlockStorage
 		data.writeUInt32(_verticesCount);
 		data.offset += 4;
 
-		//trace('x:');
 		for (i in 0 ... _verticesCount)
 		{
-			/*if (i < 100)
-			{
-				trace(_coordsX[i]);
-			}*/
 			data.writeFloat32(_coordsX[i]);
 			data.offset += 4;
 		}
 
-		//trace('y:');
 		for (i in 0 ... _verticesCount)
 		{
-			/*if (i < 100)
-			{
-				trace(_coordsY[i]);
-			}*/
 			data.writeFloat32(_coordsY[i]);
 			data.offset += 4;
 		}
@@ -91,10 +82,6 @@ class VertexBlockStorage
         for (i in 0 ... _verticesCount)
         {
             _coordsX.push(data.readFloat32());
-			/*if (i < 100)
-			{
-				trace('${data.readFloat32()}');
-			}*/
             data.offset += 4;
         }
 
@@ -102,10 +89,6 @@ class VertexBlockStorage
         for (i in 0 ... _verticesCount)
         {
             _coordsY.push(data.readFloat32());
-			/*if (i < 100)
-			{
-				trace('${data.readFloat32()}');
-			}*/
             data.offset += 4;
         }
 

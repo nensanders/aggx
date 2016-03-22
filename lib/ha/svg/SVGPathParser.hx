@@ -138,7 +138,6 @@ class SVGPathParser
                         {
                             arg[i] = tok.next(cmd);
                         }
-                        //trace(arg);
                         arc(arg[0], arg[1], arg[2], arg[3] != 0, arg[4] != 0, arg[5], arg[6], cmd == 'a');
                     }
                 case "Z", "z":

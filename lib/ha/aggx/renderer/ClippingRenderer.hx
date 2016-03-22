@@ -419,7 +419,7 @@ class ClippingRenderer
 		if(rc.y2 > src.y2 - src.y1) rc.y2 = src.y2 - src.y1;
 		return rc;
 	}
-	
+
 	//---------------------------------------------------------------------------------------------------
 	public function blendFrom(src:PixelFormatRenderer, rectSrc:RectBoxI = null, dx:Int = 0, dy:Int = 0, cover:Byte = 255):Void
 	{

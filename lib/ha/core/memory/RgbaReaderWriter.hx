@@ -72,7 +72,6 @@ class RgbaReaderWriter
 	//---------------------------------------------------------------------------------------------------
 	public static inline function setFull(addr:Pointer, r:Byte, g:Byte, b:Byte, a:Byte):Void
 	{
-		//trace('setFull: $addr, $r, $g, $b, $a');
         MemoryAccess.setInt32(addr, ((r << RS) | (g << GS) | (b << BS) | (a << AS)));
 	}
 }

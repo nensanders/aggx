@@ -128,7 +128,6 @@ class PixelCellRasterizer
 
 	public inline function getScanlineCells(y:Int):DataPointer
 	{
-        //trace('getScanlineCells: $y offset: ${_sortedY[y - _minY].start * PIXEL_SIZE}');
         _sortedCellsPtr.offset = _sortedY[y - _minY].start * PIXEL_SIZE;
 		return _sortedCellsPtr;
 	}
@@ -145,7 +144,6 @@ class PixelCellRasterizer
 		{
             _cellsPtr.offset = _cellsCount * PIXEL_SIZE;
             _cellsPtr.setAll(_currentCell);
-			//trace(_currentCell);
 
 			++_cellsCount;
 
@@ -261,7 +259,6 @@ class PixelCellRasterizer
 	//---------------------------------------------------------------------------------------------------
 	public function line(x1:Int, y1:Int, x2:Int, y2:Int):Void
 	{
-		//trace('line $x1 $y1 $x2 $y2');
 		var dx_limit = 16384 << POLY_SUBPIXEL_SHIFT;
 
 		var dx = x2 - x1;
@@ -294,7 +291,6 @@ class PixelCellRasterizer
 		if(ey2 < _minY) _minY = ey2;
 		if(ey2 > _maxY) _maxY = ey2;
 
-		//trace('$ex1 $ey1 $ex2 $ey2 $fy1 $fy2');
 
 		setCurrentCell(ex1, ey1);
 
@@ -404,7 +400,6 @@ class PixelCellRasterizer
 	//---------------------------------------------------------------------------------------------------
 	private function qsort(data: Data, beg: Int, end:Int):Void
 	{
-        //trace('beg: $beg end: $end');
 		if (end == beg)
 		{
 			return;

@@ -58,7 +58,6 @@ class Scanline implements IScanline
 
 	public function reset(minX:Int, maxX:Int):Void
 	{
-        //trace('reset');
 		var maxLen:UInt = maxX - minX + 2;
 		if(maxLen > cast _spans.length)
 		{
@@ -75,7 +74,6 @@ class Scanline implements IScanline
 	//---------------------------------------------------------------------------------------------------
 	public function addCell(x:Int, cover:Byte):Void
 	{
-        //trace('addCell x: $x cover: $cover minX: $_minX');
 		x -= _minX;
         _covers.offset = x;
         _covers.writeUInt8(cover);
@@ -100,7 +98,6 @@ class Scanline implements IScanline
 	//---------------------------------------------------------------------------------------------------
 	public function addSpan(x:Int, len:UInt, cover:Byte):Void
 	{
-        //trace('addSpan x: $x len: $len cover: $cover');
 		x -= _minX;
 		MemoryUtils.dataSet(_covers, x, cover, len);
 		
