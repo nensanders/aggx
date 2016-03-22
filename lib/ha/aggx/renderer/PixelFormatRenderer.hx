@@ -27,7 +27,6 @@ import lib.ha.aggx.color.RgbaColorStorage;
 import lib.ha.aggx.RenderingBuffer;
 import lib.ha.aggx.RowInfo;
 import lib.ha.core.memory.Byte;
-import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryUtils;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryReader;
@@ -419,17 +418,7 @@ class PixelFormatRenderer
 		var gamma = new InverseGammaApplier(g);
 		forEachPixel(gamma.apply);
 	}
-	//---------------------------------------------------------------------------------------------------
-	public function copyFrom(from:RenderingBuffer, xdst:Int, ydst:Int, xsrc:Int, ysrc:Int, len:Int):Void
-	{
-		var p = from.getRowPtr(ysrc);
-		if(p != 0)
-		{
-			p += (xsrc << 2);
-			var p2 = _rbuf.getRowPtr(ydst) + (xdst << 2);
-			MemoryUtils.copy(p2, p, len << 2);
-		}
-	}
+
 	//---------------------------------------------------------------------------------------------------
 	public function blendFrom(from:PixelFormatRenderer, xdst:Int, ydst:Int, xsrc:Int, ysrc:Int, len:Int, cover:Byte):Void
 	{

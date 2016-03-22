@@ -24,11 +24,7 @@ using lib.ha.core.memory.MemoryWriter;
 //=======================================================================================================
 class MemoryUtils 
 {
-	public static function copy(dst:Pointer, src:Pointer, size:UInt):Void
-	{
-		MemoryAccess.copy(dst, src, size);
-	}
-	//---------------------------------------------------------------------------------------------------
+
 	public static function set(dst:Pointer, val:Byte, size:UInt):Void
 	{
 		var i:UInt = 0;

@@ -33,42 +33,6 @@ class MemoryAccess
         domainMemory = b;
     }
 
-    public static inline function resize(newSize: Int): Void
-    {
-        trace('resize: ${domainMemory.allocedLength} -> $newSize');
-        throw "not implemented";
-        //domainMemory.resize(newSize);
-    }
-
-    public static inline function resizeOffset(offset: Int): Void
-    {
-        throw "not implemented";
-        var newSize: Int = domainMemory.allocedLength + offset;
-        resize(newSize);
-    }
-
-    public static inline function copy(dst:Pointer, src:Pointer, size:UInt):Void {
-
-        var pos = domainMemory.offset;
-
-        var temp = new Data(size);
-        temp.offset = 0;
-        temp.offsetLength = temp.allocedLength;
-
-        domainMemory.offset = src;
-        domainMemory.offsetLength = size;
-
-        temp.writeData(domainMemory);
-
-        domainMemory.offset = dst;
-        domainMemory.writeData(temp);
-
-        temp.resize(0);
-        temp = null;
-
-        domainMemory.offset = pos;
-    }
-
     public static inline function writeBytes(bytes: Data, offset: UInt, size: UInt)
     {
         domainMemory.offset = offset;

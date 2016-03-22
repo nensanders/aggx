@@ -419,40 +419,7 @@ class ClippingRenderer
 		if(rc.y2 > src.y2 - src.y1) rc.y2 = src.y2 - src.y1;
 		return rc;
 	}
-	//---------------------------------------------------------------------------------------------------
-	public function copyFrom(src:RenderingBuffer, rectSrc:RectBoxI = null, dx:Int = 0, dy:Int = 0):Void
-	{
-		var rsrc = new RectBoxI(0, 0, src.width, src.height);
-		if (rectSrc != null)		
-		{
-			rsrc.x1 = rectSrc.x1;
-			rsrc.y1 = rectSrc.y1;
-			rsrc.x2 = rectSrc.x2 + 1;
-			rsrc.y2 = rectSrc.y2 + 1;
-		}
-
-		var rdst = new RectBoxI(rsrc.x1 + dx, rsrc.y1 + dy, rsrc.x2 + dx, rsrc.y2 + dy);
-
-		var rc = clipRectArea(rdst, rsrc, src.width, src.height);
-
-		if(rc.x2 > 0)
-		{
-			var incy = 1;
-			if(rdst.y1 > rsrc.y1)
-			{
-				rsrc.y1 += rc.y2 - 1;
-				rdst.y1 += rc.y2 - 1;
-				incy = -1;
-			}
-			while(rc.y2 > 0)
-			{
-				_pixelFormatRenderer.copyFrom(src, rdst.x1, rdst.y1, rsrc.x1, rsrc.y1, rc.x2);
-				rdst.y1 += incy;
-				rsrc.y1 += incy;
-				--rc.y2;
-			}
-		}
-	}
+	
 	//---------------------------------------------------------------------------------------------------
 	public function blendFrom(src:PixelFormatRenderer, rectSrc:RectBoxI = null, dx:Int = 0, dy:Int = 0, cover:Byte = 255):Void
 	{

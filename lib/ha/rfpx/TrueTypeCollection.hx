@@ -20,8 +20,6 @@ package lib.ha.rfpx;
 //=======================================================================================================
 import types.Data;
 import haxe.ds.Vector;
-import lib.ha.core.memory.MemoryBlock;
-import lib.ha.core.memory.MemoryManager;
 import lib.ha.rfpx.data.TTCHeader;
 //=======================================================================================================
 class TrueTypeCollection

@@ -20,7 +20,6 @@ package lib.ha.rfpx.data;
 //=======================================================================================================
 import types.Data;
 import haxe.ds.Vector;
-import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.MemoryReaderEx;
 using lib.ha.core.memory.MemoryReaderEx;
 //=======================================================================================================

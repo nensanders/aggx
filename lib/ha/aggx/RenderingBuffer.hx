@@ -19,7 +19,6 @@
 package lib.ha.aggx;
 //=======================================================================================================
 import lib.ha.core.memory.Byte;
-import lib.ha.core.memory.MemoryBlock;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryUtils;
 import lib.ha.core.memory.MemoryWriter;
@@ -59,20 +58,7 @@ class RenderingBuffer
 	{
 		return new RowInfo(0, _width - 1, _start + y * _stride);
 	}
-	//---------------------------------------------------------------------------------------------------
-	public function copyFrom(src:RenderingBuffer):Void
-	{	
-		var h = Calc.umin(src.height, _height);
-		var l = Calc.umin(strideAbs, src.strideAbs);
-
-		var y:UInt = 0;
-		var w = _width;
-		while (y < h)
-		{
-			MemoryUtils.copy(getRowPtr(y), src.getRowPtr(y), l);
-			y++;
-		}
-	}
+	
 	//---------------------------------------------------------------------------------------------------
 	public function clear(value:Byte):Void
 	{

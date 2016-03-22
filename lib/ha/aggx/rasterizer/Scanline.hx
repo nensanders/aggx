@@ -22,8 +22,6 @@ import lib.ha.core.utils.Debug;
 import types.Data;
 import haxe.ds.Vector;
 import lib.ha.core.memory.Byte;
-import lib.ha.core.memory.MemoryBlock;
-import lib.ha.core.memory.MemoryManager;
 import lib.ha.core.memory.MemoryUtils;
 import lib.ha.core.memory.Pointer;
 import lib.ha.core.memory.MemoryWriter;
@@ -98,21 +96,6 @@ class Scanline implements IScanline
 	private function addCells(x:Int, len:UInt, covers:Pointer):Void
 	{
         throw "not implemented";
-		/*x -= _minX;
-		MemoryUtils.copy(_covers.ptr + x, covers, len);
-
-		if (x == _lastX + 1)
-		{
-			_currentSpan.len += len;
-		}
-		else
-		{
-			_curSpanIndex++;
-			_spans[_curSpanIndex] = _currentSpan = new Span(_covers, x);
-			_currentSpan.x = x + _minX;
-			_currentSpan.len = len;
-		}
-		_lastX = x + len - 1;*/
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function addSpan(x:Int, len:UInt, cover:Byte):Void

@@ -22,8 +22,6 @@ import lib.ha.core.utils.Debug;
 import lib.ha.core.utils.DataPointer;
 import haxe.CallStack;
 import haxe.ds.Vector;
-import lib.ha.core.memory.MemoryBlock;
-import lib.ha.core.memory.MemoryManager;
 import lib.ha.core.memory.Pointer;
 import lib.ha.aggx.rasterizer.PixelCell;
 import lib.ha.aggx.rasterizer.PixelCellDataExtensions;
