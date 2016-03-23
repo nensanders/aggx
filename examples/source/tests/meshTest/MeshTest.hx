@@ -73,17 +73,6 @@ import aggx.RenderingBuffer;
 
 class MeshTest extends OpenGLTest
 {
-    inline private static var IMAGE_PATH = "meshTest/images/lena.png";
-    inline private static var FONT_PATH_ARIAL = "meshTest/fonts/arial.ttf";
-    inline private static var FONT_PATH_COMIC = "meshTest/fonts/Pacifico.ttf";
-    inline private static var FONT_PATH_JAPAN = "meshTest/fonts/font_1_ant-kaku.ttf";
-    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
-    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/car.svg";
-    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/paths.svg";
-    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
-    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/chars/Bendy2.svg";
-    //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_transform.svg";
-    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
     inline private static var VERTEXSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.vsh";
     inline private static var FRAGMENTSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.fsh";
 
@@ -93,19 +82,20 @@ class MeshTest extends OpenGLTest
     static private var texture: GLTexture;
 
     //---------------------------------------------------------------------------------------------------
-    static var pixelBufferWidth:UInt = 1024;
-    static var pixelBufferHeight:UInt = 768;
-    static var pixelBufferSize:UInt = pixelBufferWidth * pixelBufferHeight * 4;
+    public var pixelBufferWidth:UInt = 1024;
+    public var pixelBufferHeight:UInt = 768;
+    public var pixelBufferSize:UInt = 1024 * 768 * 4;
     //---------------------------------------------------------------------------------------------------
-    static var data: Data;
-    static var renderingBuffer: RenderingBuffer;
-    static var pixelFormatRenderer: PixelFormatRenderer;
-    static var clippingRenderer: ClippingRenderer;
-    static var scanline: Scanline;
-    static var rasterizer: ScanlineRasterizer;
-    static var scanlineRenderer: SolidScanlineRenderer;
 
-    static var enterFrame: Void -> Void = null;
+    var data: Data;
+    var renderingBuffer: RenderingBuffer;
+    var pixelFormatRenderer: PixelFormatRenderer;
+    var clippingRenderer: ClippingRenderer;
+    var scanline: Scanline;
+    var rasterizer: ScanlineRasterizer;
+    var scanlineRenderer: SolidScanlineRenderer;
+
+    public var enterFrame: Void -> Void = null;
 
     // Create OpenGL objectes (Shaders, Buffers, Textures) here
     override private function onCreate(): Void
@@ -212,7 +202,7 @@ class MeshTest extends OpenGLTest
         GL.bindTexture(GLDefines.TEXTURE_2D, GL.nullTexture);
     }
 
-    static private function reuploadTexture()
+    private function reuploadTexture()
     {
         var data: Data = MemoryAccess.domainMemory;
         data.offset = 0;
@@ -228,365 +218,9 @@ class MeshTest extends OpenGLTest
         GL.deleteTexture(texture);
     }
 
-    private function testAggx(): Void
+    public function testAggx(): Void
     {
-        MemoryAccess.select(data);
-        //clippingRenderer.setClippingBounds(0, 0, 512, 512);
-        clippingRenderer.clear(new RgbaColor(255, Std.int(255.0 * 1.0), Std.int(255.0 * 1.0), 255));
-
-        //t0(); //fonts
-        //t3();
-        //t4();
-        //t5();
-        //t6();
-        //t7();
-        ///t8();
-        //t9();
-        //t10();
-        t11(); // SVG
-        //t12();
-    }
-
-//---------------------------------------------------------------------------------------------------
-    static function t0():Void
-    {
-        var loader = new TrueTypeLoader(AssetLoader.getDataFromFile(FONT_PATH_JAPAN));
-        loader.load(t1);
-        //loader.load(t2);
-    }
-//---------------------------------------------------------------------------------------------------
-    static function t1(ttc:TrueTypeCollection):Void
-    {
-        var string1 = "ABCDEFGHJIKLMNOPQRSTUVWXYZ";
-        var string2 = "abcdefghjiklmnopqrstuvwxyz";
-        var string3 = "1234567890";
-        var string4 = "!@#$%^&*()_+|{}:?><~`';/.,";
-        var string5 = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦШЩЭЮЯ";
-        var string6 = "абвгдеёжзийклмнопрстуфхцшщэюя";
-        var japanString1 = '「ほのかアンティーク角」フォントは角ゴシックの漢字に合わせたウロコの付きの文字を組み合わせたアンチック体（アンティーク体）の日本語フォントです。';
-        var japanString2 = '漢字等についてはオープンソースフォント「源柔ゴシック」を使用させて頂いております（詳細は後述）。';
-        var japanString3 = '個人での利用のほか、商用利用においてデザイナーやクリエイターの方もご活用いただけます。';
-
-        var fontEngine = new FontEngine(ttc);
-        var fontSize = 80;
-
-        scanlineRenderer.color = new RgbaColor(255, 0, 0);
-
-        var x = 10;
-        var y = 0 * fontSize / 20;
-
-        fontEngine.renderString(string1, fontSize, x, y, scanlineRenderer);
-
-        scanlineRenderer.color = new RgbaColor(27, 106, 240);
-
-        var x = 10;
-        var y = 20 * fontSize / 20;
-
-        fontEngine.renderString(string2, fontSize, x, y, scanlineRenderer);
-
-        scanlineRenderer.color = new RgbaColor(227, 200, 26);
-
-        var x = 10;
-        var y = 40 * fontSize / 20;
-
-        fontEngine.renderString(string3, fontSize, x, y, scanlineRenderer);
-
-        scanlineRenderer.color = new RgbaColor(106, 27, 240);
-
-        var x = 10;
-        var y = 60 * fontSize / 20;
-
-        fontEngine.renderString(string4, fontSize, x, y, scanlineRenderer);
-
-        scanlineRenderer.color = new RgbaColor(136, 207, 100);
-
-        var x = 10;
-        var y = 80 * fontSize / 20;
-
-        fontEngine.renderString(string5, fontSize, x, y, scanlineRenderer);
-
-        scanlineRenderer.color = new RgbaColor(136, 20, 50);
-
-        var x = 10;
-        var y = 100 * fontSize / 20;
-
-        fontEngine.renderString(string6, fontSize, x, y, scanlineRenderer);
-
-        var x = 10;
-        var y = 120 * fontSize / 20;
-
-        fontEngine.renderString(japanString1, fontSize, x, y, scanlineRenderer);
-
-        var x = 10;
-        var y = 140 * fontSize / 20;
-
-        fontEngine.renderString(japanString2, fontSize, x, y, scanlineRenderer);
-
-        var x = 10;
-        var y = 160 * fontSize / 20;
-
-        fontEngine.renderString(japanString3, fontSize, x, y, scanlineRenderer);
-    }
-
-//---------------------------------------------------------------------------------------------------
-    static function t2(ttc:TrueTypeCollection):Void
-    {
-        var t = new TransCurve1(renderingBuffer, ttc);
-        t.run();
-
-        enterFrame = function()
-        {
-            clippingRenderer.clear(new RgbaColor(255, 255, 255));
-            t.animate();
-            reuploadTexture();
-        }
-    }
-
-    //---------------------------------------------------------------------------------------------------
-    static function t3():Void
-    {
-        var t = new AlphaGradient(renderingBuffer);
-
-        t.run();
-    }
-    //---------------------------------------------------------------------------------------------------
-    static function t4():Void
-    {
-        var t = new AADemo(renderingBuffer);
-        t.run();
-    }
-    //---------------------------------------------------------------------------------------------------
-    static function t5():Void
-    {
-        var t = new AATest(renderingBuffer);
-        t.run();
-    }
-
-    static function t6():Void
-    {
-        var pixelOffset = 0.5;
-        var pexelAligner = new AffineTransformer();
-        pexelAligner.multiply(AffineTransformer.translator(.5, .5));
-        var tr = 10.;
-        var path = new VectorPath();
-
-        path.moveTo(tr, tr);
-        path.lineTo(pixelBufferWidth - tr, tr);
-        path.lineTo(pixelBufferWidth - tr, pixelBufferHeight - tr);
-        path.lineTo(tr, pixelBufferHeight - tr);
-        path.curve4(pixelBufferWidth - tr, pixelBufferHeight - tr, pixelBufferWidth - tr, tr, tr, tr);
-
-        path.closePolygon();
-
-        path.transformAllPaths(pexelAligner);
-
-        var curve = new ConvCurve(path);
-        var stroke = new ConvStroke(curve);
-
-        stroke.width = 0.3;
-        rasterizer.addPath(stroke);
-
-        scanlineRenderer.color = new RgbaColor(255, 0, 0, 255);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
-
-        rasterizer.addPath(curve);
-        scanlineRenderer.color = new RgbaColor(255, 0, 0, 20);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
-    }
-
-//---------------------------------------------------------------------------------------------------
-    static function t7():Void
-    {
-        var tr = 4.5;
-
-        var path = new VectorPath();
-
-        path.moveTo(tr, tr);
-        path.lineTo(pixelBufferWidth-tr, tr);
-        path.lineTo(pixelBufferWidth-tr, pixelBufferHeight-tr);
-        path.lineTo(tr, pixelBufferHeight-tr);
-        path.lineTo(tr, pixelBufferHeight-2*tr);
-        path.curve4(pixelBufferWidth-2*tr, pixelBufferHeight-2*tr, pixelBufferWidth-2*tr, 2*tr,  tr, 2*tr);
-        path.closePolygon();
-
-        var curve = new ConvCurve(path);
-        var dash = new ConvDash(curve);
-        var stroke = new ConvStroke(dash);
-
-        dash.addDash(50, 30);
-
-        stroke.width = 5;
-        stroke.lineCap = LineCap.SQUARE;
-        rasterizer.addPath(curve);
-
-        scanlineRenderer.color = new RgbaColor(255, 0, 0, 80);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
-
-        rasterizer.reset();
-
-        rasterizer.addPath(stroke);
-        scanlineRenderer.color = new RgbaColor(255, 0, 0);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
-    }
-//---------------------------------------------------------------------------------------------------
-    static function t8():Void
-    {
-        var pixelOffset = 0.5;
-        var tr = 10.;
-
-        var path = new VectorPath();
-
-        path.removeAll();
-        path.moveTo(tr + pixelOffset, tr + pixelOffset);
-        path.lineTo(pixelBufferWidth + pixelOffset - tr, tr + pixelOffset);
-        path.lineTo(pixelBufferWidth + pixelOffset - tr, pixelBufferHeight + pixelOffset - tr);
-        path.lineTo(tr + pixelOffset, pixelBufferHeight + pixelOffset - tr);
-        path.lineTo(tr + pixelOffset, pixelBufferHeight + pixelOffset - tr);
-        path.curve4(pixelBufferWidth + pixelOffset - tr, pixelBufferHeight + pixelOffset - tr, pixelBufferWidth + pixelOffset - tr, pixelOffset + tr, pixelOffset + tr, pixelOffset + tr);
-        path.closePolygon();
-
-        var curve = new ConvCurve(path);
-        var stroke0 = new ConvStroke(curve);
-
-        var dash = new ConvDash(stroke0);
-        var stroke = new ConvStroke(dash);
-
-        stroke0.width = 5;
-        stroke0.lineCap = LineCap.ROUND;
-
-        dash.addDash(10, 10);
-
-        stroke.width = 1;
-        stroke.lineCap = LineCap.ROUND;
-
-        //rasterizer.addPath(curve);
-
-        var storage = new VectorPath();
-        var ellipse = new Ellipse(50, 50, 50, 50);
-        rasterizer.addPath(ellipse);
-
-        scanlineRenderer.color = new RgbaColor(160, 180, 80, 80);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
-
-        /*rasterizer.addPath(stroke);
-        scanlineRenderer.color = new RgbaColor(120, 100, 0);
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);*/
-
-        var gradientFunction = new GradientX();
-        var gradientMatrix = new AffineTransformer();
-        gradientMatrix.premultiply(AffineTransformer.translator(50, 0));
-        gradientMatrix.invert();
-        var spanInterpolator = new SpanInterpolatorLinear(gradientMatrix);
-        var spanAllocator = new SpanAllocator();
-        var gradientColors = new ColorArray(256);
-        var gradientSpan = new SpanGradient(spanInterpolator, gradientFunction, gradientColors, 0, 100);
-        var gradientRenderer = new ScanlineRenderer(clippingRenderer, spanAllocator, gradientSpan);
-
-        var begin = new RgbaColorF(1, 0, 0).toRgbaColor();
-        var end = new RgbaColorF(0, 1, 0).toRgbaColor();
-
-        var i = 0;
-        while (i < 256)
-        {
-            gradientColors.set(begin.gradient(end, i / 255.0), i);
-            ++i;
-        }
-
-        SolidScanlineRenderer.renderScanlines(rasterizer, scanline, gradientRenderer);
-    }
-
-//---------------------------------------------------------------------------------------------------
-    static function t9():Void
-    {
-        var t = new Circles(renderingBuffer);
-        t.run();
-//blit();
-        enterFrame = function()
-        {
-            t.animate();
-            reuploadTexture();
-        };
-    }
-//---------------------------------------------------------------------------------------------------
-    static function t10():Void
-    {
-        var pixelOffset = 0.5;
-        var pexelAligner = new AffineTransformer();
-        pexelAligner.multiply(AffineTransformer.translator(.5, .5));
-
-        var tr = 10.;
-        var toCenter = true;
-
-        var path = new VectorPath();
-        path.transformAllPaths(pexelAligner);
-
-        var curve = new ConvCurve(path);
-        var dash = new ConvDash(curve);
-        var stroke = new ConvStroke(dash);
-
-        dash.addDash(10, 10);
-        stroke.width = 7;
-
-        enterFrame = function()
-        {
-            var r = Std.int(Math.random() * 255);
-            var g = Std.int(Math.random() * 255);
-            var b = Std.int(Math.random() * 255);
-            var a = Std.int(Math.random() * 255);
-
-            clippingRenderer.clear(new RgbaColor(255, 255, 255));
-//t5();
-
-            path.removeAll();
-
-            path.moveTo(tr, tr);
-            path.lineTo(pixelBufferWidth - tr, tr);
-            path.lineTo(pixelBufferWidth - tr, pixelBufferHeight - tr);
-            path.lineTo(tr, pixelBufferHeight - tr);
-            path.lineTo(tr, tr);
-            path.closePolygon();
-
-            if (toCenter)
-            {
-                tr += 3;
-                stroke.width -= 0.04;
-                if (tr > pixelBufferHeight / 2)
-                {
-                    tr = pixelBufferHeight / 2;
-                    toCenter = false;
-                    stroke.width = 0.5;
-                }
-            }
-            else
-            {
-                tr -= 3;
-                stroke.width += 0.06;
-                if (tr < 10.)
-                {
-                    tr = 10.;
-                    toCenter = true;
-                    stroke.width = 7;
-                }
-            }
-
-            rasterizer.addPath(stroke);
-            scanlineRenderer.color = new RgbaColor(g, r, b);
-            SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
-
-            rasterizer.addPath(curve);
-            scanlineRenderer.color = new RgbaColor(r, g, b, a);
-            SolidScanlineRenderer.renderScanlines(rasterizer, scanline, scanlineRenderer);
-//
-            reuploadTexture();
-//t6();
-        };
-    }
-
-//---------------------------------------------------------------------------------------------------
-    static function t11():Void
-    {
-        var t = new SVGTest(renderingBuffer, AssetLoader.getDataFromFile(VECTOR_PATH_TIGER));
-        t.run();
+        throw "not implemented";
     }
 
     private function update(deltaTime: Float, currentTime: Float)
@@ -595,16 +229,6 @@ class MeshTest extends OpenGLTest
         {
             enterFrame();
         }
-
-//        var tween = (Math.sin(currentTime * 0.5) + 1.0) / 2.0;
-//
-//        animatedMesh.width = 0.75 + 0.25 * tween;
-//        animatedMesh.height = 1.0 - 0.25 * tween;
-//
-//        animatedMesh.uMultiplier = 1.0 + Math.sin(currentTime * 0.125);
-//        animatedMesh.vMultiplier = 1.0 + Math.cos(currentTime * 0.125);
-//
-//        animatedMesh.updateBuffers();
     }
 
     override private function render()
