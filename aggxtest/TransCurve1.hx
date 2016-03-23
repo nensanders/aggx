@@ -17,7 +17,7 @@ import aggx.vectorial.converters.ConvStroke;
 import aggx.vectorial.converters.ConvTransform;
 import aggx.vectorial.SimplePolygonVertexSource;
 import aggx.vectorial.TransSinglePath;
-import lib.ha.rfpx.TrueTypeCollection;
+import aggx.rfpx.TrueTypeCollection;
 //=======================================================================================================
 class TransCurve1 
 {

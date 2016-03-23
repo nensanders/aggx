@@ -26,31 +26,31 @@
 
 package tests.meshTest;
 
-import lib.ha.aggx.vectorial.Ellipse;
+import aggx.vectorial.Ellipse;
 import aggx.color.RgbaColorF;
-import lib.ha.aggx.renderer.ScanlineRenderer;
+import aggx.renderer.ScanlineRenderer;
 import aggx.color.SpanGradient;
 import aggx.color.SpanAllocator;
 import aggx.color.SpanInterpolatorLinear;
 import aggx.color.GradientX;
-import lib.ha.aggx.vectorial.converters.ConvSegmentator;
-import lib.ha.aggx.vectorial.converters.ConvAdaptorVcgen;
-import lib.ha.aggx.vectorial.converters.ConvBSpline;
-import lib.ha.aggx.vectorial.converters.ConvContour;
-import lib.ha.aggx.vectorial.PathCommands;
+import aggx.vectorial.converters.ConvSegmentator;
+import aggx.vectorial.converters.ConvAdaptorVcgen;
+import aggx.vectorial.converters.ConvBSpline;
+import aggx.vectorial.converters.ConvContour;
+import aggx.vectorial.PathCommands;
 import aggxtest.SVGTest;
 import aggxtest.Circles;
 import aggxtest.AATest;
 import aggxtest.AADemo;
 import aggxtest.AlphaGradient;
 import aggxtest.TransCurve1;
-import lib.ha.aggx.vectorial.LineCap;
-import lib.ha.aggx.vectorial.converters.ConvDash;
-import lib.ha.core.memory.MemoryAccess;
-import lib.ha.aggx.vectorial.converters.ConvStroke;
-import lib.ha.aggx.vectorial.converters.ConvCurve;
-import lib.ha.aggx.vectorial.VectorPath;
-import lib.ha.core.geometry.AffineTransformer;
+import aggx.vectorial.LineCap;
+import aggx.vectorial.converters.ConvDash;
+import aggx.core.memory.MemoryAccess;
+import aggx.vectorial.converters.ConvStroke;
+import aggx.vectorial.converters.ConvCurve;
+import aggx.vectorial.VectorPath;
+import aggx.core.geometry.AffineTransformer;
 import tests.utils.Bitmap;
 import tests.utils.ImageDecoder;
 import tests.utils.AssetLoader;
@@ -60,18 +60,16 @@ import types.Data;
 import gl.GL;
 import gl.GLDefines;
 
-import lib.ha.aggx.typography.FontEngine;
-import lib.ha.rfpx.TrueTypeCollection;
-import lib.ha.rfpx.TrueTypeLoader;
+import aggx.typography.FontEngine;
+import aggx.rfpx.TrueTypeCollection;
+import aggx.rfpx.TrueTypeLoader;
 import aggx.color.RgbaColor;
-import lib.ha.aggx.renderer.SolidScanlineRenderer;
-import lib.ha.aggx.rasterizer.ScanlineRasterizer;
-import lib.ha.aggx.rasterizer.Scanline;
-import lib.ha.aggx.renderer.ClippingRenderer;
-import lib.ha.aggx.renderer.PixelFormatRenderer;
-import lib.ha.aggx.RenderingBuffer;
-import lib.ha.core.memory.MemoryManager;
-import lib.ha.core.memory.MemoryBlock;
+import aggx.renderer.SolidScanlineRenderer;
+import aggx.rasterizer.ScanlineRasterizer;
+import aggx.rasterizer.Scanline;
+import aggx.renderer.ClippingRenderer;
+import aggx.renderer.PixelFormatRenderer;
+import aggx.RenderingBuffer;
 
 class MeshTest extends OpenGLTest
 {
@@ -85,7 +83,7 @@ class MeshTest extends OpenGLTest
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/chars/Bendy2.svg";
     //inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_transform.svg";
-    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/rect_gradientTransform.svg";
+    inline private static var VECTOR_PATH_TIGER = "meshTest/vector/tiger.svg";
     inline private static var VERTEXSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.vsh";
     inline private static var FRAGMENTSHADER_PATH = "common/shaders/ScreenSpace_PosColorTex.fsh";
 
@@ -100,7 +98,6 @@ class MeshTest extends OpenGLTest
     static var pixelBufferSize:UInt = pixelBufferWidth * pixelBufferHeight * 4;
     //---------------------------------------------------------------------------------------------------
     static var data: Data;
-    static var pixelBuffer: MemoryBlock;
     static var renderingBuffer: RenderingBuffer;
     static var pixelFormatRenderer: PixelFormatRenderer;
     static var clippingRenderer: ClippingRenderer;
@@ -218,7 +215,7 @@ class MeshTest extends OpenGLTest
     static private function reuploadTexture()
     {
         var data: Data = MemoryAccess.domainMemory;
-        data.offset = pixelBuffer.start;
+        data.offset = 0;
         data.offsetLength = pixelBufferSize;
 
         GL.bindTexture(GLDefines.TEXTURE_2D, texture);

@@ -1,6 +1,6 @@
 package aggxtest;
 //=======================================================================================================
-import lib.ha.core.memory.MemoryUtils;
+import aggx.core.memory.MemoryUtils;
 import haxe.ds.Vector;
 import aggx.color.RgbaColor;
 import aggx.rasterizer.GammaNone;

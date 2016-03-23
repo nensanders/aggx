@@ -12,8 +12,8 @@ import aggx.renderer.SolidScanlineRenderer;
 import aggx.RenderingBuffer;
 import aggx.vectorial.converters.ConvTransform;
 import aggx.vectorial.Ellipse;
-import lib.ha.core.geometry.AffineTransformer;
-import lib.ha.core.math.Calc;
+import aggx.core.geometry.AffineTransformer;
+import aggx.core.math.Calc;
 //=======================================================================================================
 class Circles
 {

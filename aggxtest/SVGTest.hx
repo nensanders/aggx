@@ -1,11 +1,11 @@
 package aggxtest;
 
-import lib.ha.svg.SVGDataBuilder;
-import lib.ha.svg.SVGRenderer;
-import lib.ha.core.geometry.AffineTransformer;
+import aggx.svg.SVGDataBuilder;
+import aggx.svg.SVGRenderer;
+import aggx.core.geometry.AffineTransformer;
 import aggx.color.RgbaColor;
-import lib.ha.svg.SVGParser;
-import lib.ha.svg.SVGData;
+import aggx.svg.SVGParser;
+import aggx.svg.SVGData;
 import types.Data;
 import aggx.rasterizer.ScanlineRasterizer;
 import aggx.rasterizer.Scanline;

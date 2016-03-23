@@ -23,9 +23,9 @@ import aggx.vectorial.generators.VcgenStroke;
 import aggx.vectorial.PathCommands;
 import aggx.vectorial.PathFlags;
 import aggxtest.AATest;
-import lib.ha.core.geometry.AffineTransformer;
-import lib.ha.core.memory.Byte;
-import lib.ha.core.math.Calc;
+import aggx.core.geometry.AffineTransformer;
+import aggx.core.memory.Byte;
+import aggx.core.math.Calc;
 //=======================================================================================================
 class AlphaGradient
 {
