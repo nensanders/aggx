@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <library>
 
-    <duelllib name="types" version="master" />
+    <duelllib name="types" version="3.8.0+" />
 
 </library>
