@@ -9,6 +9,7 @@ import aggx.color.RgbaColorF;
 import aggx.color.SpanAllocator;
 import aggx.color.SpanGradient;
 import aggx.color.SpanGradient;
+import aggx.color.ColorArray;
 import aggx.color.SpanInterpolatorLinear;
 import aggx.rasterizer.IScanline;
 import aggx.rasterizer.Scanline;
@@ -208,33 +209,6 @@ class AATest
 			++i;
 		}
 	}
-}
-//=======================================================================================================
-class ColorArray implements IColorFunction
-{
-	private var _colors:Vector<RgbaColor>;
-	//---------------------------------------------------------------------------------------------------
-	public function new(sz:UInt)
-	{
-		_colors = new Vector(sz);
-	}
-	//---------------------------------------------------------------------------------------------------
-	public function get(idx:UInt):RgbaColor
-	{
-		if (idx >= _colors.length)
-		{
-			idx = _colors.length - 1;
-		}
-		return RgbaColor.fromRgbaColor(_colors[idx]);
-	}
-	//---------------------------------------------------------------------------------------------------
-	public function set(c:RgbaColor, idx:Int):Void
-	{
-		_colors[idx] = c;
-	}
-	//---------------------------------------------------------------------------------------------------
-	private inline function get_size():UInt { return _colors.length; }
-	public var size(get, null):UInt;
 }
 //=======================================================================================================
 class SimpleVertexSource implements IVertexSource

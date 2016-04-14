@@ -1,7 +1,7 @@
 package tests;
 
 import aggx.color.RgbaColor;
-import aggxtest.AlphaGradient;
+import tests.aggxtest.AlphaGradient;
 import tests.utils.AssetLoader;
 import aggx.core.memory.MemoryAccess;
 import tests.meshTest.MeshTest;

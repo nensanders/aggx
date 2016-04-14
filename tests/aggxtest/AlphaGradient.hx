@@ -22,7 +22,7 @@ import aggx.vectorial.Ellipse;
 import aggx.vectorial.generators.VcgenStroke;
 import aggx.vectorial.PathCommands;
 import aggx.vectorial.PathFlags;
-import aggxtest.AATest;
+import aggx.color.ColorArray;
 import aggx.core.geometry.AffineTransformer;
 import aggx.core.memory.Byte;
 import aggx.core.math.Calc;

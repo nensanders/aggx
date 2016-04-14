@@ -1,12 +1,15 @@
-import lib.ha.aggx.renderer.SolidScanlineRenderer;
-import lib.ha.aggx.renderer.ClippingRenderer;
-import lib.ha.aggx.renderer.PixelFormatRenderer;
-import lib.ha.aggx.RenderingBuffer;
-import lib.ha.core.geometry.AffineTransformer;
-import lib.ha.aggx.rasterizer.Scanline;
-import lib.ha.aggx.rasterizer.ScanlineRasterizer;
-import lib.ha.svg.SVGData;
-import lib.ha.svg.SVGRenderer;
+import aggx.vectorial.generators.VcgenDash;
+import aggx.vectorial.converters.ConvDash;
+import aggx.vectorial.Ellipse;
+import aggx.renderer.SolidScanlineRenderer;
+import aggx.renderer.ClippingRenderer;
+import aggx.renderer.PixelFormatRenderer;
+import aggx.RenderingBuffer;
+import aggx.core.geometry.AffineTransformer;
+import aggx.rasterizer.Scanline;
+import aggx.rasterizer.ScanlineRasterizer;
+import aggx.svg.SVGData;
+import aggx.svg.SVGRenderer;
 
 class MainCs
 {
@@ -22,6 +25,9 @@ class MainCs
         var pixelFormatRenderer = new PixelFormatRenderer(renderingBuffer);
         var clippingRenderer = new ClippingRenderer(pixelFormatRenderer);
         var scanlineRenderer = new SolidScanlineRenderer(clippingRenderer);
+        var ellipse = new Ellipse();
+        var convDash = new ConvDash(null);
+        var vcgenDash = new VcgenDash();
 
         render.render(data, rasterizer, scanline, clippingRenderer, transform, 1.0);
     }
