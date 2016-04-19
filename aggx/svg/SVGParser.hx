@@ -92,15 +92,14 @@ class SVGParser
         });
     }
 
-
-    private var viewBoxRegex = ~/([,\s]+)/g;
     private function parseSvgElement(xml: Xml): Void
     {
         if (xml.exists("viewBox"))
         {
             /// parse the initial viewport
             var viewBoxString = xml.get("viewBox");
-            var viewBoxStringArray = viewBoxRegex.split(viewBoxString);
+            var viewBoxStringArray = viewBoxString.split(" ");
+            viewBoxStringArray = viewBoxStringArray.filter(function(s) return s != "");
             if (viewBoxStringArray.length == 4)
             {
                 _path.data.viewBox.x = Std.parseFloat(viewBoxStringArray[0]);
