@@ -92,23 +92,46 @@ class SVGParser
         });
     }
 
+
+    private var viewBoxRegex = ~/([,\s]+)/g;
+    private function parseSvgElement(xml: Xml): Void
+    {
+        if (xml.exists("viewBox"))
+        {
+            /// parse the initial viewport
+            var viewBoxString = xml.get("viewBox");
+            var viewBoxStringArray = viewBoxRegex.split(viewBoxString);
+            if (viewBoxStringArray.length == 4)
+            {
+                _path.data.viewBox.x = Std.parseFloat(viewBoxStringArray[0]);
+                _path.data.viewBox.y = Std.parseFloat(viewBoxStringArray[1]);
+                _path.data.viewBox.width = Std.parseFloat(viewBoxStringArray[2]);
+                _path.data.viewBox.height = Std.parseFloat(viewBoxStringArray[3]);
+            }
+        }
+    }
+
     public function processXML(xml: Xml): Void
     {
         //begin with parsing all defs elements witch may scattered across all the document
-        var defsCbk = function(element: Xml): Bool
+        var topLevelCbk = function(element: Xml): Bool
         {
-            if (element.nodeName != "defs")
+            if (element.nodeName == "svg")
             {
+                parseSvgElement(element);
                 return true;
             }
-
-            parseDefs(element);
-            return true;
+            else if (element.nodeName == "defs")
+            {
+                parseDefs(element);
+                return true;
+            }
+            return false;
         }
 
-        xml.eachXmlElement(defsCbk);
+        xml.eachXmlElement(topLevelCbk);
 
-       processXmlRecursive(xml);
+        processXmlRecursive(xml);
     }
 
     private function processXmlRecursive(xml: Xml)
