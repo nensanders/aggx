@@ -1,6 +1,6 @@
 package tests;
 
-import aggxtest.SVGTest;
+import tests.aggxtest.SVGTest;
 import aggx.typography.FontEngine;
 import aggx.rfpx.TrueTypeCollection;
 import tests.utils.AssetLoader;

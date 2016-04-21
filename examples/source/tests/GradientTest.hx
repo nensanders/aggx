@@ -4,7 +4,7 @@ import aggx.vectorial.converters.ConvDash;
 import aggx.color.RgbaColorF;
 import aggx.renderer.ScanlineRenderer;
 import aggx.color.SpanGradient;
-import aggxtest.AATest.ColorArray;
+import tests.aggxtest.AATest.ColorArray;
 import aggx.color.SpanAllocator;
 import aggx.color.SpanInterpolatorLinear;
 import aggx.color.GradientX;

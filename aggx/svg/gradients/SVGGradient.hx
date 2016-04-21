@@ -4,7 +4,7 @@ import aggx.color.SpanGradient.SpreadMethod;
 import haxe.ds.Vector;
 import aggx.core.memory.Ref.FloatRef;
 import aggx.core.geometry.AffineTransformer;
-import aggxtest.AATest.ColorArray;
+import aggx.color.ColorArray;
 import aggx.color.RgbaColor;
 
 enum GradientType

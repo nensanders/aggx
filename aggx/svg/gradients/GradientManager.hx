@@ -3,7 +3,7 @@ package aggx.svg.gradients;
 import types.Data;
 import aggx.color.GradientRadialFocus;
 import aggx.color.SpanGradient.SpreadMethod;
-import aggxtest.AATest.ColorArray;
+import aggx.color.ColorArray;
 import aggx.core.memory.Ref.FloatRef;
 import aggx.core.memory.Ref;
 import aggx.core.geometry.AffineTransformer;

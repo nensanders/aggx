@@ -1,6 +1,6 @@
 package tests;
 
-import aggxtest.Circles;
+import tests.aggxtest.Circles;
 import aggx.color.RgbaColor;
 import aggx.core.memory.MemoryAccess;
 import tests.meshTest.MeshTest;
