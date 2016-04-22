@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -23,7 +23,7 @@ import aggx.core.geometry.Coord;
 import aggx.rfpx.ContourSegment;
 import aggx.rfpx.Glyph;
 //=======================================================================================================
-class Typeface 
+class Typeface
 {
 	private var _charCode:UInt;
 	private var _glyph:Glyph;
@@ -45,27 +45,27 @@ class Typeface
 
 		_path.removeAll();
 		var numberOfContours:UInt = _glyph.numberOfContours;
-		
+
 		var p:Coord;
 
 		var n:UInt = 0;
 		while (n < numberOfContours)
 		{
 			var contourSegments = _glyph.getContourSegments(n);
-		
-			if (contourSegments == null) 
+
+			if (contourSegments == null)
 			{
 				++n;
 				continue;
 			}
-			
+
 			p = contourSegments.current.getPoint(0);
-			
+
 			x1 = p.x;
 			y1 = p.y;
-			
+
 			if (_flipY) { y1 = -y1;}
-			
+
 			_path.moveTo(x1, y1);
 
 			while (contourSegments.next())
@@ -74,26 +74,26 @@ class Typeface
 				if (segment.type == ContourSegment.LINE)
 				{
 					p = segment.getPoint(0);
-					
+
 					x1 = p.x;
 					y1 = p.y;
-					
+
 					if (_flipY) { y1 = -y1; }
-					
+
 					_path.lineTo(x1, y1);
 				}
-				else 
+				else if (segment.type == ContourSegment.CURVE)
 				{
 					var b = segment.getPoint(0);
 					var c = segment.getPoint(1);
-					
+
 					x1 = b.x;
 					y1 = b.y;
 					x2 = c.x;
 					y2 = c.y;
-					
+
 					if (_flipY) { y1 = -y1; y2 = -y2; }
-					
+
 					_path.curve3(x1, y1, x2, y2);
 				}
 			}
