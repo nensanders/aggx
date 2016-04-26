@@ -1,4 +1,4 @@
-package aggxtest;
+package tests.aggxtest;
 
 import aggx.svg.SVGDataBuilder;
 import aggx.svg.SVGRenderer;
