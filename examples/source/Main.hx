@@ -60,7 +60,18 @@ class Main
 
         configureInput();
 
-        testArray = [tests.meshTest.MeshTest];
+        testArray = [
+            tests.SvgTest,
+            tests.AlphaGradientTest,
+            tests.AADemo,
+            tests.AATest,
+            tests.SubpixelTest,
+            tests.StrokeDashTest,
+            tests.GradientTest,
+            tests.CirclesTest,
+            tests.RandomColorTest,
+            tests.FontTest
+        ];
 
         currentTestNumber = testArray.length - 1;
         switchToTest(currentTestNumber);

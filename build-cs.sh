@@ -1,0 +1,1 @@
+haxe -main MainCs.hx -cp aggx -cp examples/source -cp csharp -cs Export/csharp -D dll -D erase-generics -v

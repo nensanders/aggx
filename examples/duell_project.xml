@@ -3,12 +3,12 @@
 
     <include path="../duell_library.xml"/>
 
-    <app title="Anti-Grain Geometry Haxe Tests" file="AggxExamples" package="net.twotime.aggxexamples" version="0.0.1" company="2time.net"  />
+    <app title="Anti-Grain Geometry Tests" file="AggxExamples" package="com.gameduell.aggxexamples" version="0.0.1" company="GameDuell GmbH" />
 	<main name="Main" />
 
 	<source path="source" />
 
-	<duelllib name="duellkit" version="5.0.0+" />
+	<duelllib name="duellkit" version="7.0.0+" />
 
     <haxelib name="format" version="3.1.2" />
 
