@@ -15,7 +15,8 @@ class SVGData
     public var elementStorage: Array<SVGElement> = [];
     public var gradientManager(default, null): GradientManager = new GradientManager();
     public var viewBox: RectF = new RectF();
-
+    public var width: Float = 0;
+    public var height: Float = 0;
     public var expandValue: Float = 0;
 
     public function new()

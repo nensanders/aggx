@@ -92,43 +92,46 @@ class SVGParser
         });
     }
 
-    private function parseSvgElement(xml: Xml): Void
+    private function parseRootElement(element: Xml): Void
     {
-        if (xml.exists("viewBox"))
+        eachAttribute(element, function (name: String, value: String)
         {
-            /// parse the initial viewport
-            var viewBoxString = xml.get("viewBox");
-            var viewBoxStringArray = viewBoxString.split(" ");
-            viewBoxStringArray = viewBoxStringArray.filter(function(s) return s != "");
-            if (viewBoxStringArray.length == 4)
+            switch (name)
             {
-                _path.data.viewBox.x = Std.parseFloat(viewBoxStringArray[0]);
-                _path.data.viewBox.y = Std.parseFloat(viewBoxStringArray[1]);
-                _path.data.viewBox.width = Std.parseFloat(viewBoxStringArray[2]);
-                _path.data.viewBox.height = Std.parseFloat(viewBoxStringArray[3]);
+                case "viewBox": parseViewBox(value);
+                case "width": _path.data.width = Std.parseFloat(value);
+                case "height": _path.data.height = Std.parseFloat(value);
             }
+        });
+    }
+
+    private function parseViewBox(value: String): Void
+    {
+        var viewBoxStringArray = value.split(" ");
+        viewBoxStringArray = viewBoxStringArray.filter(function(s) return s != "");
+        if (viewBoxStringArray.length == 4)
+        {
+            _path.data.viewBox.x = Std.parseFloat(viewBoxStringArray[0]);
+            _path.data.viewBox.y = Std.parseFloat(viewBoxStringArray[1]);
+            _path.data.viewBox.width = Std.parseFloat(viewBoxStringArray[2]);
+            _path.data.viewBox.height = Std.parseFloat(viewBoxStringArray[3]);
         }
     }
 
     public function processXML(xml: Xml): Void
     {
         //begin with parsing all defs elements witch may scattered across all the document
-        var topLevelCbk = function(element: Xml): Bool
+        var defsCbk = function(element: Xml): Bool
         {
-            if (element.nodeName == "svg")
-            {
-                parseSvgElement(element);
-                return true;
-            }
-            else if (element.nodeName == "defs")
+            if (element.nodeName == "defs")
             {
                 parseDefs(element);
-                return true;
             }
-            return false;
+
+            return true;
         }
 
-        xml.eachXmlElement(topLevelCbk);
+        xml.eachXmlElement(defsCbk);
 
         processXmlRecursive(xml);
     }
@@ -197,6 +200,7 @@ class SVGParser
 
         switch (el)
         {
+            case "svg": parseRootElement(element);
             case "g":
                 {
                     _path.pushElement();
