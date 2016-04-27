@@ -1,4 +1,4 @@
-package aggxtest;
+package tests.aggxtest;
 //=======================================================================================================
 import haxe.ds.Vector;
 import aggx.color.GradientCircle;

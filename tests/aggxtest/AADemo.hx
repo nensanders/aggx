@@ -1,4 +1,4 @@
-package aggxtest;
+package tests.aggxtest;
 //=======================================================================================================
 import aggx.core.memory.MemoryUtils;
 import haxe.ds.Vector;
