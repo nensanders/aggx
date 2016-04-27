@@ -28,7 +28,7 @@ class HmtxTable
 {
 	private var _tableRecord:TableRecord;
 	private var _hMetrics:Vector<LongHorMetric>;
-	private var _leftSideBearing:Vector<Int>;			//SHORT[numGlyphs - numberOfHMetrics]
+	private var _leftSideBearing:Array<Int>;			//SHORT[numGlyphs - numberOfHMetrics]
 	//---------------------------------------------------------------------------------------------------
 	public function new(record:TableRecord, data: Data, numGlyphs:UInt, numberOfHMetrics:UInt)
 	{
@@ -48,7 +48,7 @@ class HmtxTable
 		}
 		
 		var lsbCount:UInt = numGlyphs - numberOfHMetrics;
-		_leftSideBearing = new Vector(lsbCount);
+		_leftSideBearing = [];
 		i = 0;
 		while (i < lsbCount)
 		{
