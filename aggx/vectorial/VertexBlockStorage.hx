@@ -19,7 +19,6 @@
 package aggx.vectorial;
 //=======================================================================================================
 import aggx.core.StreamInterface;
-import types.Data;
 import aggx.core.memory.Byte;
 import aggx.core.memory.Ref;
 //=======================================================================================================
