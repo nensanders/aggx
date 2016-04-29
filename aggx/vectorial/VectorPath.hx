@@ -18,6 +18,7 @@
 
 package aggx.vectorial;
 //=======================================================================================================
+import aggx.core.StreamInterface;
 import types.Data;
 import aggx.core.memory.Byte;
 import aggx.core.geometry.AffineTransformer;
@@ -58,12 +59,12 @@ class VectorPath implements IVertexSource
 		_vertices.addVertex(x, y, cmd);
 	}
 
-    public function save(data: Data): Void
+    public function save(data: StreamInterface): Void
     {
         _vertices.save(data);
     }
 
-    public function load(data: Data): Void
+    public function load(data: StreamInterface): Void
     {
         _vertices.load(data);
         _vertextIterator = 0;
