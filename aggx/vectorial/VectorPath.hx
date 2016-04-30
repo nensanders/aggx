@@ -29,10 +29,30 @@ class VectorPath implements IVertexSource
 	private var _vertices:VertexBlockStorage;
 	private var _vertextIterator:UInt;
     private var _svgArc: BezierArcSvg = new BezierArcSvg();
+
+	public var vertices(get, set): VertexBlockStorage;
 	//---------------------------------------------------------------------------------------------------
-	public function new() 
+	public function new(?vertices: VertexBlockStorage)
 	{
-		_vertices = new VertexBlockStorage();
+		if (vertices == null)
+		{
+			_vertices = new VertexBlockStorage();
+		}
+		else
+		{
+			_vertices = vertices;
+		}
+	}
+
+	public function set_vertices(vertices: VertexBlockStorage): VertexBlockStorage
+	{
+		_vertices = vertices;
+		return _vertices;
+	}
+
+	public function get_vertices(): VertexBlockStorage
+	{
+		return _vertices;
 	}
 
 	public function toString(): String
