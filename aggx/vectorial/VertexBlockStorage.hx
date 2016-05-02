@@ -18,7 +18,7 @@
 
 package aggx.vectorial;
 //=======================================================================================================
-import types.Data;
+import aggx.core.StreamInterface;
 import aggx.core.memory.Byte;
 import aggx.core.memory.Ref;
 //=======================================================================================================
@@ -38,65 +38,50 @@ class VertexBlockStorage
 		_verticesCount = 0;
 	}
 
-	public function save(data: Data): Void
+	public function save(data: StreamInterface): Void
 	{
-        var bytesLeft = data.allocedLength - data.offset;
         var size: Int = 4 + 4 * 2 * _verticesCount + _verticesCount;
 
-        if (bytesLeft < size)
-        {
-            var newSize = Math.ceil(Math.max(size, data.allocedLength) * 1.8);
-			//intentionally left here for debugging
-            //trace('resize ${data.allocedLength} -> $newSize');
-            data.resize(newSize);
-        }
+        data.preallocate(size);
 
 		data.writeUInt32(_verticesCount);
-		data.offset += 4;
 
 		for (i in 0 ... _verticesCount)
 		{
 			data.writeFloat32(_coordsX[i]);
-			data.offset += 4;
 		}
 
 		for (i in 0 ... _verticesCount)
 		{
 			data.writeFloat32(_coordsY[i]);
-			data.offset += 4;
 		}
 
 		for (i in 0 ... _verticesCount)
 		{
 			data.writeUInt8(_commands[i]);
-			data.offset += 1;
 		}
 	}
 
-	public function load(data: Data): Void
+	public function load(data: StreamInterface): Void
 	{
 		_verticesCount = data.readUInt32();
-		data.offset += 4;
 
 		_coordsX = [];
         for (i in 0 ... _verticesCount)
         {
             _coordsX.push(data.readFloat32());
-            data.offset += 4;
         }
 
         _coordsY = [];
         for (i in 0 ... _verticesCount)
         {
             _coordsY.push(data.readFloat32());
-            data.offset += 4;
         }
 
         _commands = [];
         for (i in 0 ... _verticesCount)
         {
             _commands.push(data.readUInt8());
-            data.offset += 1;
         }
 	}
 
