@@ -1,6 +1,5 @@
 package aggx.svg.gradients;
 
-import types.Data;
 import aggx.color.GradientRadialFocus;
 import aggx.color.SpanGradient.SpreadMethod;
 import aggx.color.ColorArray;

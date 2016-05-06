@@ -82,6 +82,7 @@ class SpanGradient implements ISpanGenerator
 		var x = Ref.getInt().set(x_);
 		var y = Ref.getInt().set(y_);
 		var offset = span.offset;
+		var _len = len;//codegen bug workaround
 		_interpolator.begin(x_ + 0.5, y_ + 0.5, len);
 		do
 		{
@@ -130,7 +131,7 @@ class SpanGradient implements ISpanGenerator
             span.data[offset++] = _colorFunction.get(d);
 			_interpolator.op_inc();
 		}
-		while (--len != 0);
+		while (--_len != 0);
         Ref.putInt(x);
         Ref.putInt(y);
 	}
