@@ -1,10 +1,10 @@
 package tests;
 
+import aggx.color.ColorArray;
 import aggx.vectorial.converters.ConvDash;
 import aggx.color.RgbaColorF;
 import aggx.renderer.ScanlineRenderer;
 import aggx.color.SpanGradient;
-import tests.aggxtest.AATest.ColorArray;
 import aggx.color.SpanAllocator;
 import aggx.color.SpanInterpolatorLinear;
 import aggx.color.GradientX;
