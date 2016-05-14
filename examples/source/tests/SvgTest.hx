@@ -1,6 +1,5 @@
 package tests;
 
-import tests.aggxtest.SVGTest;
 import aggx.typography.FontEngine;
 import aggx.rfpx.TrueTypeCollection;
 import tests.utils.AssetLoader;
@@ -23,7 +22,7 @@ class SvgTest extends MeshTest
     {
         MemoryAccess.select(data);
         clippingRenderer.clear(new RgbaColor(255, Std.int(255.0 * 1.0), Std.int(255.0 * 1.0), 255));
-        var t = new SVGTest(renderingBuffer, AssetLoader.getDataFromFile(VECTOR_PATH_TIGER));
+        var t = new tests.aggxtest.SVGTest(renderingBuffer, AssetLoader.getDataFromFile(VECTOR_PATH_TIGER));
         t.run();
     }
 }

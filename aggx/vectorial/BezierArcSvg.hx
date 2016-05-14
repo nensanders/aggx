@@ -1,15 +1,16 @@
 package aggx.vectorial;
 
+import aggx.core.geometry.Vector2D;
 import aggx.core.math.Calc;
-import types.Vector2;
 import aggx.core.geometry.AffineTransformer;
 import aggx.core.memory.Ref.FloatRef;
+
 class BezierArcSvg
 {
 
-    var _start: Vector2 = new Vector2();
-    var _end: Vector2 = new Vector2();
-    var _radius: Vector2 = new Vector2();
+    var _start: Vector2D = new Vector2D();
+    var _end: Vector2D = new Vector2D();
+    var _radius: Vector2D = new Vector2D();
     var _angle: Float;
     var _isLargeArc: Bool;
     var _isSweepArc: Bool;
@@ -44,7 +45,7 @@ class BezierArcSvg
 
     public function addToPath(storage: VectorPath)
     {
-        if (Vector2.distance(_start, _end) < Calc.VERTEX_DIST_EPSILON)
+        if (Vector2D.distance(_start, _end) < Calc.VERTEX_DIST_EPSILON)
         {
             return;
         }

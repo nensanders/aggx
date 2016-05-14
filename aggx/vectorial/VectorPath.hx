@@ -18,7 +18,7 @@
 
 package aggx.vectorial;
 //=======================================================================================================
-import types.Data;
+import aggx.core.StreamInterface;
 import aggx.core.memory.Byte;
 import aggx.core.geometry.AffineTransformer;
 import aggx.core.memory.Ref;
@@ -29,10 +29,30 @@ class VectorPath implements IVertexSource
 	private var _vertices:VertexBlockStorage;
 	private var _vertextIterator:UInt;
     private var _svgArc: BezierArcSvg = new BezierArcSvg();
+
+	public var vertices(get, set): VertexBlockStorage;
 	//---------------------------------------------------------------------------------------------------
-	public function new() 
+	public function new(?vertices: VertexBlockStorage)
 	{
-		_vertices = new VertexBlockStorage();
+		if (vertices == null)
+		{
+			_vertices = new VertexBlockStorage();
+		}
+		else
+		{
+			_vertices = vertices;
+		}
+	}
+
+	public function set_vertices(vertices: VertexBlockStorage): VertexBlockStorage
+	{
+		_vertices = vertices;
+		return _vertices;
+	}
+
+	public function get_vertices(): VertexBlockStorage
+	{
+		return _vertices;
 	}
 
 	public function toString(): String
@@ -58,12 +78,12 @@ class VectorPath implements IVertexSource
 		_vertices.addVertex(x, y, cmd);
 	}
 
-    public function save(data: Data): Void
+    public function save(data: StreamInterface): Void
     {
         _vertices.save(data);
     }
 
-    public function load(data: Data): Void
+    public function load(data: StreamInterface): Void
     {
         _vertices.load(data);
         _vertextIterator = 0;
