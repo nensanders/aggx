@@ -31,23 +31,37 @@ class SVGStringParsers
             var r: String = "0x";
             var g: String = "0x";
             var b: String = "0x";
+            var a: String = "0x";
 
             if (isShortHex)
             {
                 var rs = hexStr.substr(0,1);
                 var gs = hexStr.substr(1,1);
                 var bs = hexStr.substr(2,1);
+
                 r = r + rs + rs;
                 g = g + gs + gs;
                 b = b + bs + bs;
+
+                return new RgbaColor(Std.parseInt(r), Std.parseInt(g), Std.parseInt(b));
             }
             else
             {
                 r += hexStr.substr(0,2);
                 g += hexStr.substr(2,2);
                 b += hexStr.substr(4,2);
+
+                if (hexStr.length >= 8)
+                {
+                    a += hexStr.substr(6,2);
+                }
+                else
+                {
+                    a += "FF";
+                }
+
+                return new RgbaColor(Std.parseInt(r), Std.parseInt(g), Std.parseInt(b), Std.parseInt(a));
             }
-            return new RgbaColor(Std.parseInt(r), Std.parseInt(g), Std.parseInt(b));
         }
         else if (str.indexOf("rgb") != -1)
         {
