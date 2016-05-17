@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -22,9 +22,11 @@ import types.Data;
 import haxe.ds.Vector;
 import aggx.core.memory.Pointer;
 import aggx.core.memory.MemoryReaderEx;
+import aggx.core.memory.MemoryAccess;
+
 using aggx.core.memory.MemoryReaderEx;
 //=======================================================================================================
-class CmapFormat4 
+class CmapFormat4
 {
 	private var _format:UInt;					//UShort
 	private var _length:UInt;					//UShort
@@ -39,15 +41,20 @@ class CmapFormat4
 	private var _idDelta:Vector<Int>;			//UShort[segCountX2/2]
 	private var _idRangeOffset:Vector<UInt>;	//UShort[segCountX2/2]
 	private var _glyphIndexArray:Pointer;//UShort[]
-	
+
 	private var _idRangeOffsetPtr:Pointer;
+
+	/// preserve original binary data, because this format may require additional raw lookups
+	private var _mapData: Data;
+	private var originalLength: Int;
+	private var originalOffset: Int;
 	//---------------------------------------------------------------------------------------------------
 	public function new(data: Data)
 	{
 		_format = 4;
-		
-		//var dataPtr = data;
-		
+
+		originalOffset = data.offset;
+
 		_length = data.dataGetUShort();
 		data.offset += 2;
 		_language = data.dataGetUShort();
@@ -60,7 +67,7 @@ class CmapFormat4
 		data.offset += 2;
 		_rangeShift = data.dataGetUShort();
 		data.offset += 2;
-		
+
 		var segCount:UInt = _segCountX2 >> 1;
 		_endCount = new Vector(segCount);
 		var i:UInt = 0;
@@ -70,10 +77,10 @@ class CmapFormat4
 			data.offset += 2;
 			++i;
 		}
-		
-		_reservedPad = 0;		
+
+		_reservedPad = 0;
 		data.offset += 2;
-		
+
 		_startCount = new Vector(segCount);
 		i = 0;
 		while (i < segCount)
@@ -82,7 +89,7 @@ class CmapFormat4
 			data.offset += 2;
 			++i;
 		}
-		
+
 		_idDelta = new Vector(segCount);
 		i = 0;
 		while (i < segCount)
@@ -91,9 +98,9 @@ class CmapFormat4
 			data.offset += 2;
 			++i;
 		}
-		
+
 		_idRangeOffset = new Vector(segCount);
-		_idRangeOffsetPtr = data.offset;
+		_idRangeOffsetPtr = data.offset - originalOffset;
 		i = 0;
 		while (i < segCount)
 		{
@@ -101,15 +108,27 @@ class CmapFormat4
 			data.offset += 2;
 			++i;
 		}
-		
+
 		_glyphIndexArray = data.dataGetUShort();
+
+		/// save the original binary data for getGlyphIndex lookup fails
+		_mapData = new Data(_length);
+
+		data.offset = originalOffset;
+
+		var prevOffsetLength = data.offsetLength;
+		data.offsetLength = _length;
+		_mapData.writeData(data);
+		data.offsetLength = prevOffsetLength;
+
+
 	}
 	//---------------------------------------------------------------------------------------------------
 	public function getGlyphIndex(charCode:UInt):UInt
 	{
 		var glyphIndex = 0;
 		var segment = findFormat4Segment(charCode);
-		if (segment < 0) 
+		if (segment < 0)
 		{
 			return 0;
 		}
@@ -117,18 +136,25 @@ class CmapFormat4
 		{
 			glyphIndex = (_idDelta[segment] + charCode) % 65536;
 		}
-		else 
+		else
 		{
 			var v0 = _idRangeOffset[segment];
 			var v1 = (charCode-_startCount[segment]) << 1;
 			var v2 = _idRangeOffsetPtr + (segment << 1);
+
+			/// lookup into raw data
+			var previousMemory = MemoryAccess.domainMemory;
+			MemoryAccess.select(_mapData);
+
 			var result:UInt  = (v0 + v1 + v2).getUShort();
-			
-			if (result != 0) 
+
+			MemoryAccess.select(previousMemory);
+
+			if (result != 0)
 			{
 				glyphIndex = (_idDelta[segment] + result) % 65536;
 			}
-			else 
+			else
 			{
 				glyphIndex = 0;
 			}
