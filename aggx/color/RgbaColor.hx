@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -32,7 +32,7 @@ class RgbaColor
 	public var b:UInt;
 	public var a:UInt;
 	//---------------------------------------------------------------------------------------------------
-	public function new(red:Int=0, green:Int=0, blue:Int=0, alpha:Int = 255)	
+	public function new(red:Int=0, green:Int=0, blue:Int=0, alpha:Int = 255)
 	{
 		r = red;
 		g = green;
@@ -48,7 +48,7 @@ class RgbaColor
 	public inline static function fromRgbaColorF(color:RgbaColorF):RgbaColor
 	{
 		return color.toRgbaColor();
-	}	
+	}
 	//---------------------------------------------------------------------------------------------------
 	public static function empty():RgbaColor
 	{
@@ -68,7 +68,8 @@ class RgbaColor
 	{
 		if(value < 0.0) value = 0.0;
 		if(value > 1.0) value = 1.0;
-		return a = Std.int(value * BASE_MASK);
+		a = Std.int(value * BASE_MASK);
+		return a;
 	}
 	public var opacity(get, set):Float;
 	//---------------------------------------------------------------------------------------------------
@@ -133,7 +134,7 @@ class RgbaColor
 		var red:UInt = Std.int((r * BASE_MASK) / a);
 		var green:UInt  = Std.int((g * BASE_MASK) / a);
 		var blue:UInt = Std.int((b * BASE_MASK) / a);
-		
+
 		r = ((red > BASE_MASK) ? BASE_MASK : red);
 		g = ((green > BASE_MASK) ? BASE_MASK : green);
 		b = ((blue > BASE_MASK) ? BASE_MASK : blue);
@@ -174,7 +175,7 @@ class RgbaColor
 			cg = g + (Std.int(color.g * cover + CoverScale.COVER_MASK / 2) >> CoverScale.COVER_SHIFT);
 			cb = b + (Std.int(color.b * cover + CoverScale.COVER_MASK / 2) >> CoverScale.COVER_SHIFT);
 			ca = a + (Std.int(color.a * cover + CoverScale.COVER_MASK / 2) >> CoverScale.COVER_SHIFT);
-			
+
 			r = (cr > BASE_MASK) ? BASE_MASK : cr;
 			g = (cg > BASE_MASK) ? BASE_MASK : cg;
 			b = (cb > BASE_MASK) ? BASE_MASK : cb;
