@@ -37,6 +37,8 @@ import aggx.rfpx.TrueTypeFont;
 //=======================================================================================================
 class FontEngine
 {
+	private inline static var GAMMA: Float = 1.8;
+
 	private var _currentFontIndex:UInt;
 	private var _flipY:Bool;
 	private var _fontCollection:TrueTypeCollection;
@@ -165,7 +167,7 @@ class FontEngine
         }
 
 		rasterizer.reset();
-		rasterizer.gamma(new GammaPower(1));
+		rasterizer.gamma(new GammaPower(GAMMA));
 		var i:UInt = 0;
         var c:UInt = Utf8.length(string);
 		var x = 0.;
