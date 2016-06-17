@@ -54,6 +54,6 @@ class GlyfTable
 	//---------------------------------------------------------------------------------------------------
 	public function getGlyphRecord(idx:UInt):GlyphRecord
 	{
-		return _glyphRecords[idx];
+		return idx < _glyphRecords.length ? _glyphRecords[idx] : null;
 	}
 }
