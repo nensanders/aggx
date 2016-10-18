@@ -37,7 +37,7 @@ import aggx.rfpx.TrueTypeFont;
 //=======================================================================================================
 class FontEngine
 {
-	private inline static var GAMMA: Float = 1.8;
+	private inline static var GAMMA: Float = 1.0;
 
 	private var _currentFontIndex:UInt;
 	private var _flipY:Bool;
